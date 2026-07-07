@@ -19,6 +19,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # The build reads VITE_FIREBASE_* from *environment* secrets, which are only
+    # exposed to jobs that declare the environment. Without this the build got
+    # empty config and the app rendered the "Not configured" state.
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
