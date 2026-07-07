@@ -86,7 +86,7 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="app-grain">{content}</div>
     </BrowserRouter>
   )
