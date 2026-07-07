@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Cornerman</title>
+    <meta name="theme-color" content="#0C0A08" />
+    <style>
+      html, body { margin: 0; height: 100%; background: #0C0A08; }
+    </style>
+    <script>
+      // SPA fallback for GitHub Pages (project subpath: /cornerman/).
+      //
+      // GitHub Pages has no server-side rewrites, so a hard navigation to a deep
+      // link like /cornerman/log/123 returns this 404.html. We redirect back to the
+      // app's base so index.html loads and the client-side (react-router) router can
+      // resolve the route. The requested path is preserved in sessionStorage so the
+      // app can restore it after boot if it wants to.
+      //
+      // This is the "single-file" variant of the well-known spa-github-pages trick
+      // (https://github.com/rafgraph/spa-github-pages): index.html does not need a
+      // companion snippet for the app to boot — it will simply land on the base
+      // route. To restore the exact deep-linked path, index.html (owned by the src
+      // agent) may read sessionStorage['spa:redirectPath'] on startup; see DEPLOY.md.
+      (function () {
+        var base = '/cornerman/';
+        var loc = window.location;
+        var requested = loc.pathname + loc.search + loc.hash;
+        try {
+          if (requested.indexOf(base) === 0 && requested !== base) {
+            sessionStorage.setItem('spa:redirectPath', requested);
+          }
+        } catch (e) { /* sessionStorage may be unavailable; boot at base anyway */ }
+        loc.replace(base);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

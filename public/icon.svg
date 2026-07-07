@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Cornerman app mark: warm canvas black canvas with the signature top-left
+       corner cut, a chalk corner bracket inside the cut, and a bracket-built "C"
+       in Corner Red. Geometry only — no font dependencies. -->
+  <path d="M76 0 H512 V512 H0 V76 Z" fill="#0C0A08" />
+  <!-- small chalk bracket echo inside the chamfer -->
+  <path d="M44 118 V44 H118" fill="none" stroke="#F4EEE4" stroke-width="12" opacity="0.85" />
+  <!-- the bracket "C" -->
+  <path d="M346 148 H198 V364 H346" fill="none" stroke="#E2483D" stroke-width="56" />
+</svg>

@@ -1,0 +1,820 @@
+/* ============================================================
+   CORNERMAN — design tokens & base layer
+   Direction: "RINGSIDE" — see design/DESIGN.md
+   Dark theme only. Warm canvas blacks, corner red, mono digits.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&family=Archivo:ital,wght@0,100..900;1,100..900&family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap');
+
+/* ------------------------------------------------------------
+   1. TOKENS
+   ------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+
+  /* -- Typography families ---------------------------------- */
+  --font-display: 'Big Shoulders', 'Archivo', sans-serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
+  --font-data: 'Spline Sans Mono', ui-monospace, monospace;
+
+  /* -- Type scale (size / line-height) ----------------------- */
+  --type-display-xl-size: 2.75rem;   --type-display-xl-lh: 0.95;  /* 44px hero workout name */
+  --type-display-l-size: 2rem;       --type-display-l-lh: 1.0;    /* 32px screen titles */
+  --type-display-m-size: 1.375rem;   --type-display-m-lh: 1.05;   /* 22px section headers */
+  --type-title-size: 1.0625rem;      --type-title-lh: 1.3;        /* 17px card/exercise titles */
+  --type-body-size: 0.9375rem;       --type-body-lh: 1.5;         /* 15px default copy */
+  --type-caption-size: 0.8125rem;    --type-caption-lh: 1.4;      /* 13px meta */
+  --type-eyebrow-size: 0.6875rem;    --type-eyebrow-lh: 1.2;      /* 11px labels */
+  --type-data-xl-size: 4.5rem;       --type-data-xl-lh: 1.0;      /* 72px rest timer */
+  --type-data-l-size: 2rem;          --type-data-l-lh: 1.0;       /* 32px stepper values */
+  --type-data-m-size: 1.0625rem;     --type-data-m-lh: 1.2;       /* 17px inline numbers */
+  --type-data-s-size: 0.75rem;       --type-data-s-lh: 1.2;       /* 12px chart ticks */
+
+  --tracking-eyebrow: 0.14em;
+  --tracking-display: 0.01em;
+  --tracking-cta: 0.06em;
+
+  /* -- Background & surface layers (warm, hue ~30deg) -------- */
+  --bg-0: #0C0A08;
+  --bg-1: #131009;
+  --surface-1: #1B1712;
+  --surface-2: #241F18;
+  --surface-3: #2E2820;
+  --hairline: rgba(244, 238, 228, 0.08);
+  --hairline-strong: rgba(244, 238, 228, 0.16);
+
+  /* -- Text hierarchy ---------------------------------------- */
+  --text-primary: #F4EEE4;
+  --text-secondary: rgba(244, 238, 228, 0.64);
+  --text-tertiary: rgba(244, 238, 228, 0.42);
+  --text-disabled: rgba(244, 238, 228, 0.26);
+  --text-on-accent: #16100C;
+
+  /* -- Dominant accent: Corner Red ---------------------------- */
+  --accent: #E2483D;
+  --accent-hover: #EC5A4F;
+  --accent-press: #C93A30;
+  --accent-dim: rgba(226, 72, 61, 0.14);
+  --accent-line: rgba(226, 72, 61, 0.40);
+
+  /* -- Sport coding (brackets, chips, chart lines only) ------- */
+  --sport-kickboxing: #E2483D;
+  --sport-kickboxing-dim: rgba(226, 72, 61, 0.14);
+  --sport-boxing: #4E8FD0;
+  --sport-boxing-dim: rgba(78, 143, 208, 0.14);
+  --sport-running: #E0A33C;
+  --sport-running-dim: rgba(224, 163, 60, 0.14);
+  --sport-calisthenics: #58B384;
+  --sport-calisthenics-dim: rgba(88, 179, 132, 0.14);
+  --sport-weightlifting: #C9647F;
+  --sport-weightlifting-dim: rgba(201, 100, 127, 0.14);
+  --sport-conditioning: #46B3AB;
+  --sport-conditioning-dim: rgba(70, 179, 171, 0.14);
+
+  /* -- Semantic ----------------------------------------------- */
+  --positive: #58B384;
+  --warning: #E0A33C;
+  --danger: #E2483D;
+
+  /* -- Spacing (4px base) ------------------------------------- */
+  --space-1: 0.25rem;   /*  4px */
+  --space-2: 0.5rem;    /*  8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px — screen gutter */
+  --space-5: 1.25rem;   /* 20px — card padding */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+
+  /* -- Radius -------------------------------------------------- */
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 20px;
+  --radius-full: 999px;
+  --corner-cut: 14px;   /* the signature chamfer */
+
+  /* -- Shadows (tinted to canvas hue) --------------------------- */
+  --shadow-card: 0 1px 0 rgba(244, 238, 228, 0.04) inset,
+                 0 8px 24px -12px rgba(5, 3, 1, 0.8);
+  --shadow-sheet: 0 1px 0 rgba(244, 238, 228, 0.06) inset,
+                  0 -12px 40px -8px rgba(5, 3, 1, 0.9);
+  --shadow-none: none;
+
+  /* -- Motion ---------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-swift: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-fast: 120ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+
+  /* -- Layers & layout -------------------------------------------- */
+  --z-tabbar: 100;
+  --z-sheet: 200;
+  --z-toast: 300;
+  --tabbar-height: 64px;
+  --touch-min: 44px;     /* absolute floor */
+  --touch-target: 56px;  /* preferred: steppers, primary CTA */
+}
+
+/* ------------------------------------------------------------
+   2. BASE RESET
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg-0);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  font-weight: 450;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-line);
+  outline-offset: 2px;
+}
+
+/* Fixed 3%-opacity grain on the app root only (pointer-safe). */
+.app-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-toast);
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Screen container: gutter + clearance for the tab bar. */
+.screen {
+  padding: var(--space-12) var(--space-4)
+    calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------
+   3. TYPOGRAPHY UTILITIES
+   ------------------------------------------------------------ */
+.type-display-xl {
+  font-family: var(--font-display);
+  font-size: var(--type-display-xl-size);
+  line-height: var(--type-display-xl-lh);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+}
+
+.type-display-l {
+  font-family: var(--font-display);
+  font-size: var(--type-display-l-size);
+  line-height: var(--type-display-l-lh);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+}
+
+.type-display-m {
+  font-family: var(--font-display);
+  font-size: var(--type-display-m-size);
+  line-height: var(--type-display-m-lh);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+}
+
+.type-title {
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-lh);
+  font-weight: 650;
+}
+
+.type-body {
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  font-weight: 450;
+  max-width: 62ch;
+}
+
+.type-caption {
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.type-eyebrow {
+  font-size: var(--type-eyebrow-size);
+  line-height: var(--type-eyebrow-lh);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-tertiary);
+}
+
+.type-data-xl,
+.type-data-l,
+.type-data-m,
+.type-data-s {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+.type-data-xl { font-size: var(--type-data-xl-size); line-height: var(--type-data-xl-lh); font-weight: 500; }
+.type-data-l  { font-size: var(--type-data-l-size);  line-height: var(--type-data-l-lh);  font-weight: 500; }
+.type-data-m  { font-size: var(--type-data-m-size);  line-height: var(--type-data-m-lh);  font-weight: 500; }
+.type-data-s  { font-size: var(--type-data-s-size);  line-height: var(--type-data-s-lh);  font-weight: 400; }
+
+/* ------------------------------------------------------------
+   4. SIGNATURE: THE CORNER CUT + BRACKET
+   ------------------------------------------------------------ */
+.corner-cut {
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--corner-cut)
+  );
+  border-radius: 0 var(--radius-l) var(--radius-l) var(--radius-l);
+}
+
+/* Bracket color follows the active sport: set `--bracket-color`
+   on the component (defaults to corner red). */
+.corner-bracket {
+  position: relative;
+}
+
+.corner-bracket::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 18px;
+  height: 18px;
+  border-top: 2px solid var(--bracket-color, var(--accent));
+  border-left: 2px solid var(--bracket-color, var(--accent));
+  pointer-events: none;
+}
+
+.corner-bracket--small::before {
+  width: 8px;
+  height: 8px;
+  top: 0;
+  left: 0;
+}
+
+/* Sport scoping: apply on any component to recolor brackets,
+   chips, and chart strokes in one move. */
+.sport-kickboxing    { --bracket-color: var(--sport-kickboxing);    --sport-color: var(--sport-kickboxing);    --sport-dim: var(--sport-kickboxing-dim); }
+.sport-boxing        { --bracket-color: var(--sport-boxing);        --sport-color: var(--sport-boxing);        --sport-dim: var(--sport-boxing-dim); }
+.sport-running       { --bracket-color: var(--sport-running);       --sport-color: var(--sport-running);       --sport-dim: var(--sport-running-dim); }
+.sport-calisthenics  { --bracket-color: var(--sport-calisthenics);  --sport-color: var(--sport-calisthenics);  --sport-dim: var(--sport-calisthenics-dim); }
+.sport-weightlifting { --bracket-color: var(--sport-weightlifting); --sport-color: var(--sport-weightlifting); --sport-dim: var(--sport-weightlifting-dim); }
+.sport-conditioning  { --bracket-color: var(--sport-conditioning);  --sport-color: var(--sport-conditioning);  --sport-dim: var(--sport-conditioning-dim); }
+
+/* ------------------------------------------------------------
+   5. CORE COMPONENT PATTERNS
+   ------------------------------------------------------------ */
+
+/* -- 5.1 Cards ------------------------------------------------ */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-l);
+  padding: var(--space-5);
+}
+
+/* Hero card = card + signature. Usage:
+   <section class="card card--hero corner-cut corner-bracket sport-kickboxing"> */
+.card--hero {
+  box-shadow: var(--shadow-card);
+}
+
+/* -- 5.2 Buttons ---------------------------------------------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-s);
+  font-family: var(--font-display);
+  font-size: var(--type-title-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-cta);
+  transition: transform var(--dur-fast) var(--ease-swift),
+              background-color var(--dur-fast) var(--ease-swift),
+              border-color var(--dur-fast) var(--ease-swift);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  height: var(--touch-target); /* 56px */
+  width: 100%;
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.btn--primary:active {
+  background: var(--accent-press);
+}
+
+.btn--ghost {
+  height: 52px;
+  background: transparent;
+  border: 1px solid var(--hairline-strong);
+  color: var(--text-primary);
+}
+
+.btn--ghost:active {
+  background: var(--surface-3);
+}
+
+.btn--danger {
+  height: var(--touch-target); /* 56px */
+  width: 100%;
+  background: var(--danger);
+  color: var(--text-on-accent);
+}
+
+.btn--danger:active {
+  background: color-mix(in srgb, var(--danger) 82%, black);
+}
+
+/* Low-emphasis text button — a destructive action tucked under a primary CTA */
+.btn--quiet {
+  height: 44px;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: var(--type-caption-size, 0.8125rem);
+  letter-spacing: var(--tracking-cta);
+}
+
+.btn--quiet:active {
+  color: var(--danger);
+}
+
+.btn:disabled {
+  color: var(--text-disabled);
+  background: var(--surface-2);
+  pointer-events: none;
+}
+
+/* -- 5.3 Time-picker chips (20 / 45 / 60 min) ------------------ */
+.chip-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.chip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              transform var(--dur-fast) var(--ease-swift);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+.chip__value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem; /* 20px */
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-secondary);
+}
+
+.chip__unit {
+  font-size: var(--type-eyebrow-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-tertiary);
+}
+
+.chip[aria-pressed='true'],
+.chip.is-selected {
+  background: var(--accent-dim);
+  border-color: var(--accent-line);
+}
+
+.chip[aria-pressed='true'] .chip__value,
+.chip.is-selected .chip__value {
+  color: var(--accent);
+}
+
+.chip[aria-pressed='true'] .chip__unit,
+.chip.is-selected .chip__unit {
+  color: var(--text-secondary);
+}
+
+/* Sport tag chip (hero card, log rows) */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  background: var(--sport-dim, var(--accent-dim));
+  color: var(--sport-color, var(--accent));
+  font-size: var(--type-eyebrow-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+/* -- 5.4 Exercise list & rows ----------------------------------- */
+.list-group {
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.exercise-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  transition: background-color var(--dur-fast) var(--ease-swift);
+}
+
+.exercise-row + .exercise-row,
+.list-group > * + * {
+  border-top: 1px solid var(--hairline);
+}
+
+.exercise-row:active {
+  background: var(--surface-2);
+}
+
+.exercise-row__prescription {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.exercise-row__count {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-m-size);
+  color: var(--text-secondary);
+}
+
+.exercise-row__count.is-complete {
+  color: var(--positive);
+}
+
+/* -- 5.5 Steppers (reps x weight) -------------------------------- */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stepper__btn {
+  width: var(--touch-target);  /* 56px */
+  height: var(--touch-target); /* 56px */
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-s);
+  color: var(--text-primary);
+  transition: background-color var(--dur-fast) var(--ease-swift),
+              transform var(--dur-fast) var(--ease-swift);
+}
+
+.stepper__btn:active {
+  background: var(--surface-3);
+  transform: scale(0.96);
+}
+
+.stepper__value-block {
+  min-width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stepper__value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-l-size);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.stepper__unit {
+  font-size: var(--type-eyebrow-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-tertiary);
+}
+
+/* -- 5.6 Rest timer sheet ----------------------------------------- */
+.timer-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  background: var(--surface-2);
+  border-top: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  box-shadow: var(--shadow-sheet);
+  padding: var(--space-6) var(--space-4)
+    calc(env(safe-area-inset-bottom) + var(--space-6));
+  transform: translateY(100%);
+  transition: transform 320ms var(--ease-swift);
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--corner-cut)
+  );
+}
+
+.timer-sheet.is-open {
+  transform: translateY(0);
+}
+
+.timer-sheet__digits {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-xl-size);
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+
+.timer-sheet__digits.is-final {
+  color: var(--accent);
+  animation: timer-pulse 1s var(--ease-out) infinite;
+}
+
+.timer-sheet__track {
+  height: 3px;
+  margin-top: var(--space-4);
+  background: var(--hairline);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* Drive with: style="transform: scaleX(0.42)" (fraction remaining) */
+.timer-sheet__fill {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 1s linear;
+}
+
+.timer-sheet__controls {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Bell flash at 0:00 — add .is-bell for ~600ms */
+.timer-sheet.is-bell {
+  animation: bell-flash 240ms var(--ease-swift) 2;
+}
+
+@keyframes bell-flash {
+  50% { border-top-color: var(--accent-line); }
+}
+
+/* -- 5.7 Streak / weekly-target ring -------------------------------
+   SVG recipe (64px): viewBox 0 0 64 64, circle r=28 cx=32 cy=32,
+   stroke-width 5, track stroke var(--hairline-strong),
+   fill circle stroke var(--accent), stroke-linecap round,
+   dasharray = 2*PI*28 = 175.93, dashoffset animated to fraction. */
+.ring__fill {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 800ms var(--ease-out) 200ms;
+}
+
+.ring__track {
+  stroke: var(--hairline-strong);
+}
+
+.ring.is-met .ring__fill {
+  stroke: var(--positive);
+}
+
+/* -- 5.8 Bottom tab bar --------------------------------------------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-tabbar);
+  height: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(36, 31, 24, 0.92); /* --surface-2 @ 92% */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--hairline);
+}
+
+.tabbar__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-tertiary);
+  transition: color var(--dur-base) var(--ease-swift),
+              transform var(--dur-fast) var(--ease-swift);
+}
+
+.tabbar__tab:active {
+  transform: scale(0.94);
+}
+
+.tabbar__tab .tabbar__icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+/* Active tab: chalk text + 8px red bracket at the icon's top-left. */
+.tabbar__tab[aria-current='page'] {
+  color: var(--text-primary);
+}
+
+.tabbar__tab[aria-current='page'] .tabbar__icon::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -6px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+
+.tabbar__label {
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+/* ------------------------------------------------------------
+   6. MOTION UTILITIES
+   ------------------------------------------------------------ */
+
+/* Page-load "walkout" stagger. Set --i (0..5) per child. */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: walkout var(--dur-slow) var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes walkout {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Counter pop when a set is logged. */
+.pop {
+  animation: pop var(--dur-base) var(--ease-swift);
+}
+
+@keyframes pop {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+}
+
+/* Universal tactile press for anything not covered above. */
+.pressable {
+  transition: transform var(--dur-fast) var(--ease-swift);
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* Skeleton shimmer for loading states (transform-only). */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border-radius: var(--radius-s);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 238, 228, 0.05),
+    transparent
+  );
+  animation: shimmer 1.4s var(--ease-out) infinite;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-item {
+    animation-delay: 0ms;
+    transform: none;
+  }
+
+  .timer-sheet__digits.is-final,
+  .pop,
+  .skeleton::after {
+    animation: none;
+  }
+
+  .timer-sheet {
+    transition-duration: 1ms;
+  }
+}
