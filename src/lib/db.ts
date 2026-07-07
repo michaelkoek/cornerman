@@ -8,8 +8,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit as fsLimit,
-  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -185,56 +183,39 @@ function sessionsCol() {
   return collection(getDb(), 'sessions')
 }
 
-/** All sessions for the current user, newest date first (History / Log). */
-export async function listSessions(max = 100): Promise<Session[]> {
+// Single-user app with a tiny dataset: fetch all of the user's sessions with a
+// single-field (uid) query — which Firestore auto-indexes — and do every filter,
+// sort, and limit in JS. This deliberately avoids composite indexes entirely, so
+// no "this query requires an index" prompts on any screen, and it plays nicer
+// with the offline cache.
+async function allUserSessions(): Promise<Session[]> {
   const uid = currentUid()
-  const q = query(
-    sessionsCol(),
-    where('uid', '==', uid),
-    orderBy('date', 'desc'),
-    fsLimit(max),
-  )
-  const snap = await getDocs(q)
+  const snap = await getDocs(query(sessionsCol(), where('uid', '==', uid)))
   const sessions = snap.docs.map(docToSession)
-  // Secondary sort by createdAt within a date (newest first), matching `date DESC, id DESC`.
+  // Newest date first; matches the old `date DESC` ordering.
   sessions.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
   return sessions
 }
 
+/** All sessions for the current user, newest date first (History / Log). */
+export async function listSessions(max = 100): Promise<Session[]> {
+  return (await allUserSessions()).slice(0, max)
+}
+
 /** Done sessions on or after `fromDate`, for recovery/dashboard/week math. */
 export async function doneSessionsSince(fromDate: string): Promise<Session[]> {
-  const uid = currentUid()
-  const q = query(
-    sessionsCol(),
-    where('uid', '==', uid),
-    where('status', '==', 'done'),
-    where('date', '>=', fromDate),
-  )
-  const snap = await getDocs(q)
-  return snap.docs.map(docToSession)
+  return (await allUserSessions()).filter((s) => s.status === 'done' && s.date >= fromDate)
 }
 
 /** All sessions on a specific date (any status). */
 export async function sessionsOnDate(date: string): Promise<Session[]> {
-  const uid = currentUid()
-  const q = query(sessionsCol(), where('uid', '==', uid), where('date', '==', date))
-  const snap = await getDocs(q)
-  return snap.docs.map(docToSession)
+  return (await allUserSessions()).filter((s) => s.date === date)
 }
 
 /** Recent done strength sessions (weightlifting/calisthenics), newest first. */
 export async function recentStrengthSessions(max: number): Promise<Session[]> {
-  const uid = currentUid()
-  const q = query(
-    sessionsCol(),
-    where('uid', '==', uid),
-    where('status', '==', 'done'),
-    orderBy('date', 'desc'),
-    fsLimit(60),
-  )
-  const snap = await getDocs(q)
-  return snap.docs
-    .map(docToSession)
+  return (await allUserSessions())
+    .filter((s) => s.status === 'done')
     .filter((s) => s.sport === 'weightlifting' || s.sport === 'calisthenics')
     .slice(0, max)
 }
