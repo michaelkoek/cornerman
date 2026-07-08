@@ -1,0 +1,140 @@
+{
+  "name": "Apple Health weight -> Firestore (Cornerman)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cornerman-weight",
+        "options": {}
+      },
+      "id": "b1000000-0000-4000-8000-000000000001",
+      "name": "Weight webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -900,
+        340
+      ],
+      "webhookId": "b1000000-0000-4000-8000-0000000000ff",
+      "notes": "POST { date: \"YYYY-MM-DD\", weightKg: number } with header x-cornerman-secret. Responds 200 on receipt; validation failures show up as execution errors."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1000000-0000-4000-8000-000000000001",
+              "name": "firebaseProjectId",
+              "value": "PASTE_FIREBASE_PROJECT_ID",
+              "type": "string"
+            },
+            {
+              "id": "c1000000-0000-4000-8000-000000000002",
+              "name": "uid",
+              "value": "PASTE_MICHAEL_FIREBASE_UID",
+              "type": "string"
+            },
+            {
+              "id": "c1000000-0000-4000-8000-000000000003",
+              "name": "sharedSecret",
+              "value": "PASTE_A_LONG_RANDOM_SECRET",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b1000000-0000-4000-8000-000000000002",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -680,
+        340
+      ],
+      "notes": "Same firebaseProjectId + uid as the Strava workflow. sharedSecret must match the x-cornerman-secret header the iOS Shortcut sends."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate the webhook payload and build a Firestore REST typed-value document\n// for the bodyweight/{uid}_{date} upsert (see integrations/firestore-model.md).\n\nconst config = $('Config').first().json;\nconst hook = $('Weight webhook').first().json;\n\nconst secret = hook.headers?.['x-cornerman-secret'] ?? '';\nif (!config.sharedSecret || secret !== config.sharedSecret) {\n  throw new Error('Bad or missing x-cornerman-secret header.');\n}\n\nconst body = hook.body ?? {};\n\n// Shortcuts on a Dutch locale can send \"82,4\" — normalise the decimal comma.\nconst raw = body.weightKg ?? body.weight;\nconst weightKg = Math.round(parseFloat(String(raw).replace(',', '.')) * 10) / 10;\nif (!Number.isFinite(weightKg) || weightKg < 30 || weightKg > 250) {\n  throw new Error(`weightKg missing or out of range (30-250): ${JSON.stringify(raw)}`);\n}\n\n// Prefer the sample's own date (weigh-in day), fall back to today in Amsterdam.\nlet date = String(body.date ?? '').slice(0, 10);\nif (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) {\n  date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());\n}\n\nreturn [{\n  json: {\n    docId: `${config.uid}_${date}`,\n    firestoreBody: {\n      fields: {\n        uid: { stringValue: config.uid },\n        date: { stringValue: date },\n        weightKg: { doubleValue: weightKg },\n        updatedAt: { timestampValue: new Date().toISOString() }\n      }\n    }\n  }\n}];"
+      },
+      "id": "b1000000-0000-4000-8000-000000000003",
+      "name": "Validate & build doc",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://firestore.googleapis.com/v1/projects/{{ $('Config').item.json.firebaseProjectId }}/databases/(default)/documents/bodyweight/{{ $json.docId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.firestoreBody) }}",
+        "options": {}
+      },
+      "id": "b1000000-0000-4000-8000-000000000004",
+      "name": "Upsert weight doc",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        340
+      ],
+      "notes": "PATCH on an explicit document path creates the doc if missing and overwrites it if present — idempotent upsert keyed on {uid}_{date}. Reuses the same Google API (service account) credential as the Strava workflow."
+    }
+  ],
+  "connections": {
+    "Weight webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Validate & build doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & build doc": {
+      "main": [
+        [
+          {
+            "node": "Upsert weight doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateId": "cornerman-weight-firestore"
+  },
+  "tags": [
+    {
+      "name": "cornerman"
+    }
+  ]
+}

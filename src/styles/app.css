@@ -787,6 +787,12 @@ textarea.input {
   background: var(--bg-1);
   border-radius: var(--radius-m);
   padding: var(--space-4) var(--space-3) var(--space-2);
+  overflow: hidden;
+}
+
+.chart-plot__zoom {
+  touch-action: pan-y;
+  transform-origin: center center;
 }
 
 .chart-key {
@@ -863,6 +869,69 @@ textarea.input {
 
 .lift-card__delta.is-down {
   color: var(--danger);
+}
+
+.weight-card {
+  background: var(--bg-1);
+  border-radius: var(--radius-m);
+  padding: var(--space-4) var(--space-3) var(--space-3);
+}
+
+.weight-card__vals {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: 0 var(--space-1);
+}
+
+.weight-card__current {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-l-size);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.weight-card__current em {
+  font-style: normal;
+  font-size: var(--type-data-s-size);
+  color: var(--text-tertiary);
+  margin-left: var(--space-1);
+}
+
+/* No up/down coloring: heavier or lighter carries no fixed valence. */
+.weight-card__delta {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+  color: var(--text-tertiary);
+}
+
+.weight-card__meta {
+  margin-top: var(--space-2);
+}
+
+.weight-card__meta-val {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: var(--space-2);
+}
+
+.weight-log {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.weight-log .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.weight-log .btn {
+  flex-shrink: 0;
 }
 
 /* ------------------------------------------------------------

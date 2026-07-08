@@ -140,6 +140,22 @@ export interface DashboardResponse {
   sessionsThisMonth: number;
 }
 
+// Bodyweight tracking
+export interface BodyweightEntry {
+  id: string;
+  date: string; // YYYY-MM-DD — one entry per day, re-logging overwrites
+  weightKg: number;
+}
+
+export interface BodyweightResponse {
+  entries: BodyweightEntry[]; // oldest first
+  currentKg: number | null; // most recent entry
+  avg7dKg: number | null; // mean of entries in the last 7 days
+  delta30dKg: number | null; // current vs ~30 days ago (or earliest entry)
+  minKg: number | null; // all-time
+  maxKg: number | null; // all-time
+}
+
 // GET /api/settings -> Settings
 // PUT /api/settings { weeklyTarget }
 // POST /api/anchors { weekday, sport, time, label } / DELETE /api/anchors/:id

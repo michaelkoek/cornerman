@@ -9,6 +9,7 @@
 
 import type {
   Anchor,
+  BodyweightResponse,
   CreateSessionRequest,
   DashboardResponse,
   Exercise,
@@ -28,16 +29,19 @@ import {
   computeStreakWeeks,
   createSessionDoc,
   deleteAnchorDoc,
+  deleteBodyweight,
   deleteSession as dbDeleteSession,
   doneCountForWeek,
   doneSessionsSince,
   getAllExercises,
   getSession,
   getSettings,
+  listBodyweight,
   listSessions as dbListSessions,
   newId,
   sessionsOnDate,
   todayStr,
+  upsertBodyweight,
   weekStart,
   writeSession,
   writeWeeklyTarget,
@@ -292,6 +296,45 @@ async function dashboard(): Promise<DashboardResponse> {
 }
 
 // ---------------------------------------------------------------------------
+// bodyweight
+// ---------------------------------------------------------------------------
+
+const round1 = (v: number) => Math.round(v * 10) / 10
+
+async function bodyweight(): Promise<BodyweightResponse> {
+  const entries = await listBodyweight()
+  const today = todayStr()
+  const current = entries[entries.length - 1] ?? null
+
+  const week = entries.filter((e) => e.date >= addDays(today, -6))
+  const avg7dKg = week.length
+    ? round1(week.reduce((sum, e) => sum + e.weightKg, 0) / week.length)
+    : null
+
+  // Baseline for the 30-day delta: the most recent entry at least 30 days old,
+  // falling back to the earliest entry when history is shorter than that.
+  const cutoff = addDays(today, -30)
+  let baseline = entries[0] ?? null
+  for (const e of entries) {
+    if (e.date <= cutoff) baseline = e
+    else break
+  }
+  const delta30dKg =
+    current && baseline && baseline.id !== current.id
+      ? round1(current.weightKg - baseline.weightKg)
+      : null
+
+  return {
+    entries,
+    currentKg: current?.weightKg ?? null,
+    avg7dKg,
+    delta30dKg,
+    minKg: entries.length ? Math.min(...entries.map((e) => e.weightKg)) : null,
+    maxKg: entries.length ? Math.max(...entries.map((e) => e.weightKg)) : null,
+  }
+}
+
+// ---------------------------------------------------------------------------
 // settings & anchors
 // ---------------------------------------------------------------------------
 
@@ -335,6 +378,11 @@ export const api = {
 
   // Dashboard
   dashboard,
+
+  // Bodyweight
+  bodyweight,
+  logWeight: (date: string, weightKg: number) => upsertBodyweight(date, weightKg),
+  deleteWeight: (id: string) => deleteBodyweight(id),
 
   // Settings & anchors
   settings: () => getSettings(),

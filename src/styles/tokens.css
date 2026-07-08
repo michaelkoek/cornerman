@@ -185,7 +185,7 @@ button {
 
 /* Screen container: gutter + clearance for the tab bar. */
 .screen {
-  padding: var(--space-12) var(--space-4)
+  padding: calc(env(safe-area-inset-top) + var(--space-12)) var(--space-4)
     calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
   max-width: 480px;
   margin-inline: auto;

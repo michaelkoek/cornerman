@@ -19,6 +19,7 @@ import {
 import exercisesData from '../../data/exercises.json'
 import type {
   Anchor,
+  BodyweightEntry,
   Exercise,
   Session,
   SessionExercise,
@@ -260,6 +261,43 @@ export async function deletePlannedOnDate(date: string): Promise<void> {
       .filter((s) => s.status === 'planned' || s.status === 'in_progress')
       .map((s) => deleteSession(s.id)),
   )
+}
+
+// ---------------------------------------------------------------------------
+// Bodyweight — one doc per day per user, id `${uid}_${date}` so logging the
+// same day twice overwrites (and an external sync can upsert idempotently).
+// ---------------------------------------------------------------------------
+
+function bodyweightCol() {
+  return collection(getDb(), 'bodyweight')
+}
+
+/** All bodyweight entries for the current user, oldest first. */
+export async function listBodyweight(): Promise<BodyweightEntry[]> {
+  const uid = currentUid()
+  const snap = await getDocs(query(bodyweightCol(), where('uid', '==', uid)))
+  const entries = snap.docs.map((d) => {
+    const data = d.data()
+    return { id: d.id, date: data.date as string, weightKg: data.weightKg as number }
+  })
+  entries.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+  return entries
+}
+
+/** Create or overwrite the entry for `date`. */
+export async function upsertBodyweight(date: string, weightKg: number): Promise<BodyweightEntry> {
+  const uid = currentUid()
+  const id = `${uid}_${date}`
+  await setDoc(
+    doc(getDb(), 'bodyweight', id),
+    { uid, date, weightKg, updatedAt: serverTimestamp() },
+    { merge: true },
+  )
+  return { id, date, weightKg }
+}
+
+export async function deleteBodyweight(id: string): Promise<void> {
+  await deleteDoc(doc(getDb(), 'bodyweight', id))
 }
 
 // ---------------------------------------------------------------------------

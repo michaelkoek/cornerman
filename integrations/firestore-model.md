@@ -69,6 +69,18 @@ One document, id === the user's uid.
 Defaults created on first sign-in: weeklyTarget 4, anchors = kickboxing Tue(2)+Thu(4) 19:00
 "Kickboxing class".
 
+### `bodyweight/{uid}_{date}`
+One document per weigh-in day. Document id is `${uid}_${date}` so re-logging the same day
+overwrites, and an external sync (n8n, Health export) can upsert idempotently.
+```
+{
+  uid: string,
+  date: "2026-07-08",
+  weightKg: number,               // one decimal
+  updatedAt: Timestamp
+}
+```
+
 ## Security rules (Firestore)
 ```
 rules_version = '2';
@@ -81,6 +93,11 @@ service cloud.firestore {
     }
     match /settings/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /bodyweight/{id} {
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }
@@ -97,6 +114,12 @@ n8n owns the Strava OAuth client secret and refresh token. On a cron (every ~3h)
    Dedupe by `stravaId` (query existing where uid==… and stravaId==id; skip if present).
 
 The app treats these like any other done session (counts toward weekly target + recovery).
+
+## Apple Health → Firestore (bodyweight sync)
+The Feelfit scale app syncs weigh-ins to Apple Health; a daily iOS Shortcut POSTs the latest
+weight sample to an n8n webhook, which upserts `bodyweight/{uid}_{date}` (PATCH on the explicit
+doc path — idempotent). Setup guide: `n8n/weight-to-firestore.README.md`. Manual entries from
+the Progress screen write the exact same documents.
 
 ## Query patterns the client needs
 - Today: sessions where uid==me and date==today (order by createdAt desc, take latest non-skipped).
