@@ -1,62 +1,26 @@
-// Firebase Auth — Google sign-in, with a React hook for the auth gate.
+// Firebase Auth — email/password sign-in, with a React hook for the auth gate.
 import { useEffect, useState } from 'react'
 import {
-  GoogleAuthProvider,
   browserLocalPersistence,
-  getRedirectResult,
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   setPersistence,
-  signInWithPopup,
-  signInWithRedirect,
+  signInWithEmailAndPassword,
   signOut as fbSignOut,
   type User,
 } from 'firebase/auth'
 import { firebaseConfigured, getAuthInstance } from './firebase'
 
-const provider = new GoogleAuthProvider()
-
-/**
- * Google sign-in. Popup is the primary path — it works on localhost and on the
- * GitHub Pages origin, where `signInWithRedirect` breaks because the round-trip
- * through *.firebaseapp.com is treated as third-party storage and blocked by
- * modern browsers (bounces straight back to the login screen). Redirect is a
- * last resort only when a popup genuinely can't open.
- */
-export async function signInWithGoogle(): Promise<void> {
+export async function signInWithEmail(email: string, password: string): Promise<void> {
   const auth = getAuthInstance()
   await setPersistence(auth, browserLocalPersistence)
-  try {
-    await signInWithPopup(auth, provider)
-  } catch (err) {
-    const code = (err as { code?: string }).code ?? ''
-    // User closed / double-clicked the popup — not a real failure, just stop.
-    if (code === 'auth/cancelled-popup-request' || code === 'auth/popup-closed-by-user') {
-      return
-    }
-    if (
-      code === 'auth/popup-blocked' ||
-      code === 'auth/operation-not-supported-in-this-environment'
-    ) {
-      await signInWithRedirect(auth, provider)
-      return
-    }
-    throw err
-  }
+  await signInWithEmailAndPassword(auth, email, password)
 }
 
-/**
- * Completes a redirect-based sign-in (the fallback path) on app load and
- * surfaces any error. No-op for the popup path. Returns an error message to
- * show, or null.
- */
-export async function completeRedirectSignIn(): Promise<string | null> {
-  if (!firebaseConfigured) return null
-  try {
-    await getRedirectResult(getAuthInstance())
-    return null
-  } catch (err) {
-    return err instanceof Error ? err.message : 'Sign-in failed. Try again.'
-  }
+export async function signUpWithEmail(email: string, password: string): Promise<void> {
+  const auth = getAuthInstance()
+  await setPersistence(auth, browserLocalPersistence)
+  await createUserWithEmailAndPassword(auth, email, password)
 }
 
 export async function signOut(): Promise<void> {
