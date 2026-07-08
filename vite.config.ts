@@ -22,6 +22,10 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // We call useRegisterSW ourselves (src/lib/pwaUpdate.ts) so we can poll
+      // for updates on an interval and on visibilitychange — a plain injected
+      // register script only checks once, on initial load.
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'icon.svg'],
       manifest: {
         name: 'Cornerman',

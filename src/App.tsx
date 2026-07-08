@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { TabBar } from './components/TabBar'
 import { Skel } from './components/Skeleton'
 import { useAuth } from './lib/auth'
+import { usePwaAutoUpdate } from './lib/pwaUpdate'
 import Log from './screens/Log'
 import Login from './screens/Login'
 import Settings from './screens/Settings'
@@ -67,6 +68,7 @@ function ConfigError() {
 }
 
 export default function App() {
+  usePwaAutoUpdate()
   const { user, loading, configured } = useAuth()
 
   let content: React.ReactNode
