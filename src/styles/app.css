@@ -320,6 +320,53 @@
   background: var(--surface-3);
 }
 
+.exlog__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Example sheet: start/finish photos + fallback link */
+.example__frames {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.example__frames:has(.example__frame:only-child) {
+  grid-template-columns: 1fr;
+}
+
+.example__frame {
+  margin: 0;
+  min-width: 0;
+}
+
+.example__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+}
+
+.example__frame-label {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.example__more {
+  width: 100%;
+  margin-top: var(--space-4);
+}
+
 .set-line {
   display: flex;
   align-items: center;
@@ -373,6 +420,74 @@
   border-color: transparent;
   background: rgba(88, 179, 132, 0.14);
   color: var(--positive);
+}
+
+/* PR tag on a done set line — the current all-time record */
+.set-line__pr {
+  display: inline-block;
+  padding: 1px var(--space-1);
+  margin-right: var(--space-1);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  color: #e0a33c;
+  border: 1px solid rgba(224, 163, 60, 0.45);
+  border-radius: var(--radius-s);
+  vertical-align: 2px;
+}
+
+/* ------------------------------------------------------------
+   PR toast — record banner above the tab bar
+   ------------------------------------------------------------ */
+.pr-toast {
+  position: fixed;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
+  z-index: calc(var(--z-tabbar) + 2);
+  max-width: 480px;
+  margin-inline: auto;
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid rgba(224, 163, 60, 0.5);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-card);
+  clip-path: polygon(var(--corner-cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-cut));
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    transform 320ms var(--ease-swift),
+    opacity 320ms var(--ease-swift);
+}
+
+.pr-toast.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pr-toast__eyebrow {
+  color: #e0a33c;
+}
+
+.pr-toast__msg {
+  margin-top: var(--space-1);
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-l-size);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.finish-prs {
+  margin-bottom: var(--space-4);
+  color: #e0a33c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-toast {
+    transition-duration: 1ms;
+    transform: none;
+  }
 }
 
 .workout-finish {
@@ -832,6 +947,24 @@ textarea.input {
   border-radius: var(--radius-m);
   padding: var(--space-4) var(--space-3) var(--space-2);
   min-width: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  transition: transform var(--dur-fast) var(--ease-swift), background-color var(--dur-fast) var(--ease-swift);
+}
+
+button.lift-card:active {
+  transform: scale(0.98);
+  background: var(--surface-2);
+}
+
+.lift-card__pr {
+  margin-top: 2px;
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+  color: #e0a33c;
 }
 
 .lift-card__name {

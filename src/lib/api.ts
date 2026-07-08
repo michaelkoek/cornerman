@@ -14,6 +14,7 @@ import type {
   DashboardResponse,
   Exercise,
   ExerciseCategory,
+  ExerciseHistoryResponse,
   Location,
   Session,
   SessionExercise,
@@ -26,14 +27,15 @@ import type {
 import {
   addAnchorDoc,
   addDays,
+  allDoneSessions,
   computeStreakWeeks,
   createSessionDoc,
   deleteAnchorDoc,
   deleteBodyweight,
   deleteSession as dbDeleteSession,
   doneCountForWeek,
-  doneSessionsSince,
   getAllExercises,
+  getExercise,
   getSession,
   getSettings,
   listBodyweight,
@@ -52,6 +54,7 @@ import {
   computeYesterdayLoad,
   suggestSession,
 } from './engine'
+import { computePRs, emptyPR, epley, foldSet } from './prs'
 
 export interface SessionPatch {
   status?: Session['status']
@@ -91,9 +94,14 @@ async function today(): Promise<TodayResponse> {
     .filter((s) => s.status === 'in_progress' || s.status === 'planned' || s.status === 'done')
     .sort((a, b) => rank[a.status] - rank[b.status])[0]
 
-  // Done history for recovery signal + week count + streak (last ~1 year for streak).
-  const doneSessions = await doneSessionsSince(addDays(date, -400))
+  // All-time done history: recovery/week/streak math windows itself, and the
+  // full history doubles as the PR baseline for in-workout celebration.
+  const doneSessions = await allDoneSessions()
   const ws = weekStart(date)
+
+  // PR baselines are only consumed by the active-workout view, so skip the
+  // all-history PR pass on days with nothing to log (the landing screen).
+  const active = candidate && candidate.status !== 'done'
 
   return {
     date,
@@ -103,6 +111,7 @@ async function today(): Promise<TodayResponse> {
     weekSessions: doneCountForWeek(doneSessions, ws),
     weeklyTarget: target,
     streakWeeks: computeStreakWeeks(doneSessions, target),
+    prBaselines: active ? Object.fromEntries(computePRs(doneSessions)) : undefined,
   }
 }
 
@@ -216,14 +225,35 @@ function exercises(filters?: { location?: Location; category?: ExerciseCategory 
 // dashboard
 // ---------------------------------------------------------------------------
 
+/** Top done set per date (heaviest, then most reps), oldest first. */
+function topSetPoints(
+  points: { date: string; w: number; reps: number }[],
+): { date: string; topSetKg: number; est1Rm: number; reps: number }[] {
+  const byDate = new Map<string, { w: number; reps: number }>()
+  for (const p of points) {
+    const cur = byDate.get(p.date)
+    if (!cur || p.w > cur.w || (p.w === cur.w && p.reps > cur.reps)) {
+      byDate.set(p.date, { w: p.w, reps: p.reps })
+    }
+  }
+  return [...byDate.entries()]
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([date, top]) => ({
+      date,
+      topSetKg: top.w,
+      est1Rm: epley(top.w, top.reps),
+      reps: top.reps,
+    }))
+}
+
 async function dashboard(): Promise<DashboardResponse> {
   const today = todayStr()
   const currentWs = weekStart(today)
   const settings = await getSettings()
 
-  // 12 weeks of done sessions covers weekly volume + lift progression; go a bit
-  // wider so streak math is stable.
-  const doneSessions = await doneSessionsSince(addDays(currentWs, -7 * 60))
+  // All-time done sessions: PRs and lift progression are "all-time max";
+  // weekly volume windows itself to 12 weeks below.
+  const doneSessions = await allDoneSessions()
 
   // Weekly volume: minutes per sport, last 12 weeks (oldest first).
   const weeklyVolume: DashboardResponse['weeklyVolume'] = []
@@ -248,7 +278,9 @@ async function dashboard(): Promise<DashboardResponse> {
   for (const session of doneSessions) {
     for (const se of session.exercises) {
       if (se.exercise.type !== 'weighted') continue
-      const doneWeighted = se.sets.filter((s) => s.done && s.weightKg != null)
+      // weightKg > 0 (not just non-null) to match prs.ts/exerciseHistory — a
+      // 0 kg placeholder set must not plot a 0-kg point or a phantom PR.
+      const doneWeighted = se.sets.filter((s) => s.done && s.weightKg != null && s.weightKg > 0)
       if (doneWeighted.length === 0) continue
       let entry = perExercise.get(se.exerciseId)
       if (!entry) {
@@ -262,26 +294,33 @@ async function dashboard(): Promise<DashboardResponse> {
     }
   }
 
-  const topLifts = [...perExercise.entries()]
-    .sort((a, b) => b[1].sessionDates.size - a[1].sessionDates.size || a[1].name.localeCompare(b[1].name))
-    .slice(0, 6)
+  const rankedLifts = [...perExercise.entries()].sort(
+    (a, b) => b[1].sessionDates.size - a[1].sessionDates.size || a[1].name.localeCompare(b[1].name),
+  )
 
-  const liftProgression: DashboardResponse['liftProgression'] = topLifts.map(([exerciseId, entry]) => {
-    const byDate = new Map<string, { w: number; reps: number }>()
-    for (const p of entry.points) {
-      const cur = byDate.get(p.date)
-      if (!cur || p.w > cur.w || (p.w === cur.w && p.reps > cur.reps)) {
-        byDate.set(p.date, { w: p.w, reps: p.reps })
-      }
+  const prs = computePRs(doneSessions)
+
+  const liftProgression: DashboardResponse['liftProgression'] = rankedLifts
+    .slice(0, 6)
+    .map(([exerciseId, entry]) => ({
+      exerciseId,
+      name: entry.name,
+      points: topSetPoints(entry.points),
+      pr: prs.get(exerciseId),
+    }))
+
+  const allLifts: DashboardResponse['allLifts'] = rankedLifts.map(([exerciseId, entry]) => {
+    const pr = prs.get(exerciseId)
+    // doneSessions is newest-first, so the first point pushed is the latest.
+    const lastDate = entry.points[0]?.date ?? ''
+    return {
+      exerciseId,
+      name: entry.name,
+      sessions: entry.sessionDates.size,
+      maxWeightKg: pr?.maxWeightKg ?? null,
+      bestEst1Rm: pr?.bestEst1Rm ?? null,
+      lastDate,
     }
-    const points = [...byDate.entries()]
-      .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-      .map(([date, top]) => ({
-        date,
-        topSetKg: top.w,
-        est1Rm: Math.round(top.w * (1 + top.reps / 30) * 10) / 10, // Epley
-      }))
-    return { exerciseId, name: entry.name, points }
   })
 
   const monthPrefix = today.slice(0, 7)
@@ -292,7 +331,61 @@ async function dashboard(): Promise<DashboardResponse> {
     liftProgression,
     streakWeeks: computeStreakWeeks(doneSessions, settings.weeklyTarget),
     sessionsThisMonth,
+    allLifts,
   }
+}
+
+// ---------------------------------------------------------------------------
+// exercise history (Progress drill-in)
+// ---------------------------------------------------------------------------
+
+async function exerciseHistory(exerciseId: string): Promise<ExerciseHistoryResponse> {
+  const exercise = getExercise(exerciseId)
+  if (!exercise) {
+    throw new Error('Unknown exerciseId')
+  }
+
+  const doneSessions = await allDoneSessions() // newest first
+  const rawPoints: { date: string; w: number; reps: number }[] = []
+  const recent: ExerciseHistoryResponse['recent'] = []
+  // Fold only this exercise's sets (oldest-first) into one PR — no need to
+  // build the whole per-exercise map just to read a single entry.
+  let pr = emptyPR(exerciseId)
+
+  for (let i = doneSessions.length - 1; i >= 0; i--) {
+    const session = doneSessions[i]
+    const doneSets = session.exercises
+      .filter((se) => se.exerciseId === exerciseId)
+      .flatMap((se) => se.sets.filter((s) => s.done))
+    if (doneSets.length === 0) {
+      continue
+    }
+    for (const s of doneSets) {
+      pr = foldSet(pr, exercise.type, { reps: s.reps, weightKg: s.weightKg, seconds: s.seconds }, session.date)
+      if (s.weightKg != null && s.weightKg > 0) {
+        rawPoints.push({ date: session.date, w: s.weightKg, reps: s.reps })
+      }
+    }
+  }
+
+  // recent = last 5 sessions, newest first.
+  for (const session of doneSessions) {
+    if (recent.length >= 5) {
+      break
+    }
+    const doneSets = session.exercises
+      .filter((se) => se.exerciseId === exerciseId)
+      .flatMap((se) => se.sets.filter((s) => s.done))
+    if (doneSets.length === 0) {
+      continue
+    }
+    recent.push({
+      date: session.date,
+      sets: doneSets.map((s) => ({ reps: s.reps, weightKg: s.weightKg, seconds: s.seconds })),
+    })
+  }
+
+  return { exercise, pr, points: topSetPoints(rawPoints), recent }
 }
 
 // ---------------------------------------------------------------------------
@@ -378,6 +471,7 @@ export const api = {
 
   // Dashboard
   dashboard,
+  exerciseHistory,
 
   // Bodyweight
   bodyweight,

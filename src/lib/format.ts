@@ -1,4 +1,10 @@
-import type { Session, Sport } from '../../shared/types'
+import type { Exercise, Session, Sport } from '../../shared/types'
+
+interface SetShape {
+  reps: number
+  weightKg: number | null
+  seconds: number | null
+}
 
 // ---------------------------------------------------------------------------
 // Sport metadata
@@ -102,6 +108,28 @@ export function weekLabel(weekStart: string): string {
 /** 62.5 -> "62.5", 60 -> "60" */
 export function fmtKg(v: number): string {
   return Number.isInteger(v) ? String(v) : v.toFixed(1)
+}
+
+/** Logged set, verbose: "8 × 80KG" / "45S" / "12 REPS". */
+export function fmtSet(set: SetShape, type: Exercise['type']): string {
+  if (type === 'timed') {
+    return `${set.seconds ?? 0}S`
+  }
+  if (set.weightKg != null) {
+    return `${set.reps} × ${fmtKg(set.weightKg)}KG`
+  }
+  return `${set.reps} REPS`
+}
+
+/** Logged set, compact for lists: "80×5" / "45s" / "12". */
+export function fmtSetCompact(set: SetShape, type: Exercise['type']): string {
+  if (type === 'timed') {
+    return `${set.seconds ?? 0}s`
+  }
+  if (set.weightKg != null) {
+    return `${fmtKg(set.weightKg)}×${set.reps}`
+  }
+  return `${set.reps}`
 }
 
 /** seconds/km -> "5:24" */

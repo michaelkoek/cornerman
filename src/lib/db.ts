@@ -208,6 +208,11 @@ export async function doneSessionsSince(fromDate: string): Promise<Session[]> {
   return (await allUserSessions()).filter((s) => s.status === 'done' && s.date >= fromDate)
 }
 
+/** All-time done sessions, newest date first — PR / all-time-max math. */
+export async function allDoneSessions(): Promise<Session[]> {
+  return (await allUserSessions()).filter((s) => s.status === 'done')
+}
+
 /** All sessions on a specific date (any status). */
 export async function sessionsOnDate(date: string): Promise<Session[]> {
   return (await allUserSessions()).filter((s) => s.date === date)

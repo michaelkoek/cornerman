@@ -92,6 +92,21 @@ export interface Settings {
 
 // --- API shapes ---
 
+// Personal records for one exercise, derived from all-time done sessions.
+// Which fields are non-null depends on Exercise.type:
+// weighted -> maxWeightKg/maxWeightReps/bestEst1Rm, bodyweight -> maxReps, timed -> maxSeconds.
+export interface ExercisePR {
+  exerciseId: string;
+  maxWeightKg: number | null; // heaviest done set (weighted only)
+  maxWeightReps: number | null; // best reps at that max weight
+  maxReps: number | null; // most reps in a single done set
+  bestEst1Rm: number | null; // Epley over all done weighted sets
+  maxSeconds: number | null; // longest done set (timed only)
+  lastWeightKg: number | null; // weight of the most recent done set (recall)
+  totalDoneSets: number;
+  lastDate: string | null; // date of the most recent done set
+}
+
 // GET /api/today
 export interface TodayResponse {
   date: string;
@@ -101,6 +116,7 @@ export interface TodayResponse {
   weekSessions: number; // done sessions this week (Mon-Sun)
   weeklyTarget: number;
   streakWeeks: number; // consecutive weeks hitting target
+  prBaselines?: Record<string, ExercisePR>; // by exerciseId — PR detection while logging
 }
 
 // POST /api/suggest { minutes: 20|45|60, location: Location }
@@ -135,9 +151,29 @@ export interface DashboardResponse {
     exerciseId: string;
     name: string;
     points: { date: string; topSetKg: number; est1Rm: number }[];
+    pr?: ExercisePR;
   }[]; // top 6 most-logged weighted exercises
   streakWeeks: number;
   sessionsThisMonth: number;
+  allLifts?: {
+    exerciseId: string;
+    name: string;
+    sessions: number;
+    maxWeightKg: number | null;
+    bestEst1Rm: number | null;
+    lastDate: string;
+  }[]; // every weighted exercise ever logged, most-logged first
+}
+
+// GET /api/exercise-history/:exerciseId — per-exercise detail (Progress drill-in)
+export interface ExerciseHistoryResponse {
+  exercise: Exercise;
+  pr: ExercisePR;
+  points: { date: string; topSetKg: number; est1Rm: number; reps: number }[]; // all-time, top set per date, oldest first
+  recent: {
+    date: string;
+    sets: { reps: number; weightKg: number | null; seconds: number | null }[];
+  }[]; // last 5 sessions, newest first
 }
 
 // Bodyweight tracking

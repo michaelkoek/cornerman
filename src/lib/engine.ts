@@ -15,9 +15,9 @@ import type {
   SuggestRequest,
 } from '../../shared/types'
 import {
+  allDoneSessions,
   createSessionDoc,
   deletePlannedOnDate,
-  doneSessionsSince,
   getAllExercises,
   newId,
   recentStrengthSessions,
@@ -101,6 +101,10 @@ interface ProgressionResult {
   targetReps: [number, number]
 }
 
+// After this long without doing a lift, recall the last weight but don't auto-
+// progress on top of it — detraining means a stale max is already ambitious.
+const STALE_DAYS = 60
+
 /** Progression: based on the last done session-exercise of the same exercise. */
 function progressionFor(ex: Exercise, doneSessions: Session[]): ProgressionResult {
   const [baseLow, baseHigh] = ex.repRange
@@ -108,10 +112,12 @@ function progressionFor(ex: Exercise, doneSessions: Session[]): ProgressionResul
   // Find the most recent done session-exercise for this exercise that has a done set.
   // doneSessions are pre-sorted newest date first.
   let lastSe: SessionExercise | null = null
+  let lastDate: string | null = null
   outer: for (const s of doneSessions) {
     for (const se of s.exercises) {
       if (se.exerciseId === ex.id && se.sets.some((st) => st.done)) {
         lastSe = se
+        lastDate = s.date
         break outer
       }
     }
@@ -122,6 +128,7 @@ function progressionFor(ex: Exercise, doneSessions: Session[]): ProgressionResul
   }
 
   const doneSets = lastSe.sets.filter((st) => st.done)
+  const stale = lastDate !== null && lastDate < addDays(todayStr(), -STALE_DAYS)
 
   if (ex.type === 'weighted') {
     const weights = doneSets
@@ -133,7 +140,8 @@ function progressionFor(ex: Exercise, doneSessions: Session[]): ProgressionResul
     const lastWeight = Math.max(...weights)
     const allTopped = doneSets.every((s) => s.reps >= baseHigh)
     return {
-      suggestedWeightKg: allTopped ? lastWeight + 2.5 : lastWeight,
+      // Recall the weight even after a long gap, but skip the +2.5 bump when stale.
+      suggestedWeightKg: allTopped && !stale ? lastWeight + 2.5 : lastWeight,
       targetReps: [baseLow, baseHigh],
     }
   }
@@ -261,10 +269,9 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
   const { minutes, location } = req
   const today = todayStr()
 
-  // Recent history for recovery, rotation, variety, progression (~last 12 weeks of done work).
-  const doneSessions = (await doneSessionsSince(addDays(today, -84))).sort((a, b) =>
-    a.date < b.date ? 1 : a.date > b.date ? -1 : 0,
-  )
+  // All-time done history (newest first): recovery only looks at yesterday,
+  // and progression should recall a weight even if the lift was months ago.
+  const doneSessions = await allDoneSessions()
   const load = computeYesterdayLoad(doneSessions, today)
   const hard = load === 'hard'
 
@@ -311,10 +318,7 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
 
 /** Progression info for a single exercise added manually to a session. */
 export async function progressionForExercise(ex: Exercise): Promise<ProgressionResult> {
-  const doneSessions = (await doneSessionsSince(addDays(todayStr(), -84))).sort((a, b) =>
-    a.date < b.date ? 1 : a.date > b.date ? -1 : 0,
-  )
-  return progressionFor(ex, doneSessions)
+  return progressionFor(ex, await allDoneSessions())
 }
 
 /** Build a SessionExercise to add to an existing session (manual add / swap). */

@@ -1,5 +1,6 @@
 import {
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
   type Dispatch,
@@ -8,6 +9,7 @@ import {
 import type {
   Anchor,
   Exercise,
+  ExercisePR,
   Location,
   Session,
   SessionExercise,
@@ -20,18 +22,29 @@ import {
   SPORT_LABEL,
   fmtDayEyebrow,
   fmtKg,
+  fmtSet,
   sportClass,
   workoutTitle,
 } from '../lib/format'
+import {
+  baselineExcluding,
+  detectPr,
+  prMessage,
+  recordSetIds,
+  sessionPrCount,
+  type LoggedSet,
+} from '../lib/prs'
 import { useAsync, usePersist } from '../lib/useAsync'
+import { ExampleSheet } from '../components/ExampleSheet'
 import { ManualLogSheet } from '../components/ManualLogSheet'
+import { PrToast } from '../components/PrToast'
 import { RestTimer } from '../components/RestTimer'
 import { Ring } from '../components/Ring'
 import { RpeSlider } from '../components/RpeSlider'
 import { Sheet } from '../components/Sheet'
 import { Skel, ErrorNotice } from '../components/Skeleton'
 import { Stepper } from '../components/Stepper'
-import { IconCheck, IconSwap } from '../components/icons'
+import { IconCheck, IconEye, IconSwap } from '../components/icons'
 
 const st = (i: number) => ({ '--i': i }) as CSSProperties
 
@@ -308,11 +321,11 @@ interface SetDraft {
   seconds: number
 }
 
-function draftFor(se: SessionExercise, set: SetLog): SetDraft {
+function draftFor(se: SessionExercise, set: SetLog, best?: ExercisePR): SetDraft {
   const midReps = Math.round((se.targetReps[0] + se.targetReps[1]) / 2)
   return {
     reps: set.reps > 0 ? set.reps : midReps,
-    weight: set.weightKg ?? se.suggestedWeightKg ?? 0,
+    weight: set.weightKg ?? se.suggestedWeightKg ?? best?.lastWeightKg ?? 0,
     seconds: set.seconds ?? Math.max(se.targetReps[0], 20),
   }
 }
@@ -340,9 +353,19 @@ function WorkoutView({
   const [drafts, setDrafts] = useState<Record<string, SetDraft>>({})
   const [poppedExId, setPoppedExId] = useState<string | null>(null)
   const [swapFor, setSwapFor] = useState<SessionExercise | null>(null)
+  const [exampleFor, setExampleFor] = useState<Exercise | null>(null)
   const [finishOpen, setFinishOpen] = useState(false)
   const [discardOpen, setDiscardOpen] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [prToast, setPrToast] = useState<{ msg: string; key: number } | null>(null)
+  const toastSeq = useRef(0)
+
+  // Records are derived from the persisted session (+ all-time baselines), not
+  // stored — so a mid-workout reload or a re-log can't lose or double a PR.
+  const records = useMemo(
+    () => recordSetIds(today.prBaselines, session),
+    [today.prBaselines, session],
+  )
 
   const exercises = [...session.exercises].sort((a, b) => a.order - b.order)
   const totalSets = exercises.reduce((n, se) => n + se.sets.length, 0)
@@ -356,12 +379,36 @@ function WorkoutView({
   }
 
   const logSet = (se: SessionExercise, set: SetLog) => {
-    const d = drafts[set.id] ?? draftFor(se, set)
+    const d = drafts[set.id] ?? draftFor(se, set, today.prBaselines?.[se.exerciseId])
     const timed = se.exercise.type === 'timed'
     const weighted = se.exercise.type === 'weighted'
     const patch: SetPatch = timed
       ? { seconds: d.seconds, done: true }
       : { reps: d.reps, weightKg: weighted ? d.weight : null, done: true }
+
+    // PR check: compare this set against every OTHER set (all-time baselines +
+    // this session's done sets, excluding this one). Reload- and re-log-proof
+    // because it reads the persisted session, keeps no ratcheting state.
+    const logged: LoggedSet = {
+      reps: d.reps,
+      weightKg: weighted ? d.weight : null,
+      seconds: timed ? d.seconds : null,
+    }
+    const baseline = baselineExcluding(today.prBaselines, session, se.exerciseId, set.id)
+    const prKinds = detectPr(baseline, se.exercise, logged)
+    if (prKinds.length > 0) {
+      toastSeq.current += 1
+      setPrToast({ msg: prMessage(prKinds, logged), key: toastSeq.current })
+      navigator.vibrate?.([40, 60, 120])
+    }
+
+    // Carry what was just lifted into the next undone set of this exercise.
+    const nextSet = [...se.sets]
+      .sort((a, b) => a.setNumber - b.setNumber)
+      .find((x) => !x.done && x.setNumber > set.setNumber)
+    if (nextSet) {
+      setDrafts((prev) => (prev[nextSet.id] ? prev : { ...prev, [nextSet.id]: d }))
+    }
 
     // optimistic — gym use has to feel instant
     onLocal((s) => ({
@@ -429,6 +476,8 @@ function WorkoutView({
             <ExerciseBlock
               key={se.id}
               se={se}
+              best={today.prBaselines?.[se.exerciseId]}
+              recordIds={records}
               expanded={expandedId === se.id}
               onToggle={() => setExpandedId(expandedId === se.id ? null : se.id)}
               activeSetId={activeSetId}
@@ -438,6 +487,7 @@ function WorkoutView({
               popped={poppedExId === se.id}
               onLog={(set) => logSet(se, set)}
               onSwap={() => setSwapFor(se)}
+              onExample={() => setExampleFor(se.exercise)}
             />
           ))}
         </div>
@@ -460,6 +510,8 @@ function WorkoutView({
         </button>
       </section>
 
+      <ExampleSheet exercise={exampleFor} onClose={() => setExampleFor(null)} />
+
       <SwapSheet
         swapFor={swapFor}
         sessionId={session.id}
@@ -473,6 +525,7 @@ function WorkoutView({
       <FinishSheet
         open={finishOpen}
         session={session}
+        prCount={sessionPrCount(today.prBaselines, session)}
         onClose={() => setFinishOpen(false)}
         onFinished={reload}
       />
@@ -483,6 +536,10 @@ function WorkoutView({
         onClose={() => setDiscardOpen(false)}
         onDiscarded={reload}
       />
+
+      {prToast && (
+        <PrToast key={prToast.key} message={prToast.msg} onDone={() => setPrToast(null)} />
+      )}
     </>
   )
 }
@@ -572,6 +629,8 @@ function prescription(se: SessionExercise): string {
 
 function ExerciseBlock({
   se,
+  best,
+  recordIds,
   expanded,
   onToggle,
   activeSetId,
@@ -581,8 +640,11 @@ function ExerciseBlock({
   popped,
   onLog,
   onSwap,
+  onExample,
 }: {
   se: SessionExercise
+  best?: ExercisePR
+  recordIds: Set<string>
   expanded: boolean
   onToggle: () => void
   activeSetId: string | null
@@ -592,6 +654,7 @@ function ExerciseBlock({
   popped: boolean
   onLog: (set: SetLog) => void
   onSwap: () => void
+  onExample: () => void
 }) {
   const sets = [...se.sets].sort((a, b) => a.setNumber - b.setNumber)
   const done = sets.filter((s) => s.done).length
@@ -628,10 +691,16 @@ function ExerciseBlock({
                 ))}
               </div>
             </div>
-            <button type="button" className="exlog__swap" onClick={onSwap}>
-              <IconSwap size={16} />
-              Swap
-            </button>
+            <div className="exlog__actions">
+              <button type="button" className="exlog__swap" onClick={onExample}>
+                <IconEye size={16} />
+                Example
+              </button>
+              <button type="button" className="exlog__swap" onClick={onSwap}>
+                <IconSwap size={16} />
+                Swap
+              </button>
+            </div>
           </div>
 
           <div style={{ marginTop: 'var(--space-3)' }}>
@@ -646,11 +715,8 @@ function ExerciseBlock({
                 <span className="set-line__vals">
                   {set.done ? (
                     <>
-                      {se.exercise.type === 'timed'
-                        ? `${set.seconds ?? 0}S`
-                        : set.weightKg != null
-                          ? `${set.reps} × ${fmtKg(set.weightKg)}KG`
-                          : `${set.reps} REPS`}{' '}
+                      {fmtSet(set, se.exercise.type)}{' '}
+                      {recordIds.has(set.id) && <span className="set-line__pr">PR</span>}
                       <span className="set-line__check">
                         <IconCheck size={14} />
                       </span>
@@ -668,7 +734,7 @@ function ExerciseBlock({
               key={activeSet.id}
               se={se}
               set={activeSet}
-              draft={drafts[activeSet.id] ?? draftFor(se, activeSet)}
+              draft={drafts[activeSet.id] ?? draftFor(se, activeSet, best)}
               onDraft={(d) => setDrafts((prev) => ({ ...prev, [activeSet.id]: d }))}
               onLog={() => onLog(activeSet)}
             />
@@ -844,11 +910,13 @@ function AlternativesList({
 function FinishSheet({
   open,
   session,
+  prCount = 0,
   onClose,
   onFinished,
 }: {
   open: boolean
   session: Session
+  prCount?: number
   onClose: () => void
   onFinished: () => void
 }) {
@@ -877,6 +945,12 @@ function FinishSheet({
 
   return (
     <Sheet open={open} onClose={onClose} title="Finish session" sportClass={sportClass(session.sport)}>
+      {prCount > 0 && (
+        <p className="coach-line finish-prs">
+          {prCount === 1 ? '1 personal record today' : `${prCount} personal records today`} — that’s
+          how you get stronger.
+        </p>
+      )}
       <div className="field">
         <span className="type-eyebrow">How hard was it?</span>
         <RpeSlider value={rpe} onChange={setRpe} />
