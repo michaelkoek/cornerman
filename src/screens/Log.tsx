@@ -12,6 +12,7 @@ import {
 } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
 import { ManualLogSheet } from '../components/ManualLogSheet'
+import { WorkoutDetailSheet } from '../components/WorkoutDetailSheet'
 import { EmptyNotice, ErrorNotice, SkelRows, Skel } from '../components/Skeleton'
 import { IconPlus, SportIcon } from '../components/icons'
 
@@ -35,6 +36,7 @@ function groupByWeek(sessions: Session[]): WeekGroup[] {
 export default function Log() {
   const { data, error, loading, reload } = useAsync(api.listSessions)
   const [logOpen, setLogOpen] = useState(false)
+  const [selected, setSelected] = useState<Session | null>(null)
 
   const groups = useMemo(() => (data ? groupByWeek(data) : []), [data])
 
@@ -64,7 +66,7 @@ export default function Log() {
             </div>
             <div className="list-group">
               {g.sessions.map((s) => (
-                <SessionRow key={s.id} session={s} />
+                <SessionRow key={s.id} session={s} onOpen={() => setSelected(s)} />
               ))}
             </div>
           </section>
@@ -76,11 +78,12 @@ export default function Log() {
       </button>
 
       <ManualLogSheet open={logOpen} onClose={() => setLogOpen(false)} onSaved={reload} />
+      <WorkoutDetailSheet session={selected} onClose={() => setSelected(null)} />
     </main>
   )
 }
 
-function SessionRow({ session }: { session: Session }) {
+function SessionRow({ session, onOpen }: { session: Session; onOpen: () => void }) {
   const muted = session.status === 'skipped' || session.status === 'planned'
   const title =
     session.source === 'strava'
@@ -90,7 +93,11 @@ function SessionRow({ session }: { session: Session }) {
         : SPORT_LABEL[session.sport]
 
   return (
-    <div className={`log-row ${sportClass(session.sport)} ${muted ? 'is-muted' : ''}`}>
+    <button
+      type="button"
+      className={`log-row ${sportClass(session.sport)} ${muted ? 'is-muted' : ''}`}
+      onClick={onOpen}
+    >
       <span className="log-row__icon">
         <SportIcon sport={session.sport} />
       </span>
@@ -103,6 +110,6 @@ function SessionRow({ session }: { session: Session }) {
         </span>
       </span>
       <span className="log-row__date">{fmtShortDate(session.date)}</span>
-    </div>
+    </button>
   )
 }

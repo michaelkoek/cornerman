@@ -531,6 +531,7 @@
   z-index: var(--z-sheet);
   max-height: 88dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   background: var(--surface-2);
   border-top: 1px solid var(--hairline-strong);
@@ -558,6 +559,50 @@
   margin-bottom: var(--space-5);
   /* clear the 18px corner bracket */
   padding-left: var(--space-3);
+}
+
+/* iOS-style drag grabber — swipe it (or the sheet) down to dismiss. Touch only. */
+.sheet__grabber {
+  display: none;
+  width: 36px;
+  height: 4px;
+  margin: -6px auto var(--space-4);
+  border-radius: 999px;
+  background: var(--hairline-strong);
+}
+
+@media (pointer: coarse) {
+  .sheet__grabber {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------
+   Workout detail (read-only recap from the Log screen)
+   ------------------------------------------------------------ */
+.workout-detail__meta {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+.workout-detail__ex {
+  padding-bottom: var(--space-3);
+}
+
+.workout-detail__sets {
+  padding: 0 var(--space-4) var(--space-2);
+}
+
+.workout-detail__note {
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  font-style: italic;
 }
 
 /* ------------------------------------------------------------
@@ -833,6 +878,10 @@ textarea.input {
   font-size: var(--type-data-s-size);
   color: var(--text-tertiary);
   text-transform: uppercase;
+}
+
+.log-row:active {
+  background: var(--surface-2);
 }
 
 .log-row.is-muted {
