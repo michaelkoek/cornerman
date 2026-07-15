@@ -222,6 +222,15 @@
   margin-top: var(--space-3);
 }
 
+.seg--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.planner__split-hint {
+  margin-top: var(--space-2);
+  color: var(--text-secondary);
+}
+
 .seg__opt {
   height: 52px;
   display: flex;

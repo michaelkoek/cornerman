@@ -8,10 +8,16 @@ import {
   addDays,
   type SessionRow,
 } from './db.ts';
-import type { Exercise, ExerciseCategory, Session, SuggestRequest } from '../shared/types.ts';
+import type {
+  Exercise,
+  ExerciseCategory,
+  Session,
+  SuggestRequest,
+  WorkoutSplit,
+} from '../shared/types.ts';
 
 const STRENGTH_SPORTS = ['weightlifting', 'calisthenics'] as const;
-const CYCLE: ExerciseCategory[] = ['push', 'pull', 'legs'];
+const CYCLE: WorkoutSplit[] = ['push', 'pull', 'legs'];
 
 export type YesterdayLoad = 'rest' | 'light' | 'moderate' | 'hard';
 
@@ -42,8 +48,8 @@ function recentStrengthSessions(limit: number): SessionRow[] {
     .all(STRENGTH_SPORTS[0], STRENGTH_SPORTS[1], limit) as SessionRow[];
 }
 
-/** Dominant push/pull/legs category of a session's exercises. */
-function dominantCategory(sessionId: number): ExerciseCategory | null {
+/** Dominant push/pull/legs split of a session's exercises. */
+function dominantSplit(sessionId: number): WorkoutSplit | null {
   const rows = db
     .prepare(
       `SELECT e.category AS category, COUNT(*) AS n
@@ -51,15 +57,15 @@ function dominantCategory(sessionId: number): ExerciseCategory | null {
        WHERE se.session_id = ? AND e.category IN ('push','pull','legs')
        GROUP BY e.category ORDER BY n DESC`
     )
-    .all(sessionId) as { category: ExerciseCategory; n: number }[];
+    .all(sessionId) as { category: WorkoutSplit; n: number }[];
   return rows.length > 0 ? rows[0].category : null;
 }
 
-/** Next category in the push -> pull -> legs rotation based on the last done strength session. */
-function nextCategory(): ExerciseCategory {
+/** Next split in the push -> pull -> legs rotation based on the last done strength session. */
+function nextSplit(): WorkoutSplit {
   const recent = recentStrengthSessions(5);
   for (const s of recent) {
-    const cat = dominantCategory(s.id);
+    const cat = dominantSplit(s.id);
     if (cat) return CYCLE[(CYCLE.indexOf(cat) + 1) % CYCLE.length];
   }
   return 'push';
@@ -149,29 +155,26 @@ interface Slot {
   count: number;
 }
 
-function planSlots(minutes: SuggestRequest['minutes']): { slots: Slot[]; totalTarget: number } {
-  const first = nextCategory();
-  const second = CYCLE[(CYCLE.indexOf(first) + 1) % CYCLE.length];
-  const third = CYCLE[(CYCLE.indexOf(first) + 2) % CYCLE.length];
+function planSlots(
+  minutes: SuggestRequest['minutes'],
+  split: WorkoutSplit
+): { slots: Slot[]; totalTarget: number } {
   if (minutes === 20) {
-    return { slots: [{ category: first, count: 3 }], totalTarget: 3 };
+    return { slots: [{ category: split, count: 3 }], totalTarget: 3 };
   }
   if (minutes === 45) {
     return {
       slots: [
-        { category: first, count: 2 },
-        { category: second, count: 2 },
+        { category: split, count: 4 },
         { category: 'core', count: 1 },
       ],
       totalTarget: 5,
     };
   }
-  // 60 minutes: full push/pull/legs coverage + core + conditioning finisher (6-7 exercises)
+  // 60 minutes: deep split focus + core + conditioning finisher (7 exercises)
   return {
     slots: [
-      { category: first, count: 2 },
-      { category: second, count: 2 },
-      { category: third, count: 1 },
+      { category: split, count: 5 },
       { category: 'core', count: 1 },
       { category: 'conditioning', count: 1 },
     ],
@@ -191,7 +194,8 @@ export function suggestSession(req: SuggestRequest): Session {
     "DELETE FROM sessions WHERE date = ? AND status IN ('planned', 'in_progress')"
   ).run(today);
 
-  const { slots } = planSlots(minutes);
+  const split = req.split ?? nextSplit();
+  const { slots } = planSlots(minutes, split);
   const used = recentlyUsedExerciseIds();
 
   let pool = getAllExercises().filter((e) =>

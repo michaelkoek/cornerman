@@ -15,6 +15,7 @@ import type {
   SessionExercise,
   SetLog,
   TodayResponse,
+  WorkoutSplit,
 } from '../../shared/types'
 import { api, type SetPatch } from '../lib/api'
 import {
@@ -246,6 +247,7 @@ function Planner({
 }) {
   const [minutes, setMinutes] = useState<20 | 45 | 60 | null>(null)
   const [location, setLocation] = useState<Location>('gym')
+  const [split, setSplit] = useState<WorkoutSplit | null>(null)
   const [busy, setBusy] = useState(false)
   const [suggestError, setSuggestError] = useState<string | null>(null)
 
@@ -254,7 +256,7 @@ function Planner({
     setBusy(true)
     setSuggestError(null)
     try {
-      const session = await api.suggest({ minutes, location })
+      const session = await api.suggest({ minutes, location, split: split ?? undefined })
       onSession(session)
     } catch (err) {
       setSuggestError(err instanceof Error ? err.message : 'Could not build a workout.')
@@ -297,6 +299,22 @@ function Planner({
           </button>
         ))}
       </div>
+      <div className="seg seg--3" role="group" aria-label="Split — optional, tap again to clear">
+        {(['push', 'pull', 'legs'] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            className="seg__opt"
+            aria-pressed={split === s}
+            onClick={() => setSplit(split === s ? null : s)}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+      <p className="type-caption planner__split-hint">
+        {split ? `${split.toUpperCase()} day it is.` : 'No split picked — I’ll rotate for you.'}
+      </p>
       {suggestError && <p className="form-error">{suggestError}</p>}
       <button
         type="button"

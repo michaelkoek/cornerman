@@ -13,6 +13,7 @@ import type {
   SessionExercise,
   SetLog,
   SuggestRequest,
+  WorkoutSplit,
 } from '../../shared/types'
 import {
   allDoneSessions,
@@ -25,7 +26,7 @@ import {
   addDays,
 } from './db'
 
-const CYCLE: ExerciseCategory[] = ['push', 'pull', 'legs']
+const CYCLE: WorkoutSplit[] = ['push', 'pull', 'legs']
 
 export type YesterdayLoad = 'rest' | 'light' | 'moderate' | 'hard'
 
@@ -43,16 +44,16 @@ export function computeYesterdayLoad(sessions: Session[], today: string = todayS
   return 'light'
 }
 
-/** Dominant push/pull/legs category of a session's exercises. */
-function dominantCategory(session: Session): ExerciseCategory | null {
-  const counts = new Map<ExerciseCategory, number>()
+/** Dominant push/pull/legs split of a session's exercises. */
+function dominantSplit(session: Session): WorkoutSplit | null {
+  const counts = new Map<WorkoutSplit, number>()
   for (const se of session.exercises) {
     const cat = se.exercise.category
     if (cat === 'push' || cat === 'pull' || cat === 'legs') {
       counts.set(cat, (counts.get(cat) ?? 0) + 1)
     }
   }
-  let best: ExerciseCategory | null = null
+  let best: WorkoutSplit | null = null
   let bestN = 0
   for (const [cat, n] of counts) {
     if (n > bestN) {
@@ -63,10 +64,10 @@ function dominantCategory(session: Session): ExerciseCategory | null {
   return best
 }
 
-/** Next category in the push -> pull -> legs rotation based on the last done strength session. */
-function nextCategory(recent: Session[]): ExerciseCategory {
+/** Next split in the push -> pull -> legs rotation based on the last done strength session. */
+function nextSplit(recent: Session[]): WorkoutSplit {
   for (const s of recent) {
-    const cat = dominantCategory(s)
+    const cat = dominantSplit(s)
     if (cat) return CYCLE[(CYCLE.indexOf(cat) + 1) % CYCLE.length]
   }
   return 'push'
@@ -165,30 +166,24 @@ interface Slot {
 
 function planSlots(
   minutes: SuggestRequest['minutes'],
-  recent: Session[],
+  split: WorkoutSplit,
 ): { slots: Slot[]; totalTarget: number } {
-  const first = nextCategory(recent)
-  const second = CYCLE[(CYCLE.indexOf(first) + 1) % CYCLE.length]
-  const third = CYCLE[(CYCLE.indexOf(first) + 2) % CYCLE.length]
   if (minutes === 20) {
-    return { slots: [{ category: first, count: 3 }], totalTarget: 3 }
+    return { slots: [{ category: split, count: 3 }], totalTarget: 3 }
   }
   if (minutes === 45) {
     return {
       slots: [
-        { category: first, count: 2 },
-        { category: second, count: 2 },
+        { category: split, count: 4 },
         { category: 'core', count: 1 },
       ],
       totalTarget: 5,
     }
   }
-  // 60 minutes: full push/pull/legs coverage + core + conditioning finisher (6-7 exercises)
+  // 60 minutes: deep split focus + core + conditioning finisher (7 exercises)
   return {
     slots: [
-      { category: first, count: 2 },
-      { category: second, count: 2 },
-      { category: third, count: 1 },
+      { category: split, count: 5 },
       { category: 'core', count: 1 },
       { category: 'conditioning', count: 1 },
     ],
@@ -280,7 +275,8 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
   // Replace any existing planned/in_progress session for today.
   await deletePlannedOnDate(today)
 
-  const { slots } = planSlots(minutes, recentStrength)
+  const split = req.split ?? nextSplit(recentStrength)
+  const { slots } = planSlots(minutes, split)
   const used = recentlyUsedExerciseIds(recentStrength)
   const picked = pickExercises(slots, location, hard, used)
 

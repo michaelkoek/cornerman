@@ -9,6 +9,7 @@ export type Sport =
   | 'conditioning';
 
 export type ExerciseCategory = 'push' | 'pull' | 'legs' | 'core' | 'conditioning';
+export type WorkoutSplit = Extract<ExerciseCategory, 'push' | 'pull' | 'legs'>;
 export type Equipment =
   | 'barbell'
   | 'dumbbell'
@@ -119,11 +120,14 @@ export interface TodayResponse {
   prBaselines?: Record<string, ExercisePR>; // by exerciseId — PR detection while logging
 }
 
-// POST /api/suggest { minutes: 20|45|60, location: Location }
-// -> creates a planned strength session for today and returns it
+// POST /api/suggest { minutes: 20|45|60, location: Location, split?: WorkoutSplit }
+// -> creates a planned strength session for today and returns it.
+// split is optional — when omitted the engine picks the next one in the
+// push -> pull -> legs rotation.
 export interface SuggestRequest {
   minutes: 20 | 45 | 60;
   location: Location;
+  split?: WorkoutSplit;
 }
 // Response: Session
 

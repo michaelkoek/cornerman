@@ -26,7 +26,11 @@ function prescription(se: SessionExercise): string {
 /** Read-only recap of a logged workout, shown from the Log screen. */
 export function WorkoutDetailSheet({ session, onClose }: WorkoutDetailSheetProps) {
   if (!session) {
-    return <Sheet open={false} onClose={onClose} />
+    return (
+      <Sheet open={false} onClose={onClose}>
+        {null}
+      </Sheet>
+    )
   }
 
   return (
