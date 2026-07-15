@@ -8,13 +8,14 @@
    ------------------------------------------------------------ */
 #root {
   min-height: 100dvh;
-  background:
-    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 320px);
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 320px);
 }
 
 .screen {
   animation: screen-in var(--dur-base) var(--ease-out);
-  padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-8));
+  padding-bottom: calc(
+    var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-8)
+  );
 }
 
 @keyframes screen-in {
@@ -90,7 +91,7 @@
 }
 
 .streak-line::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -147,7 +148,7 @@
 
 /* signature echo when target met */
 .ring.is-met::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 2px;
   left: 2px;
@@ -204,7 +205,7 @@
 }
 
 .coach-line::before {
-  content: '';
+  content: "";
   flex: none;
   width: 8px;
   height: 8px;
@@ -256,7 +257,7 @@
   transform: scale(0.97);
 }
 
-.seg__opt[aria-pressed='true'] {
+.seg__opt[aria-pressed="true"] {
   background: var(--accent-dim);
   border-color: var(--accent-line);
   color: var(--accent);
@@ -321,7 +322,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--tracking-eyebrow);
-  transition: transform var(--dur-fast) var(--ease-swift), background-color var(--dur-fast) var(--ease-swift);
+  transition:
+    transform var(--dur-fast) var(--ease-swift),
+    background-color var(--dur-fast) var(--ease-swift);
 }
 
 .exlog__swap:active {
@@ -452,7 +455,9 @@
   position: fixed;
   left: var(--space-4);
   right: var(--space-4);
-  bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
+  bottom: calc(
+    var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4)
+  );
   z-index: calc(var(--z-tabbar) + 2);
   max-width: 480px;
   margin-inline: auto;
@@ -461,7 +466,13 @@
   border: 1px solid rgba(224, 163, 60, 0.5);
   border-radius: var(--radius-m);
   box-shadow: var(--shadow-card);
-  clip-path: polygon(var(--corner-cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-cut));
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--corner-cut)
+  );
   opacity: 0;
   transform: translateY(16px);
   transition:
@@ -539,16 +550,22 @@
   bottom: 0;
   z-index: var(--z-sheet);
   max-height: 88dvh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--surface-2);
   border-top: 1px solid var(--hairline-strong);
   border-radius: var(--radius-l) var(--radius-l) 0 0;
-  padding: var(--space-6) var(--space-4) calc(env(safe-area-inset-bottom) + var(--space-6));
+  padding: var(--space-6) var(--space-4) 0;
   transform: translateY(100%);
   transition: transform 320ms var(--ease-swift);
-  clip-path: polygon(var(--corner-cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-cut));
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--corner-cut)
+  );
 }
 
 .sheet.is-open {
@@ -557,7 +574,13 @@
 
 .sheet__inner {
   max-width: 480px;
+  width: 100%;
   margin-inline: auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-6));
 }
 
 .sheet__head {
@@ -700,7 +723,7 @@ textarea.input {
   transform: scale(0.94);
 }
 
-.sport-grid__opt[aria-pressed='true'] {
+.sport-grid__opt[aria-pressed="true"] {
   background: var(--sport-dim, var(--accent-dim));
   border-color: var(--sport-color, var(--accent));
   color: var(--sport-color, var(--accent));
@@ -728,7 +751,7 @@ textarea.input {
     color var(--dur-base) var(--ease-out);
 }
 
-.weekday-row__opt[aria-pressed='true'] {
+.weekday-row__opt[aria-pressed="true"] {
   background: var(--accent-dim);
   border-color: var(--accent-line);
   color: var(--accent);
@@ -846,7 +869,7 @@ textarea.input {
 }
 
 .log-row__icon::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 3px;
   left: 3px;
@@ -900,7 +923,9 @@ textarea.input {
 .fab {
   position: fixed;
   right: var(--space-4);
-  bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
+  bottom: calc(
+    var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4)
+  );
   z-index: calc(var(--z-tabbar) + 1);
   width: var(--touch-target);
   height: var(--touch-target);
@@ -911,7 +936,9 @@ textarea.input {
   background: var(--accent);
   color: var(--text-on-accent);
   box-shadow: var(--shadow-card);
-  transition: transform var(--dur-fast) var(--ease-swift), background-color var(--dur-fast) var(--ease-swift);
+  transition:
+    transform var(--dur-fast) var(--ease-swift),
+    background-color var(--dur-fast) var(--ease-swift);
 }
 
 .fab:active {
@@ -1009,7 +1036,9 @@ textarea.input {
   width: 100%;
   text-align: left;
   color: inherit;
-  transition: transform var(--dur-fast) var(--ease-swift), background-color var(--dur-fast) var(--ease-swift);
+  transition:
+    transform var(--dur-fast) var(--ease-swift),
+    background-color var(--dur-fast) var(--ease-swift);
 }
 
 button.lift-card:active {
@@ -1164,7 +1193,9 @@ button.lift-card:active {
   border: 1px solid var(--hairline);
   border-radius: var(--radius-s);
   color: var(--text-primary);
-  transition: background-color var(--dur-fast) var(--ease-swift), transform var(--dur-fast) var(--ease-swift);
+  transition:
+    background-color var(--dur-fast) var(--ease-swift),
+    transform var(--dur-fast) var(--ease-swift);
 }
 
 .mini-stepper__btn:active {
@@ -1204,7 +1235,9 @@ button.lift-card:active {
   justify-content: center;
   border-radius: var(--radius-s);
   color: var(--text-tertiary);
-  transition: background-color var(--dur-fast) var(--ease-swift), transform var(--dur-fast) var(--ease-swift);
+  transition:
+    background-color var(--dur-fast) var(--ease-swift),
+    transform var(--dur-fast) var(--ease-swift);
 }
 
 .icon-btn:active {

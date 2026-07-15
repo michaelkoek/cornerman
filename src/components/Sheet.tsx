@@ -23,7 +23,7 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
   const [shown, setShown] = useState(false)
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
-  const sheetRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const startY = useRef(0)
   const tracking = useRef(false)
 
@@ -51,7 +51,7 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
   }, [open, onClose])
 
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    const el = sheetRef.current
+    const el = scrollRef.current
     const touch = e.touches[0]
     // only start a drag when content is scrolled to the top, else let it scroll
     if (!el || el.scrollTop > 0 || !touch) return
@@ -91,7 +91,6 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
     <>
       <div className={`sheet__backdrop ${shown ? 'is-open' : ''}`} onClick={onClose} />
       <div
-        ref={sheetRef}
         className={`sheet corner-bracket ${sportClass ?? ''} ${shown ? 'is-open' : ''}`}
         style={dragging ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined}
         role="dialog"
@@ -103,7 +102,7 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
         onTouchCancel={onTouchEnd}
       >
         <span className="sheet__grabber" aria-hidden="true" />
-        <div className="sheet__inner">
+        <div ref={scrollRef} className="sheet__inner">
           {title && (
             <header className="sheet__head">
               <h2 className="type-display-m">{title}</h2>
