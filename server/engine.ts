@@ -8,13 +8,8 @@ import {
   addDays,
   type SessionRow,
 } from './db.ts';
-import type {
-  Exercise,
-  ExerciseCategory,
-  Session,
-  SuggestRequest,
-  WorkoutSplit,
-} from '../shared/types.ts';
+import type { Exercise, Session, SuggestRequest, WorkoutSplit } from '../shared/types.ts';
+import { buildSlots, filterPool, pickExercises } from '../shared/planning.ts';
 
 const STRENGTH_SPORTS = ['weightlifting', 'calisthenics'] as const;
 const CYCLE: WorkoutSplit[] = ['push', 'pull', 'legs'];
@@ -83,21 +78,6 @@ function recentlyUsedExerciseIds(): Set<string> {
   return used;
 }
 
-function isLegsHeavyCompound(e: Exercise): boolean {
-  if (e.category !== 'legs') return false;
-  const key = `${e.id} ${e.name}`.toLowerCase();
-  return key.includes('deadlift') || key.includes('squat');
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
 interface ProgressionResult {
   suggestedWeightKg: number | null;
   targetReps: [number, number];
@@ -150,38 +130,6 @@ function progressionFor(ex: Exercise): ProgressionResult {
   return { suggestedWeightKg: null, targetReps: [low, high] };
 }
 
-interface Slot {
-  category: ExerciseCategory;
-  count: number;
-}
-
-function planSlots(
-  minutes: SuggestRequest['minutes'],
-  split: WorkoutSplit
-): { slots: Slot[]; totalTarget: number } {
-  if (minutes === 20) {
-    return { slots: [{ category: split, count: 3 }], totalTarget: 3 };
-  }
-  if (minutes === 45) {
-    return {
-      slots: [
-        { category: split, count: 4 },
-        { category: 'core', count: 1 },
-      ],
-      totalTarget: 5,
-    };
-  }
-  // 60 minutes: deep split focus + core + conditioning finisher (7 exercises)
-  return {
-    slots: [
-      { category: split, count: 5 },
-      { category: 'core', count: 1 },
-      { category: 'conditioning', count: 1 },
-    ],
-    totalTarget: 7,
-  };
-}
-
 /** Generate + persist a planned strength session for today. Returns the full Session. */
 export function suggestSession(req: SuggestRequest): Session {
   const { minutes, location } = req;
@@ -195,39 +143,10 @@ export function suggestSession(req: SuggestRequest): Session {
   ).run(today);
 
   const split = req.split ?? nextSplit();
-  const { slots } = planSlots(minutes, split);
+  const slots = buildSlots(minutes, split, req.focus);
   const used = recentlyUsedExerciseIds();
-
-  let pool = getAllExercises().filter((e) =>
-    location === 'gym' ? true : e.location.includes('home')
-  );
-  if (hard) {
-    pool = pool.filter((e) => e.difficulty !== 3 && !isLegsHeavyCompound(e));
-  }
-
-  const picked: Exercise[] = [];
-  const pickedIds = new Set<string>();
-
-  for (const slot of slots) {
-    let candidates = pool.filter(
-      (e) => e.category === slot.category && !pickedIds.has(e.id) && !used.has(e.id)
-    );
-    // If variety exclusion empties the slot, fall back to allowing recently used exercises.
-    if (candidates.length < slot.count) {
-      candidates = pool.filter((e) => e.category === slot.category && !pickedIds.has(e.id));
-    }
-    // Compound first (>=3 muscle groups), random tiebreak. When recovering hard, bias easier work.
-    const sorted = shuffle(candidates).sort((a, b) => {
-      const compound = Number(b.muscleGroups.length >= 3) - Number(a.muscleGroups.length >= 3);
-      if (compound !== 0) return compound;
-      if (hard) return a.difficulty - b.difficulty;
-      return 0;
-    });
-    for (const e of sorted.slice(0, slot.count)) {
-      picked.push(e);
-      pickedIds.add(e.id);
-    }
-  }
+  const pool = filterPool(getAllExercises(), location, hard);
+  const picked = pickExercises(slots, pool, hard, used);
 
   // 5. Sport of the generated session.
   const allBodyweight = picked.every((e) => e.type !== 'weighted');

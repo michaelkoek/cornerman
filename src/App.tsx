@@ -11,12 +11,14 @@ import Today from './screens/Today'
 
 // recharts is heavy — split it off the critical gym path
 const Progress = lazy(() => import('./screens/Progress'))
+// the ~860 KB exercise library JSON lives inside this chunk — keep it lazy too
+const Library = lazy(() => import('./screens/library/Library'))
 
-function ProgressFallback() {
+function LazyFallback({ title }: { title: string }) {
   return (
     <main className="screen" aria-busy="true">
       <header className="screen-title">
-        <h1 className="type-display-l">Progress</h1>
+        <h1 className="type-display-l">{title}</h1>
       </header>
       <Skel h={96} r="var(--radius-m)" />
       <Skel h={252} r="var(--radius-m)" style={{ marginTop: 'var(--space-8)' }} />
@@ -35,8 +37,16 @@ function Screens() {
         <Route
           path="/progress"
           element={
-            <Suspense fallback={<ProgressFallback />}>
+            <Suspense fallback={<LazyFallback title="Progress" />}>
               <Progress />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/exercises"
+          element={
+            <Suspense fallback={<LazyFallback title="Exercises" />}>
+              <Library />
             </Suspense>
           }
         />

@@ -66,6 +66,16 @@ export function IconSettings(p: IconProps) {
   )
 }
 
+export function IconLibrary(p: IconProps) {
+  return (
+    <Glyph {...p}>
+      <rect x="5.5" y="7.5" width="3" height="9" rx="1" />
+      <rect x="15.5" y="7.5" width="3" height="9" rx="1" />
+      <path d="M8.5 12h7M3 12h2.5M18.5 12H21" />
+    </Glyph>
+  )
+}
+
 /* ---------------- Actions ---------------- */
 
 export function IconPlus(p: IconProps) {

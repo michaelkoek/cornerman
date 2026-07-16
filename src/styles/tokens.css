@@ -687,7 +687,7 @@ button {
   height: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   background: rgba(36, 31, 24, 0.92); /* --surface-2 @ 92% */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

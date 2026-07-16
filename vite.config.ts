@@ -22,6 +22,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // The lazy exercise-library chunk (~880 KB, data/exercise-library.json)
+      // is precached by generateSW so the /exercises catalog works offline.
+      // Workbox silently drops any file over its 2 MB default
+      // (maximumFileSizeToCacheInBytes) — if that chunk ever outgrows it, set
+      // the option explicitly in a `workbox: {}` block here.
       // We call useRegisterSW ourselves (src/lib/pwaUpdate.ts) so we can poll
       // for updates on an interval and on visibilitychange — a plain injected
       // register script only checks once, on initial load.

@@ -33,6 +33,23 @@ export interface Exercise {
   type: 'weighted' | 'bodyweight' | 'timed';
   repRange: [number, number];
   cue: string;
+  // Links to LibraryExercise.id (hasaneyldrm/exercises-dataset) for GIF + instructions.
+  datasetId?: string;
+}
+
+// One entry of the bundled exercise library (data/exercise-library.json),
+// generated from hasaneyldrm/exercises-dataset by scripts/prepare-exercise-library.ts.
+// Vocabulary is the raw dataset's, not the app's (equipment is a free string like
+// "leverage machine" — mapping to the Equipment union happens only at curation time).
+export interface LibraryExercise {
+  id: string; // dataset id, e.g. "0001"
+  name: string;
+  bodyPart: string; // e.g. "waist", "chest", "upper arms"
+  target: string; // primary muscle, e.g. "abs"
+  secondaryMuscles: string[];
+  equipment: string;
+  media: string; // filename stem for images/{media}.jpg and videos/{media}.gif
+  steps: string[]; // English instruction steps
 }
 
 export interface SetLog {
@@ -120,14 +137,26 @@ export interface TodayResponse {
   prBaselines?: Record<string, ExercisePR>; // by exerciseId — PR detection while logging
 }
 
+// Muscle-focus targets for the "Target a muscle" planner. Each maps to a
+// muscle filter and/or category inside the engine (FOCUS_PRESETS).
+export type FocusTarget =
+  | 'chest'
+  | 'back'
+  | 'shoulders'
+  | 'arms'
+  | 'legs'
+  | 'core'
+  | 'stamina';
+
 // POST /api/suggest { minutes: 20|45|60, location: Location, split?: WorkoutSplit }
 // -> creates a planned strength session for today and returns it.
 // split is optional — when omitted the engine picks the next one in the
-// push -> pull -> legs rotation.
+// push -> pull -> legs rotation. focus overrides split when both are set.
 export interface SuggestRequest {
   minutes: 20 | 45 | 60;
   location: Location;
   split?: WorkoutSplit;
+  focus?: FocusTarget;
 }
 // Response: Session
 

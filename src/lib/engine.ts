@@ -1,20 +1,16 @@
 // Cornerman — suggestion rule engine, ported to the browser from server/engine.ts.
-// suggest({minutes, location}) reads recent sessions from Firestore, computes a
-// plan, writes a new planned session doc, and returns it (exercises hydrated).
-//
-// The rules (rotation / recovery / selection / progression) are faithful to the
-// server version; the only change is data access — SQLite queries become
-// operations over in-memory Session objects.
+// Reads recent sessions from Firestore, computes a plan (slot/selection rules live
+// in shared/planning.ts), writes a planned session doc, and returns it hydrated.
 
 import type {
   Exercise,
-  ExerciseCategory,
   Session,
   SessionExercise,
   SetLog,
   SuggestRequest,
   WorkoutSplit,
 } from '../../shared/types'
+import { buildSlots, filterPool, pickExercises } from '../../shared/planning'
 import {
   allDoneSessions,
   createSessionDoc,
@@ -82,21 +78,6 @@ function recentlyUsedExerciseIds(recent: Session[]): Set<string> {
   return used
 }
 
-function isLegsHeavyCompound(e: Exercise): boolean {
-  if (e.category !== 'legs') return false
-  const key = `${e.id} ${e.name}`.toLowerCase()
-  return key.includes('deadlift') || key.includes('squat')
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
 interface ProgressionResult {
   suggestedWeightKg: number | null
   targetReps: [number, number]
@@ -159,76 +140,6 @@ function progressionFor(ex: Exercise, doneSessions: Session[]): ProgressionResul
   return { suggestedWeightKg: null, targetReps: [low, high] }
 }
 
-interface Slot {
-  category: ExerciseCategory
-  count: number
-}
-
-function planSlots(
-  minutes: SuggestRequest['minutes'],
-  split: WorkoutSplit,
-): { slots: Slot[]; totalTarget: number } {
-  if (minutes === 20) {
-    return { slots: [{ category: split, count: 3 }], totalTarget: 3 }
-  }
-  if (minutes === 45) {
-    return {
-      slots: [
-        { category: split, count: 4 },
-        { category: 'core', count: 1 },
-      ],
-      totalTarget: 5,
-    }
-  }
-  // 60 minutes: deep split focus + core + conditioning finisher (7 exercises)
-  return {
-    slots: [
-      { category: split, count: 5 },
-      { category: 'core', count: 1 },
-      { category: 'conditioning', count: 1 },
-    ],
-    totalTarget: 7,
-  }
-}
-
-/** Build the ordered set of picked exercises for a plan (pure). */
-function pickExercises(
-  slots: Slot[],
-  location: SuggestRequest['location'],
-  hard: boolean,
-  used: Set<string>,
-): Exercise[] {
-  let pool = getAllExercises().filter((e) =>
-    location === 'gym' ? true : e.location.includes('home'),
-  )
-  if (hard) {
-    pool = pool.filter((e) => e.difficulty !== 3 && !isLegsHeavyCompound(e))
-  }
-
-  const picked: Exercise[] = []
-  const pickedIds = new Set<string>()
-
-  for (const slot of slots) {
-    let candidates = pool.filter(
-      (e) => e.category === slot.category && !pickedIds.has(e.id) && !used.has(e.id),
-    )
-    if (candidates.length < slot.count) {
-      candidates = pool.filter((e) => e.category === slot.category && !pickedIds.has(e.id))
-    }
-    const sorted = shuffle(candidates).sort((a, b) => {
-      const compound = Number(b.muscleGroups.length >= 3) - Number(a.muscleGroups.length >= 3)
-      if (compound !== 0) return compound
-      if (hard) return a.difficulty - b.difficulty
-      return 0
-    })
-    for (const e of sorted.slice(0, slot.count)) {
-      picked.push(e)
-      pickedIds.add(e.id)
-    }
-  }
-  return picked
-}
-
 /** Build a full SessionExercise (with generated sets) for a picked exercise. */
 function buildSessionExercise(
   e: Exercise,
@@ -276,9 +187,10 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
   await deletePlannedOnDate(today)
 
   const split = req.split ?? nextSplit(recentStrength)
-  const { slots } = planSlots(minutes, split)
+  const slots = buildSlots(minutes, split, req.focus)
   const used = recentlyUsedExerciseIds(recentStrength)
-  const picked = pickExercises(slots, location, hard, used)
+  const pool = filterPool(getAllExercises(), location, hard)
+  const picked = pickExercises(slots, pool, hard, used)
 
   const allBodyweight = picked.every((e) => e.type !== 'weighted')
   const sport = allBodyweight ? 'calisthenics' : 'weightlifting'

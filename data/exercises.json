@@ -3,1308 +3,2608 @@
     "id": "barbell-bench-press",
     "name": "Barbell Bench Press",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["barbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [5, 8],
-    "cue": "Tuck elbows to 45 degrees and drive feet into the floor."
+    "repRange": [
+      5,
+      8
+    ],
+    "cue": "Tuck elbows to 45 degrees and drive feet into the floor.",
+    "datasetId": "0025"
   },
   {
     "id": "incline-barbell-bench-press",
     "name": "Incline Barbell Bench Press",
     "category": "push",
-    "muscleGroups": ["chest", "shoulders", "triceps"],
-    "equipment": ["barbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "Touch the bar high on the chest, just below the collarbone."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Touch the bar high on the chest, just below the collarbone.",
+    "datasetId": "0047"
   },
   {
     "id": "dumbbell-bench-press",
     "name": "Dumbbell Bench Press",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Lower under control until dumbbells reach chest level."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Lower under control until dumbbells reach chest level.",
+    "datasetId": "0289"
   },
   {
     "id": "incline-dumbbell-press",
     "name": "Incline Dumbbell Press",
     "category": "push",
-    "muscleGroups": ["chest", "shoulders", "triceps"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Keep shoulder blades pinned back throughout the press."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Keep shoulder blades pinned back throughout the press.",
+    "datasetId": "0314"
   },
   {
     "id": "dumbbell-floor-press",
     "name": "Dumbbell Floor Press",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
+    "repRange": [
+      8,
+      12
+    ],
     "cue": "Pause briefly when triceps touch the floor, then press."
   },
   {
     "id": "barbell-overhead-press",
     "name": "Barbell Overhead Press",
     "category": "push",
-    "muscleGroups": ["shoulders", "triceps"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [5, 8],
-    "cue": "Squeeze glutes and push your head through at lockout."
+    "repRange": [
+      5,
+      8
+    ],
+    "cue": "Squeeze glutes and push your head through at lockout.",
+    "datasetId": "0091"
   },
   {
     "id": "standing-dumbbell-overhead-press",
     "name": "Standing Dumbbell Overhead Press",
     "category": "push",
-    "muscleGroups": ["shoulders", "triceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Brace your core so your ribs stay down, not flared."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Brace your core so your ribs stay down, not flared.",
+    "datasetId": "0426"
   },
   {
     "id": "arnold-press",
     "name": "Arnold Press",
     "category": "push",
-    "muscleGroups": ["shoulders", "triceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Rotate palms from facing you to facing forward as you press."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Rotate palms from facing you to facing forward as you press.",
+    "datasetId": "2137"
   },
   {
     "id": "kettlebell-overhead-press",
     "name": "Kettlebell Overhead Press",
     "category": "push",
-    "muscleGroups": ["shoulders", "triceps"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "Keep the wrist straight and the bell resting on the forearm."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Keep the wrist straight and the bell resting on the forearm.",
+    "datasetId": "0553"
   },
   {
     "id": "push-up",
     "name": "Push-Up",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [10, 20],
-    "cue": "Keep a straight line from head to heels the whole rep."
+    "repRange": [
+      10,
+      20
+    ],
+    "cue": "Keep a straight line from head to heels the whole rep.",
+    "datasetId": "0662"
   },
   {
     "id": "diamond-push-up",
     "name": "Diamond Push-Up",
     "category": "push",
-    "muscleGroups": ["triceps", "chest"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "triceps",
+      "chest"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 15],
-    "cue": "Form a diamond with thumbs and index fingers under your chest."
+    "repRange": [
+      8,
+      15
+    ],
+    "cue": "Form a diamond with thumbs and index fingers under your chest.",
+    "datasetId": "0283"
   },
   {
     "id": "decline-push-up",
     "name": "Decline Push-Up",
     "category": "push",
-    "muscleGroups": ["chest", "shoulders", "triceps"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [10, 15],
-    "cue": "Elevate feet on a chair or bench and keep hips level."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Elevate feet on a chair or bench and keep hips level.",
+    "datasetId": "0279"
   },
   {
     "id": "archer-push-up",
     "name": "Archer Push-Up",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [6, 10],
-    "cue": "Shift your weight over the bending arm; keep the other arm straight."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Shift your weight over the bending arm; keep the other arm straight.",
+    "datasetId": "3294"
   },
   {
     "id": "pseudo-planche-push-up",
     "name": "Pseudo Planche Push-Up",
     "category": "push",
-    "muscleGroups": ["shoulders", "chest", "triceps"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "chest",
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [5, 10],
+    "repRange": [
+      5,
+      10
+    ],
     "cue": "Turn fingers back and lean shoulders far past your hands."
   },
   {
     "id": "pike-push-up",
     "name": "Pike Push-Up",
     "category": "push",
-    "muscleGroups": ["shoulders", "triceps"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 12],
+    "repRange": [
+      8,
+      12
+    ],
     "cue": "Hips high, lower the crown of your head toward the floor."
   },
   {
     "id": "dip",
     "name": "Dip",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["bodyweight"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 12],
-    "cue": "Lean slightly forward and lower until upper arms are parallel."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Lean slightly forward and lower until upper arms are parallel.",
+    "datasetId": "0251"
   },
   {
     "id": "bench-dip",
     "name": "Bench Dip",
     "category": "push",
-    "muscleGroups": ["triceps", "shoulders"],
-    "equipment": ["bench", "bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "bench",
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [10, 15],
-    "cue": "Keep hips close to the bench and elbows pointing straight back."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Keep hips close to the bench and elbows pointing straight back.",
+    "datasetId": "0129"
   },
   {
     "id": "machine-chest-press",
     "name": "Machine Chest Press",
     "category": "push",
-    "muscleGroups": ["chest", "triceps", "shoulders"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Set handles at mid-chest height and press without locking elbows hard."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Set handles at mid-chest height and press without locking elbows hard.",
+    "datasetId": "0577"
   },
   {
     "id": "cable-fly",
     "name": "Cable Fly",
     "category": "push",
-    "muscleGroups": ["chest"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Keep a slight elbow bend and hug the cables together like a barrel."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Keep a slight elbow bend and hug the cables together like a barrel.",
+    "datasetId": "0188"
   },
   {
     "id": "dumbbell-chest-fly",
     "name": "Dumbbell Chest Fly",
     "category": "push",
-    "muscleGroups": ["chest"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Lower with a fixed elbow angle until you feel a chest stretch."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Lower with a fixed elbow angle until you feel a chest stretch.",
+    "datasetId": "0308"
   },
   {
     "id": "dumbbell-lateral-raise",
     "name": "Dumbbell Lateral Raise",
     "category": "push",
-    "muscleGroups": ["shoulders"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [12, 20],
-    "cue": "Lead with the elbows and stop at shoulder height."
+    "repRange": [
+      12,
+      20
+    ],
+    "cue": "Lead with the elbows and stop at shoulder height.",
+    "datasetId": "0334"
   },
   {
     "id": "cable-lateral-raise",
     "name": "Cable Lateral Raise",
     "category": "push",
-    "muscleGroups": ["shoulders"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [12, 15],
-    "cue": "Stand side-on to the stack and raise the arm in a wide arc."
+    "repRange": [
+      12,
+      15
+    ],
+    "cue": "Stand side-on to the stack and raise the arm in a wide arc.",
+    "datasetId": "0178"
   },
   {
     "id": "dumbbell-front-raise",
     "name": "Dumbbell Front Raise",
     "category": "push",
-    "muscleGroups": ["shoulders"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Raise to eye level without swinging your torso."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Raise to eye level without swinging your torso.",
+    "datasetId": "0310"
   },
   {
     "id": "overhead-dumbbell-triceps-extension",
     "name": "Overhead Dumbbell Triceps Extension",
     "category": "push",
-    "muscleGroups": ["triceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Keep elbows close to your ears and stretch deep behind the head."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Keep elbows close to your ears and stretch deep behind the head.",
+    "datasetId": "2188"
   },
   {
     "id": "triceps-pushdown",
     "name": "Triceps Pushdown",
     "category": "push",
-    "muscleGroups": ["triceps"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Pin elbows to your sides and fully straighten the arms."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Pin elbows to your sides and fully straighten the arms.",
+    "datasetId": "0201"
   },
   {
     "id": "skull-crusher",
     "name": "Skull Crusher",
     "category": "push",
-    "muscleGroups": ["triceps"],
-    "equipment": ["barbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Lower the bar to your forehead with elbows fixed in place."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Lower the bar to your forehead with elbows fixed in place.",
+    "datasetId": "0060"
   },
   {
     "id": "close-grip-bench-press",
     "name": "Close-Grip Bench Press",
     "category": "push",
-    "muscleGroups": ["triceps", "chest", "shoulders"],
-    "equipment": ["barbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "triceps",
+      "chest",
+      "shoulders"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "Grip just inside shoulder width and keep elbows tucked."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Grip just inside shoulder width and keep elbows tucked.",
+    "datasetId": "0030"
   },
   {
     "id": "pull-up",
     "name": "Pull-Up",
     "category": "pull",
-    "muscleGroups": ["lats", "back", "biceps", "forearms"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "back",
+      "biceps",
+      "forearms"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [5, 10],
-    "cue": "Pull your chest to the bar, not just your chin."
+    "repRange": [
+      5,
+      10
+    ],
+    "cue": "Pull your chest to the bar, not just your chin.",
+    "datasetId": "0652"
   },
   {
     "id": "chin-up",
     "name": "Chin-Up",
     "category": "pull",
-    "muscleGroups": ["lats", "biceps", "back"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "biceps",
+      "back"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [5, 10],
-    "cue": "Underhand grip; drive elbows down toward your ribs."
+    "repRange": [
+      5,
+      10
+    ],
+    "cue": "Underhand grip; drive elbows down toward your ribs.",
+    "datasetId": "1326"
   },
   {
     "id": "negative-pull-up",
     "name": "Negative Pull-Up",
     "category": "pull",
-    "muscleGroups": ["lats", "back", "biceps"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "back",
+      "biceps"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [3, 6],
+    "repRange": [
+      3,
+      6
+    ],
     "cue": "Jump to the top and lower yourself over a slow 3-5 seconds."
   },
   {
     "id": "weighted-pull-up",
     "name": "Weighted Pull-Up",
     "category": "pull",
-    "muscleGroups": ["lats", "back", "biceps", "forearms"],
-    "equipment": ["pullup-bar", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "back",
+      "biceps",
+      "forearms"
+    ],
+    "equipment": [
+      "pullup-bar",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [4, 8],
-    "cue": "Add load only once you own 10 strict bodyweight reps."
+    "repRange": [
+      4,
+      8
+    ],
+    "cue": "Add load only once you own 10 strict bodyweight reps.",
+    "datasetId": "0841"
   },
   {
     "id": "wide-grip-pull-up",
     "name": "Wide-Grip Pull-Up",
     "category": "pull",
-    "muscleGroups": ["lats", "back"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "back"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [5, 8],
-    "cue": "Wide overhand grip; think of pulling your elbows into your pockets."
+    "repRange": [
+      5,
+      8
+    ],
+    "cue": "Wide overhand grip; think of pulling your elbows into your pockets.",
+    "datasetId": "1429"
   },
   {
     "id": "scapular-pull-up",
     "name": "Scapular Pull-Up",
     "category": "pull",
-    "muscleGroups": ["back", "lats"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "back",
+      "lats"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [8, 12],
-    "cue": "Arms stay straight; lift only by pulling shoulder blades down."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Arms stay straight; lift only by pulling shoulder blades down.",
+    "datasetId": "0688"
   },
   {
     "id": "dead-hang",
     "name": "Dead Hang",
     "category": "pull",
-    "muscleGroups": ["forearms", "lats"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "forearms",
+      "lats"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 60],
+    "repRange": [
+      30,
+      60
+    ],
     "cue": "Relax into the hang and breathe; grip is the only thing working."
   },
   {
     "id": "barbell-bent-over-row",
     "name": "Barbell Bent-Over Row",
     "category": "pull",
-    "muscleGroups": ["back", "lats", "biceps", "lower-back"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "back",
+      "lats",
+      "biceps",
+      "lower-back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "Hinge to about 45 degrees and pull the bar to your lower ribs."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Hinge to about 45 degrees and pull the bar to your lower ribs.",
+    "datasetId": "0027"
   },
   {
     "id": "single-arm-dumbbell-row",
     "name": "Single-Arm Dumbbell Row",
     "category": "pull",
-    "muscleGroups": ["lats", "back", "biceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lats",
+      "back",
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Row to your hip, not your armpit, without twisting the torso."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Row to your hip, not your armpit, without twisting the torso.",
+    "datasetId": "0292"
   },
   {
     "id": "inverted-row",
     "name": "Inverted Row",
     "category": "pull",
-    "muscleGroups": ["back", "lats", "biceps"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "back",
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [8, 15],
-    "cue": "Body straight as a plank; pull your chest to the bar or table edge."
+    "repRange": [
+      8,
+      15
+    ],
+    "cue": "Body straight as a plank; pull your chest to the bar or table edge.",
+    "datasetId": "0499"
   },
   {
     "id": "seated-cable-row",
     "name": "Seated Cable Row",
     "category": "pull",
-    "muscleGroups": ["back", "lats", "biceps"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "back",
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Sit tall and pull the handle to your stomach without leaning back."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Sit tall and pull the handle to your stomach without leaning back.",
+    "datasetId": "0861"
   },
   {
     "id": "lat-pulldown",
     "name": "Lat Pulldown",
     "category": "pull",
-    "muscleGroups": ["lats", "back", "biceps"],
-    "equipment": ["cable", "machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "lats",
+      "back",
+      "biceps"
+    ],
+    "equipment": [
+      "cable",
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Pull the bar to your upper chest with elbows driving down."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Pull the bar to your upper chest with elbows driving down.",
+    "datasetId": "0150"
   },
   {
     "id": "face-pull",
     "name": "Face Pull",
     "category": "pull",
-    "muscleGroups": ["shoulders", "back"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [12, 20],
+    "repRange": [
+      12,
+      20
+    ],
     "cue": "Pull the rope to your face and finish with thumbs pointing back."
   },
   {
     "id": "machine-row",
     "name": "Chest-Supported Machine Row",
     "category": "pull",
-    "muscleGroups": ["back", "lats", "biceps"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "back",
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Keep your chest glued to the pad so only the back works."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Keep your chest glued to the pad so only the back works.",
+    "datasetId": "1350"
   },
   {
     "id": "renegade-row",
     "name": "Renegade Row",
     "category": "pull",
-    "muscleGroups": ["back", "biceps", "abs", "shoulders"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "back",
+      "biceps",
+      "abs",
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "In plank on dumbbells, row without letting hips rotate."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "In plank on dumbbells, row without letting hips rotate.",
+    "datasetId": "0521"
   },
   {
     "id": "kettlebell-row",
     "name": "Kettlebell Row",
     "category": "pull",
-    "muscleGroups": ["back", "lats", "biceps"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "back",
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Hinge with a flat back and row the bell to your hip."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Hinge with a flat back and row the bell to your hip.",
+    "datasetId": "0541"
   },
   {
     "id": "kettlebell-swing",
     "name": "Kettlebell Swing",
     "category": "pull",
-    "muscleGroups": ["glutes", "hamstrings", "lower-back"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "glutes",
+      "hamstrings",
+      "lower-back"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [12, 20],
-    "cue": "Snap the hips forward; the arms are just ropes."
+    "repRange": [
+      12,
+      20
+    ],
+    "cue": "Snap the hips forward; the arms are just ropes.",
+    "datasetId": "0549"
   },
   {
     "id": "barbell-curl",
     "name": "Barbell Curl",
     "category": "pull",
-    "muscleGroups": ["biceps", "forearms"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Pin elbows to your sides and curl without swinging the hips."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Pin elbows to your sides and curl without swinging the hips.",
+    "datasetId": "0031"
   },
   {
     "id": "dumbbell-curl",
     "name": "Dumbbell Curl",
     "category": "pull",
-    "muscleGroups": ["biceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Fully straighten the arm at the bottom of every rep."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Fully straighten the arm at the bottom of every rep.",
+    "datasetId": "0294"
   },
   {
     "id": "hammer-curl",
     "name": "Hammer Curl",
     "category": "pull",
-    "muscleGroups": ["biceps", "forearms"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Neutral grip, palms facing each other the entire rep."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Neutral grip, palms facing each other the entire rep.",
+    "datasetId": "0313"
   },
   {
     "id": "incline-dumbbell-curl",
     "name": "Incline Dumbbell Curl",
     "category": "pull",
-    "muscleGroups": ["biceps"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Let arms hang behind your torso for a long biceps stretch."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Let arms hang behind your torso for a long biceps stretch.",
+    "datasetId": "0318"
   },
   {
     "id": "concentration-curl",
     "name": "Concentration Curl",
     "category": "pull",
-    "muscleGroups": ["biceps"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Brace your elbow on the inner thigh and curl slowly."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Brace your elbow on the inner thigh and curl slowly.",
+    "datasetId": "0297"
   },
   {
     "id": "dumbbell-shrug",
     "name": "Dumbbell Shrug",
     "category": "pull",
-    "muscleGroups": ["back", "forearms"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "back",
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Lift your shoulders straight up toward your ears; no rolling."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Lift your shoulders straight up toward your ears; no rolling.",
+    "datasetId": "0406"
   },
   {
     "id": "bent-over-reverse-fly",
     "name": "Bent-Over Reverse Fly",
     "category": "pull",
-    "muscleGroups": ["shoulders", "back"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [12, 15],
-    "cue": "Hinge over and open your arms wide like spreading wings."
+    "repRange": [
+      12,
+      15
+    ],
+    "cue": "Hinge over and open your arms wide like spreading wings.",
+    "datasetId": "0380"
   },
   {
     "id": "straight-arm-pulldown",
     "name": "Straight-Arm Pulldown",
     "category": "pull",
-    "muscleGroups": ["lats"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "lats"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Arms nearly straight; sweep the bar down to your thighs."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Arms nearly straight; sweep the bar down to your thighs.",
+    "datasetId": "0238"
   },
   {
     "id": "back-squat",
     "name": "Barbell Back Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes", "hamstrings", "lower-back"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "lower-back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [5, 8],
-    "cue": "Break at hips and knees together; keep your chest proud."
+    "repRange": [
+      5,
+      8
+    ],
+    "cue": "Break at hips and knees together; keep your chest proud.",
+    "datasetId": "0043"
   },
   {
     "id": "front-squat",
     "name": "Barbell Front Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes", "abs"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [5, 8],
-    "cue": "Elbows high so the bar rests on your shoulders, torso upright."
+    "repRange": [
+      5,
+      8
+    ],
+    "cue": "Elbows high so the bar rests on your shoulders, torso upright.",
+    "datasetId": "0042"
   },
   {
     "id": "goblet-squat",
     "name": "Goblet Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["dumbbell", "kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Hold the weight at your chest and sit down between your heels."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Hold the weight at your chest and sit down between your heels.",
+    "datasetId": "1760"
   },
   {
     "id": "bodyweight-squat",
     "name": "Bodyweight Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [15, 25],
+    "repRange": [
+      15,
+      25
+    ],
     "cue": "Full depth with heels down and knees tracking over toes."
   },
   {
     "id": "jump-squat",
     "name": "Jump Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes", "calves"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 12],
-    "cue": "Land soft and quiet, absorbing into the next rep."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Land soft and quiet, absorbing into the next rep.",
+    "datasetId": "0514"
   },
   {
     "id": "conventional-deadlift",
     "name": "Conventional Deadlift",
     "category": "legs",
-    "muscleGroups": ["hamstrings", "glutes", "lower-back", "back", "forearms"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "lower-back",
+      "back",
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [3, 6],
-    "cue": "Take the slack out of the bar and push the floor away."
+    "repRange": [
+      3,
+      6
+    ],
+    "cue": "Take the slack out of the bar and push the floor away.",
+    "datasetId": "0032"
   },
   {
     "id": "barbell-romanian-deadlift",
     "name": "Barbell Romanian Deadlift",
     "category": "legs",
-    "muscleGroups": ["hamstrings", "glutes", "lower-back"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "lower-back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [6, 10],
-    "cue": "Push hips back with soft knees until hamstrings stretch hard."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Push hips back with soft knees until hamstrings stretch hard.",
+    "datasetId": "0085"
   },
   {
     "id": "dumbbell-romanian-deadlift",
     "name": "Dumbbell Romanian Deadlift",
     "category": "legs",
-    "muscleGroups": ["hamstrings", "glutes", "lower-back"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "lower-back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Slide the dumbbells down the front of your legs, back flat."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Slide the dumbbells down the front of your legs, back flat.",
+    "datasetId": "1459"
   },
   {
     "id": "single-leg-romanian-deadlift",
     "name": "Single-Leg Romanian Deadlift",
     "category": "legs",
-    "muscleGroups": ["hamstrings", "glutes"],
-    "equipment": ["dumbbell", "kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "hamstrings",
+      "glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Square hips to the floor as the back leg reaches behind you."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Square hips to the floor as the back leg reaches behind you.",
+    "datasetId": "1757"
   },
   {
     "id": "walking-lunge",
     "name": "Walking Lunge",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 16],
-    "cue": "Long steps, back knee kissing the floor each rep."
+    "repRange": [
+      10,
+      16
+    ],
+    "cue": "Long steps, back knee kissing the floor each rep.",
+    "datasetId": "1460"
   },
   {
     "id": "reverse-lunge",
     "name": "Reverse Lunge",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Step back and drop straight down, front shin vertical."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Step back and drop straight down, front shin vertical.",
+    "datasetId": "0381"
   },
   {
     "id": "lateral-lunge",
     "name": "Lateral Lunge",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Sit into one hip while the other leg stays straight."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Sit into one hip while the other leg stays straight.",
+    "datasetId": "1410"
   },
   {
     "id": "bulgarian-split-squat",
     "name": "Bulgarian Split Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Rear foot on a bench or chair; drop the back knee straight down."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Rear foot on a bench or chair; drop the back knee straight down.",
+    "datasetId": "0410"
   },
   {
     "id": "barbell-hip-thrust",
     "name": "Barbell Hip Thrust",
     "category": "legs",
-    "muscleGroups": ["glutes", "hamstrings"],
-    "equipment": ["barbell", "bench"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Tuck your chin and squeeze glutes hard at full extension."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Tuck your chin and squeeze glutes hard at full extension.",
+    "datasetId": "3562"
   },
   {
     "id": "glute-bridge",
     "name": "Glute Bridge",
     "category": "legs",
-    "muscleGroups": ["glutes", "hamstrings"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [12, 20],
-    "cue": "Drive through the heels and pause one second at the top."
+    "repRange": [
+      12,
+      20
+    ],
+    "cue": "Drive through the heels and pause one second at the top.",
+    "datasetId": "0484"
   },
   {
     "id": "single-leg-glute-bridge",
     "name": "Single-Leg Glute Bridge",
     "category": "legs",
-    "muscleGroups": ["glutes", "hamstrings"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [10, 15],
-    "cue": "Keep hips level; don't let the free side sag."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Keep hips level; don't let the free side sag.",
+    "datasetId": "3645"
   },
   {
     "id": "dumbbell-step-up",
     "name": "Dumbbell Step-Up",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["dumbbell", "bench"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 12],
-    "cue": "Drive through the top foot; don't push off the bottom leg."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Drive through the top foot; don't push off the bottom leg.",
+    "datasetId": "0431"
   },
   {
     "id": "box-pistol-squat",
     "name": "Box Pistol Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight", "bench"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "bench"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [5, 10],
+    "repRange": [
+      5,
+      10
+    ],
     "cue": "Lower on one leg to a bench or chair, tap, and stand back up."
   },
   {
     "id": "pistol-squat",
     "name": "Pistol Squat",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [3, 8],
-    "cue": "Reach arms and free leg forward to counterbalance."
+    "repRange": [
+      3,
+      8
+    ],
+    "cue": "Reach arms and free leg forward to counterbalance.",
+    "datasetId": "1759"
   },
   {
     "id": "standing-calf-raise",
     "name": "Standing Calf Raise",
     "category": "legs",
-    "muscleGroups": ["calves"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [15, 25],
-    "cue": "Full stretch at the bottom, pause at the very top."
+    "repRange": [
+      15,
+      25
+    ],
+    "cue": "Full stretch at the bottom, pause at the very top.",
+    "datasetId": "1373"
   },
   {
     "id": "single-leg-calf-raise",
     "name": "Single-Leg Calf Raise",
     "category": "legs",
-    "muscleGroups": ["calves"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [10, 20],
-    "cue": "Work from a step edge for a full range of motion."
+    "repRange": [
+      10,
+      20
+    ],
+    "cue": "Work from a step edge for a full range of motion.",
+    "datasetId": "0409"
   },
   {
     "id": "seated-calf-raise",
     "name": "Seated Calf Raise",
     "category": "legs",
-    "muscleGroups": ["calves"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [12, 20],
-    "cue": "Slow tempo; the bent knee targets the deeper soleus."
+    "repRange": [
+      12,
+      20
+    ],
+    "cue": "Slow tempo; the bent knee targets the deeper soleus.",
+    "datasetId": "0594"
   },
   {
     "id": "leg-press",
     "name": "Leg Press",
     "category": "legs",
-    "muscleGroups": ["quads", "glutes"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [8, 15],
-    "cue": "Lower until knees near your chest without your hips curling up."
+    "repRange": [
+      8,
+      15
+    ],
+    "cue": "Lower until knees near your chest without your hips curling up.",
+    "datasetId": "0739"
   },
   {
     "id": "leg-extension",
     "name": "Leg Extension",
     "category": "legs",
-    "muscleGroups": ["quads"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Squeeze the quads for a beat at full lockout."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Squeeze the quads for a beat at full lockout.",
+    "datasetId": "0585"
   },
   {
     "id": "lying-leg-curl",
     "name": "Lying Leg Curl",
     "category": "legs",
-    "muscleGroups": ["hamstrings"],
-    "equipment": ["machine"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Keep hips pressed into the pad as you curl."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Keep hips pressed into the pad as you curl.",
+    "datasetId": "0586"
   },
   {
     "id": "wall-sit",
     "name": "Wall Sit",
     "category": "legs",
-    "muscleGroups": ["quads"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 90],
+    "repRange": [
+      30,
+      90
+    ],
     "cue": "Thighs parallel to the floor, back flat against the wall."
   },
   {
     "id": "plank",
     "name": "Plank",
     "category": "core",
-    "muscleGroups": ["abs", "obliques"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs",
+      "obliques"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 90],
+    "repRange": [
+      30,
+      90
+    ],
     "cue": "Squeeze glutes and tuck the pelvis; no sagging hips."
   },
   {
     "id": "side-plank",
     "name": "Side Plank",
     "category": "core",
-    "muscleGroups": ["obliques", "abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "obliques",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [20, 60],
-    "cue": "Stack your feet and push the hip toward the ceiling."
+    "repRange": [
+      20,
+      60
+    ],
+    "cue": "Stack your feet and push the hip toward the ceiling.",
+    "datasetId": "0705"
   },
   {
     "id": "hollow-body-hold",
     "name": "Hollow Body Hold",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "timed",
-    "repRange": [20, 60],
+    "repRange": [
+      20,
+      60
+    ],
     "cue": "Press your lower back into the floor the entire hold."
   },
   {
     "id": "hanging-knee-raise",
     "name": "Hanging Knee Raise",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 15],
+    "repRange": [
+      8,
+      15
+    ],
     "cue": "Curl knees to your chest without swinging."
   },
   {
     "id": "hanging-leg-raise",
     "name": "Hanging Leg Raise",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["pullup-bar"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "pullup-bar"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [6, 12],
-    "cue": "Straight legs to hip height or above; tilt the pelvis up at the top."
+    "repRange": [
+      6,
+      12
+    ],
+    "cue": "Straight legs to hip height or above; tilt the pelvis up at the top.",
+    "datasetId": "0472"
   },
   {
     "id": "barbell-rollout",
     "name": "Barbell Rollout",
     "category": "core",
-    "muscleGroups": ["abs", "shoulders"],
-    "equipment": ["barbell"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "abs",
+      "shoulders"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 3,
     "type": "bodyweight",
-    "repRange": [6, 10],
-    "cue": "Roll out only as far as you can without your lower back arching."
+    "repRange": [
+      6,
+      10
+    ],
+    "cue": "Roll out only as far as you can without your lower back arching.",
+    "datasetId": "0857"
   },
   {
     "id": "plank-walkout",
     "name": "Plank Walkout",
     "category": "core",
-    "muscleGroups": ["abs", "shoulders"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs",
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [6, 10],
+    "repRange": [
+      6,
+      10
+    ],
     "cue": "Walk your hands out past plank position, keeping ribs down."
   },
   {
     "id": "russian-twist",
     "name": "Russian Twist",
     "category": "core",
-    "muscleGroups": ["obliques", "abs"],
-    "equipment": ["bodyweight", "dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "obliques",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight",
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [16, 24],
-    "cue": "Rotate from the torso; your eyes follow your hands."
+    "repRange": [
+      16,
+      24
+    ],
+    "cue": "Rotate from the torso; your eyes follow your hands.",
+    "datasetId": "0687"
   },
   {
     "id": "dead-bug",
     "name": "Dead Bug",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [8, 12],
-    "cue": "Extend opposite arm and leg while the lower back stays glued down."
+    "repRange": [
+      8,
+      12
+    ],
+    "cue": "Extend opposite arm and leg while the lower back stays glued down.",
+    "datasetId": "0276"
   },
   {
     "id": "bird-dog",
     "name": "Bird Dog",
     "category": "core",
-    "muscleGroups": ["lower-back", "abs", "glutes"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "lower-back",
+      "abs",
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [8, 12],
+    "repRange": [
+      8,
+      12
+    ],
     "cue": "Reach long and hold each rep for two seconds without wobbling."
   },
   {
     "id": "bicycle-crunch",
     "name": "Bicycle Crunch",
     "category": "core",
-    "muscleGroups": ["abs", "obliques"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs",
+      "obliques"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [16, 30],
-    "cue": "Slow rotation, elbow toward the opposite knee each rep."
+    "repRange": [
+      16,
+      30
+    ],
+    "cue": "Slow rotation, elbow toward the opposite knee each rep.",
+    "datasetId": "0003"
   },
   {
     "id": "lying-leg-raise",
     "name": "Lying Leg Raise",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "bodyweight",
-    "repRange": [10, 15],
-    "cue": "Lower legs slowly without letting the lower back lift."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Lower legs slowly without letting the lower back lift.",
+    "datasetId": "0865"
   },
   {
     "id": "v-up",
     "name": "V-Up",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [8, 15],
-    "cue": "Fold at the hips, touching hands to feet at the top."
+    "repRange": [
+      8,
+      15
+    ],
+    "cue": "Fold at the hips, touching hands to feet at the top.",
+    "datasetId": "0507"
   },
   {
     "id": "cable-woodchopper",
     "name": "Cable Woodchopper",
     "category": "core",
-    "muscleGroups": ["obliques", "abs"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "obliques",
+      "abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Rotate through the hips and torso with arms staying long."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Rotate through the hips and torso with arms staying long.",
+    "datasetId": "0862"
   },
   {
     "id": "cable-crunch",
     "name": "Cable Crunch",
     "category": "core",
-    "muscleGroups": ["abs"],
-    "equipment": ["cable"],
-    "location": ["gym"],
+    "muscleGroups": [
+      "abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "location": [
+      "gym"
+    ],
     "difficulty": 1,
     "type": "weighted",
-    "repRange": [10, 15],
-    "cue": "Kneel and crunch your ribs toward your hips, not your arms down."
+    "repRange": [
+      10,
+      15
+    ],
+    "cue": "Kneel and crunch your ribs toward your hips, not your arms down.",
+    "datasetId": "0175"
   },
   {
     "id": "shadowboxing-round",
     "name": "Shadowboxing Round",
     "category": "conditioning",
-    "muscleGroups": ["full-body", "shoulders"],
-    "equipment": ["none"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body",
+      "shoulders"
+    ],
+    "equipment": [
+      "none"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [120, 180],
+    "repRange": [
+      120,
+      180
+    ],
     "cue": "Stay on the balls of your feet; every punch returns to guard."
   },
   {
     "id": "jump-rope",
     "name": "Jump Rope",
     "category": "conditioning",
-    "muscleGroups": ["calves", "full-body"],
-    "equipment": ["none"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "calves",
+      "full-body"
+    ],
+    "equipment": [
+      "none"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [60, 180],
-    "cue": "Small hops from the ankles, wrists doing the spinning."
+    "repRange": [
+      60,
+      180
+    ],
+    "cue": "Small hops from the ankles, wrists doing the spinning.",
+    "datasetId": "2612"
   },
   {
     "id": "burpee",
     "name": "Burpee",
     "category": "conditioning",
-    "muscleGroups": ["full-body"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "bodyweight",
-    "repRange": [10, 20],
-    "cue": "Chest to floor, then jump with full hip extension."
+    "repRange": [
+      10,
+      20
+    ],
+    "cue": "Chest to floor, then jump with full hip extension.",
+    "datasetId": "1160"
   },
   {
     "id": "mountain-climber",
     "name": "Mountain Climber",
     "category": "conditioning",
-    "muscleGroups": ["abs", "quads", "shoulders"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "abs",
+      "quads",
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 60],
-    "cue": "Hips stay low and level while the knees drive fast."
+    "repRange": [
+      30,
+      60
+    ],
+    "cue": "Hips stay low and level while the knees drive fast.",
+    "datasetId": "0630"
   },
   {
     "id": "high-knees",
     "name": "High Knees",
     "category": "conditioning",
-    "muscleGroups": ["quads", "calves", "abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "calves",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 60],
+    "repRange": [
+      30,
+      60
+    ],
     "cue": "Drive knees to hip height with a fast arm swing."
   },
   {
     "id": "sprint-intervals",
     "name": "Sprint Intervals",
     "category": "conditioning",
-    "muscleGroups": ["quads", "hamstrings", "glutes", "calves"],
-    "equipment": ["none"],
-    "location": ["home"],
+    "muscleGroups": [
+      "quads",
+      "hamstrings",
+      "glutes",
+      "calves"
+    ],
+    "equipment": [
+      "none"
+    ],
+    "location": [
+      "home"
+    ],
     "difficulty": 2,
     "type": "timed",
-    "repRange": [15, 30],
+    "repRange": [
+      15,
+      30
+    ],
     "cue": "Sprint hard, then walk back for full recovery between reps."
   },
   {
     "id": "hill-sprints",
     "name": "Hill Sprints",
     "category": "conditioning",
-    "muscleGroups": ["quads", "glutes", "hamstrings", "calves"],
-    "equipment": ["none"],
-    "location": ["home"],
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "calves"
+    ],
+    "equipment": [
+      "none"
+    ],
+    "location": [
+      "home"
+    ],
     "difficulty": 3,
     "type": "timed",
-    "repRange": [15, 30],
+    "repRange": [
+      15,
+      30
+    ],
     "cue": "Lean into the hill and drive your knees with short, punchy strides."
   },
   {
     "id": "easy-run",
     "name": "Easy Run",
     "category": "conditioning",
-    "muscleGroups": ["quads", "hamstrings", "calves", "glutes"],
-    "equipment": ["none"],
-    "location": ["home"],
+    "muscleGroups": [
+      "quads",
+      "hamstrings",
+      "calves",
+      "glutes"
+    ],
+    "equipment": [
+      "none"
+    ],
+    "location": [
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [1200, 3600],
-    "cue": "Conversational pace; you should be able to talk in full sentences."
+    "repRange": [
+      1200,
+      3600
+    ],
+    "cue": "Conversational pace; you should be able to talk in full sentences.",
+    "datasetId": "0685"
   },
   {
     "id": "kettlebell-clean-and-press",
     "name": "Kettlebell Clean and Press",
     "category": "conditioning",
-    "muscleGroups": ["full-body", "shoulders", "glutes"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body",
+      "shoulders",
+      "glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "weighted",
-    "repRange": [5, 10],
+    "repRange": [
+      5,
+      10
+    ],
     "cue": "Clean the bell softly to the rack, then press with a tight core."
   },
   {
     "id": "kettlebell-snatch",
     "name": "Kettlebell Snatch",
     "category": "conditioning",
-    "muscleGroups": ["full-body", "shoulders", "glutes", "hamstrings"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body",
+      "shoulders",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [5, 10],
-    "cue": "Punch your hand through at the top so the bell lands softly."
+    "repRange": [
+      5,
+      10
+    ],
+    "cue": "Punch your hand through at the top so the bell lands softly.",
+    "datasetId": "0542"
   },
   {
     "id": "kettlebell-complex",
     "name": "Kettlebell Complex (Swing-Clean-Press)",
     "category": "conditioning",
-    "muscleGroups": ["full-body"],
-    "equipment": ["kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [3, 6],
+    "repRange": [
+      3,
+      6
+    ],
     "cue": "One round = 5 swings, 5 cleans, 5 presses per arm without setting the bell down."
   },
   {
     "id": "bear-crawl",
     "name": "Bear Crawl",
     "category": "conditioning",
-    "muscleGroups": ["full-body", "shoulders", "abs"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body",
+      "shoulders",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "timed",
-    "repRange": [20, 40],
-    "cue": "Knees hover an inch off the floor; move opposite hand and foot."
+    "repRange": [
+      20,
+      40
+    ],
+    "cue": "Knees hover an inch off the floor; move opposite hand and foot.",
+    "datasetId": "3360"
   },
   {
     "id": "jumping-jacks",
     "name": "Jumping Jacks",
     "category": "conditioning",
-    "muscleGroups": ["full-body"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 60],
-    "cue": "Light on your feet with a full arm swing overhead."
+    "repRange": [
+      30,
+      60
+    ],
+    "cue": "Light on your feet with a full arm swing overhead.",
+    "datasetId": "3224"
   },
   {
     "id": "skater-jump",
     "name": "Skater Jump",
     "category": "conditioning",
-    "muscleGroups": ["quads", "glutes", "calves"],
-    "equipment": ["bodyweight"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 2,
     "type": "timed",
-    "repRange": [20, 40],
-    "cue": "Bound side to side and stick each landing on one leg."
+    "repRange": [
+      20,
+      40
+    ],
+    "cue": "Bound side to side and stick each landing on one leg.",
+    "datasetId": "3361"
   },
   {
     "id": "devils-press",
     "name": "Devil's Press",
     "category": "conditioning",
-    "muscleGroups": ["full-body", "shoulders"],
-    "equipment": ["dumbbell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "full-body",
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 3,
     "type": "weighted",
-    "repRange": [6, 12],
+    "repRange": [
+      6,
+      12
+    ],
     "cue": "Burpee over the dumbbells, then swing them overhead in one motion."
   },
   {
     "id": "farmers-carry",
     "name": "Farmer's Carry",
     "category": "conditioning",
-    "muscleGroups": ["forearms", "back", "abs"],
-    "equipment": ["dumbbell", "kettlebell"],
-    "location": ["gym", "home"],
+    "muscleGroups": [
+      "forearms",
+      "back",
+      "abs"
+    ],
+    "equipment": [
+      "dumbbell",
+      "kettlebell"
+    ],
+    "location": [
+      "gym",
+      "home"
+    ],
     "difficulty": 1,
     "type": "timed",
-    "repRange": [30, 60],
-    "cue": "Walk tall with shoulders back; don't let the weights pull you sideways."
+    "repRange": [
+      30,
+      60
+    ],
+    "cue": "Walk tall with shoulders back; don't let the weights pull you sideways.",
+    "datasetId": "2133"
   }
 ]

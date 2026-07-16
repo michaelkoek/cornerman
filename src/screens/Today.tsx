@@ -10,12 +10,10 @@ import type {
   Anchor,
   Exercise,
   ExercisePR,
-  Location,
   Session,
   SessionExercise,
   SetLog,
   TodayResponse,
-  WorkoutSplit,
 } from '../../shared/types'
 import { api, type SetPatch } from '../lib/api'
 import {
@@ -36,6 +34,7 @@ import {
   type LoggedSet,
 } from '../lib/prs'
 import { useAsync, usePersist } from '../lib/useAsync'
+import { PlannerSection } from './today/PlannerSection'
 import { ExampleSheet } from '../components/ExampleSheet'
 import { ManualLogSheet } from '../components/ManualLogSheet'
 import { PrToast } from '../components/PrToast'
@@ -87,12 +86,12 @@ export default function Today() {
         <>
           <AnchorHero anchor={data.anchor} data={data} onSaved={reload} />
           <CoachHint load={data.yesterdayLoad} />
-          <Planner onSession={(s) => setData({ ...data, session: s })} secondary />
+          <PlannerSection onSession={(s) => setData({ ...data, session: s })} secondary />
         </>
       ) : (
         <>
           <CoachHint load={data.yesterdayLoad} />
-          <Planner onSession={(s) => setData({ ...data, session: s })} />
+          <PlannerSection onSession={(s) => setData({ ...data, session: s })} />
         </>
       )}
 
@@ -231,101 +230,6 @@ function AnchorHero({
         </button>
       </Sheet>
     </>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* Planner: time chips + location -> POST /api/suggest                  */
-/* ------------------------------------------------------------------ */
-
-function Planner({
-  onSession,
-  secondary = false,
-}: {
-  onSession: (s: Session) => void
-  secondary?: boolean
-}) {
-  const [minutes, setMinutes] = useState<20 | 45 | 60 | null>(null)
-  const [location, setLocation] = useState<Location>('gym')
-  const [split, setSplit] = useState<WorkoutSplit | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [suggestError, setSuggestError] = useState<string | null>(null)
-
-  const go = async () => {
-    if (!minutes) return
-    setBusy(true)
-    setSuggestError(null)
-    try {
-      const session = await api.suggest({ minutes, location, split: split ?? undefined })
-      onSession(session)
-    } catch (err) {
-      setSuggestError(err instanceof Error ? err.message : 'Could not build a workout.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <section className="section stagger-item" style={st(2)}>
-      <div className="section__head">
-        <h2 className="type-display-m">
-          {secondary ? 'Or train something else' : 'How much time do you have?'}
-        </h2>
-      </div>
-      <div className="chip-row">
-        {([20, 45, 60] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            className="chip"
-            aria-pressed={minutes === m}
-            onClick={() => setMinutes(m)}
-          >
-            <span className="chip__value">{m}</span>
-            <span className="chip__unit">min</span>
-          </button>
-        ))}
-      </div>
-      <div className="seg" role="group" aria-label="Location">
-        {(['home', 'gym'] as const).map((loc) => (
-          <button
-            key={loc}
-            type="button"
-            className="seg__opt"
-            aria-pressed={location === loc}
-            onClick={() => setLocation(loc)}
-          >
-            {loc}
-          </button>
-        ))}
-      </div>
-      <div className="seg seg--3" role="group" aria-label="Split — optional, tap again to clear">
-        {(['push', 'pull', 'legs'] as const).map((s) => (
-          <button
-            key={s}
-            type="button"
-            className="seg__opt"
-            aria-pressed={split === s}
-            onClick={() => setSplit(split === s ? null : s)}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
-      <p className="type-caption planner__split-hint">
-        {split ? `${split.toUpperCase()} day it is.` : 'No split picked — I’ll rotate for you.'}
-      </p>
-      {suggestError && <p className="form-error">{suggestError}</p>}
-      <button
-        type="button"
-        className={`btn planner__go ${minutes ? 'btn--primary' : 'btn--ghost'}`}
-        style={{ width: '100%', height: 'var(--touch-target)' }}
-        disabled={!minutes || busy}
-        onClick={() => void go()}
-      >
-        {busy ? 'Building…' : 'Build my workout'}
-      </button>
-    </section>
   )
 }
 

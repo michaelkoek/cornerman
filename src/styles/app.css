@@ -379,6 +379,164 @@
   margin-top: var(--space-4);
 }
 
+/* Animated demo GIF (exercises-dataset media) */
+.example__gif-frame {
+  margin: 0 0 var(--space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.example__gif {
+  display: block;
+  width: min(100%, 260px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+}
+
+/* How-to steps from the exercise library */
+.example__how {
+  margin-top: var(--space-4);
+}
+
+.example__how-title {
+  color: var(--text-tertiary);
+}
+
+.example__steps {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.example__step {
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  color: var(--text-secondary);
+}
+
+.example__step::marker {
+  font-family: var(--font-data);
+  color: var(--text-tertiary);
+}
+
+/* Gymvisual media credit */
+.example__credit {
+  margin-top: var(--space-4);
+  color: var(--text-tertiary);
+}
+
+/* ------------------------------------------------------------
+   Exercise library (/exercises)
+   ------------------------------------------------------------ */
+.library__filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.library__search {
+  width: 100%;
+}
+
+/* Horizontally scrollable chip row (library facets, focus targets) */
+.chip-scroll {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* bleed the scroll area to the screen edges */
+  margin: 0 calc(-1 * var(--space-4));
+  padding: 0 var(--space-4);
+}
+
+.chip-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.chip-scroll__opt {
+  flex: none;
+  height: 40px;
+  padding: 0 var(--space-4);
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+.library__count {
+  margin-top: var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.library__list {
+  margin-top: var(--space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.library__item {
+  /* offscreen rows skip layout/paint on a 1,324-row list */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 64px;
+}
+
+.library-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.library-row:active {
+  background: var(--surface-2);
+}
+
+.library-row__name {
+  font-size: var(--type-title-size);
+  font-weight: 650;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.library-row__meta {
+  font-size: var(--type-eyebrow-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-tertiary);
+}
+
+.library__empty {
+  margin-top: var(--space-4);
+  color: var(--text-tertiary);
+}
+
+.library__sentinel {
+  height: 1px;
+}
+
+.library__target {
+  color: var(--accent);
+}
+
+.library__equipment {
+  margin-top: var(--space-2);
+  color: var(--text-tertiary);
+  text-transform: capitalize;
+}
+
 .set-line {
   display: flex;
   align-items: center;
