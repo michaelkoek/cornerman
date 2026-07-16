@@ -1,4 +1,5 @@
-import type { Session, SessionExercise } from '../../shared/types'
+import { useEffect, useState } from 'react'
+import type { Session, SessionExercise, SetLog } from '../../shared/types'
 import {
   SPORT_LABEL,
   fmtDayEyebrow,
@@ -9,11 +10,13 @@ import {
 } from '../lib/format'
 import { IconCheck } from './icons'
 import { Sheet } from './Sheet'
+import { WorkoutDetailSetEditor } from './WorkoutDetailSetEditor'
 
 interface WorkoutDetailSheetProps {
   session: Session | null
   onClose: () => void
   onEdit: (session: Session) => void
+  onChanged: () => void
 }
 
 function prescription(se: SessionExercise): string {
@@ -24,9 +27,32 @@ function prescription(se: SessionExercise): string {
   return `${se.targetSets} × ${reps}${unit}${weight}`
 }
 
-/** Recap of a logged workout, shown from the Log screen. Edit opens the log form. */
-export function WorkoutDetailSheet({ session, onClose, onEdit }: WorkoutDetailSheetProps) {
-  if (!session) {
+/** Recap of a logged workout, shown from the Log screen. Sets are tap-to-edit. */
+export function WorkoutDetailSheet({ session, onClose, onEdit, onChanged }: WorkoutDetailSheetProps) {
+  // Local copy so set edits render immediately; the list reloads via onChanged.
+  const [local, setLocal] = useState<Session | null>(session)
+
+  useEffect(() => {
+    setLocal(session)
+  }, [session])
+
+  const applySet = (updated: SetLog) => {
+    setLocal((prev) => {
+      if (!prev) {
+        return prev
+      }
+      return {
+        ...prev,
+        exercises: prev.exercises.map((se) => ({
+          ...se,
+          sets: se.sets.map((s) => (s.id === updated.id ? updated : s)),
+        })),
+      }
+    })
+    onChanged()
+  }
+
+  if (!local) {
     return (
       <Sheet open={false} onClose={onClose}>
         {null}
@@ -36,43 +62,49 @@ export function WorkoutDetailSheet({ session, onClose, onEdit }: WorkoutDetailSh
 
   return (
     <Sheet
-      open={session != null}
+      open={local != null}
       onClose={onClose}
-      title={SPORT_LABEL[session.sport]}
-      sportClass={sportClass(session.sport)}
+      title={SPORT_LABEL[local.sport]}
+      sportClass={sportClass(local.sport)}
     >
       <p className="workout-detail__meta">
-        {fmtDayEyebrow(session.date)} · {sessionStats(session)}
+        {fmtDayEyebrow(local.date)} · {sessionStats(local)}
       </p>
 
-      {session.exercises.length > 0 ? (
+      {local.exercises.length > 0 ? (
         <div className="list-group" style={{ marginTop: 'var(--space-4)' }}>
-          {session.exercises
+          {local.exercises
             .slice()
             .sort((a, b) => a.order - b.order)
             .map((se) => (
-              <ExerciseRecap key={se.id} se={se} />
+              <ExerciseRecap key={se.id} se={se} sessionId={local.id} onSetSaved={applySet} />
             ))}
         </div>
       ) : null}
 
-      {session.note ? <p className="workout-detail__note">{session.note}</p> : null}
+      {local.note ? <p className="workout-detail__note">{local.note}</p> : null}
 
-      <button
-        type="button"
-        className="btn btn--ghost form-submit"
-        onClick={() => onEdit(session)}
-      >
+      <button type="button" className="btn btn--ghost form-submit" onClick={() => onEdit(local)}>
         Edit session
       </button>
     </Sheet>
   )
 }
 
-function ExerciseRecap({ se }: { se: SessionExercise }) {
+function ExerciseRecap({
+  se,
+  sessionId,
+  onSetSaved,
+}: {
+  se: SessionExercise
+  sessionId: string
+  onSetSaved: (set: SetLog) => void
+}) {
+  const [activeSetId, setActiveSetId] = useState<string | null>(null)
   const sets = [...se.sets].sort((a, b) => a.setNumber - b.setNumber)
   const done = sets.filter((s) => s.done).length
   const complete = done === sets.length && sets.length > 0
+  const activeSet = sets.find((s) => s.id === activeSetId) ?? null
 
   return (
     <article className="workout-detail__ex">
@@ -90,7 +122,12 @@ function ExerciseRecap({ se }: { se: SessionExercise }) {
 
       <div className="workout-detail__sets">
         {sets.map((set) => (
-          <div key={set.id} className={`set-line ${set.done ? 'is-done' : ''}`}>
+          <button
+            key={set.id}
+            type="button"
+            className={`set-line ${set.done ? 'is-done' : ''}`}
+            onClick={() => setActiveSetId((cur) => (cur === set.id ? null : set.id))}
+          >
             <span className="type-eyebrow">Set {set.setNumber}</span>
             <span className="set-line__vals">
               {set.done ? (
@@ -104,9 +141,22 @@ function ExerciseRecap({ se }: { se: SessionExercise }) {
                 '—'
               )}
             </span>
-          </div>
+          </button>
         ))}
       </div>
+
+      {activeSet && (
+        <WorkoutDetailSetEditor
+          key={activeSet.id}
+          se={se}
+          set={activeSet}
+          sessionId={sessionId}
+          onSaved={(updated) => {
+            onSetSaved(updated)
+            setActiveSetId(null)
+          }}
+        />
+      )}
     </article>
   )
 }

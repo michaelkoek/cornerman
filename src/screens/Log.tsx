@@ -90,7 +90,12 @@ export default function Log() {
       </button>
 
       <ManualLogSheet open={logOpen} onClose={closeLogSheet} onSaved={reload} session={editing} />
-      <WorkoutDetailSheet session={selected} onClose={() => setSelected(null)} onEdit={startEdit} />
+      <WorkoutDetailSheet
+        session={selected}
+        onClose={() => setSelected(null)}
+        onEdit={startEdit}
+        onChanged={reload}
+      />
     </main>
   )
 }
