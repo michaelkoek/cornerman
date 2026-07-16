@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Sport } from '../../shared/types'
+import { useEffect, useState } from 'react'
+import type { Session, Sport } from '../../shared/types'
 import { api } from '../lib/api'
 import { SPORTS, SPORT_LABEL, sportClass, todayIso } from '../lib/format'
 import { RpeSlider } from './RpeSlider'
@@ -11,10 +11,22 @@ interface ManualLogSheetProps {
   onClose: () => void
   onSaved: () => void
   defaultSport?: Sport
+  /** When set, the sheet edits this existing session instead of creating one. */
+  session?: Session | null
 }
 
-/** Manual CreateSessionRequest form: sport, date, duration, RPE, note. */
-export function ManualLogSheet({ open, onClose, onSaved, defaultSport }: ManualLogSheetProps) {
+const BASE_DURATIONS = [30, 45, 60, 90]
+
+function durationOptions(current: number): number[] {
+  if (BASE_DURATIONS.includes(current)) {
+    return BASE_DURATIONS
+  }
+  return [...BASE_DURATIONS, current].sort((a, b) => a - b)
+}
+
+/** Manual session form: sport, date, duration, RPE, note. Creates or edits. */
+export function ManualLogSheet({ open, onClose, onSaved, defaultSport, session }: ManualLogSheetProps) {
+  const editing = session != null
   const [sport, setSport] = useState<Sport>(defaultSport ?? 'kickboxing')
   const [date, setDate] = useState(todayIso())
   const [duration, setDuration] = useState(60)
@@ -23,20 +35,51 @@ export function ManualLogSheet({ open, onClose, onSaved, defaultSport }: ManualL
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    setError(null)
+    if (session) {
+      setSport(session.sport)
+      setDate(session.date)
+      setDuration(session.durationMin ?? 60)
+      setRpe(session.rpe ?? 6)
+      setNote(session.note ?? '')
+    } else {
+      setSport(defaultSport ?? 'kickboxing')
+      setDate(todayIso())
+      setDuration(60)
+      setRpe(6)
+      setNote('')
+    }
+  }, [open, session, defaultSport])
+
+  // Strength sessions carry their exercises' sport — swapping it makes no sense.
+  const sportLocked = editing && session.exercises.length > 0
+
   const submit = async () => {
     setSaving(true)
     setError(null)
     try {
-      await api.createSession({
-        date,
-        sport,
-        durationMin: duration,
-        rpe,
-        note: note.trim() || undefined,
-        status: 'done',
-      })
-      setNote('')
-      setDate(todayIso())
+      if (session) {
+        await api.updateSession(session.id, {
+          date,
+          sport,
+          durationMin: duration,
+          rpe,
+          note: note.trim() || null,
+        })
+      } else {
+        await api.createSession({
+          date,
+          sport,
+          durationMin: duration,
+          rpe,
+          note: note.trim() || undefined,
+          status: 'done',
+        })
+      }
       onSaved()
       onClose()
     } catch (err) {
@@ -47,24 +90,31 @@ export function ManualLogSheet({ open, onClose, onSaved, defaultSport }: ManualL
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title="Log session" sportClass={sportClass(sport)}>
-      <div className="field">
-        <span className="type-eyebrow">Sport</span>
-        <div className="sport-grid">
-          {SPORTS.map((s) => (
-            <button
-              key={s}
-              type="button"
-              className={`sport-grid__opt ${sportClass(s)}`}
-              aria-pressed={s === sport}
-              onClick={() => setSport(s)}
-            >
-              <SportIcon sport={s} />
-              {SPORT_LABEL[s]}
-            </button>
-          ))}
+    <Sheet
+      open={open}
+      onClose={onClose}
+      title={editing ? 'Edit session' : 'Log session'}
+      sportClass={sportClass(sport)}
+    >
+      {sportLocked ? null : (
+        <div className="field">
+          <span className="type-eyebrow">Sport</span>
+          <div className="sport-grid">
+            {SPORTS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`sport-grid__opt ${sportClass(s)}`}
+                aria-pressed={s === sport}
+                onClick={() => setSport(s)}
+              >
+                <SportIcon sport={s} />
+                {SPORT_LABEL[s]}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="field">
         <label className="type-eyebrow" htmlFor="log-date">
@@ -83,7 +133,7 @@ export function ManualLogSheet({ open, onClose, onSaved, defaultSport }: ManualL
       <div className="field">
         <span className="type-eyebrow">Duration</span>
         <div className="chip-row">
-          {[30, 45, 60, 90].map((m) => (
+          {durationOptions(duration).map((m) => (
             <button
               key={m}
               type="button"
@@ -124,7 +174,7 @@ export function ManualLogSheet({ open, onClose, onSaved, defaultSport }: ManualL
         disabled={saving || !date}
         onClick={() => void submit()}
       >
-        {saving ? 'Saving…' : 'Log session'}
+        {saving ? 'Saving…' : editing ? 'Save changes' : 'Log session'}
       </button>
     </Sheet>
   )

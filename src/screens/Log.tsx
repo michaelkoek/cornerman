@@ -37,6 +37,18 @@ export default function Log() {
   const { data, error, loading, reload } = useAsync(api.listSessions)
   const [logOpen, setLogOpen] = useState(false)
   const [selected, setSelected] = useState<Session | null>(null)
+  const [editing, setEditing] = useState<Session | null>(null)
+
+  const startEdit = (session: Session) => {
+    setSelected(null)
+    setEditing(session)
+    setLogOpen(true)
+  }
+
+  const closeLogSheet = () => {
+    setLogOpen(false)
+    setEditing(null)
+  }
 
   const groups = useMemo(() => (data ? groupByWeek(data) : []), [data])
 
@@ -77,8 +89,8 @@ export default function Log() {
         <IconPlus size={24} />
       </button>
 
-      <ManualLogSheet open={logOpen} onClose={() => setLogOpen(false)} onSaved={reload} />
-      <WorkoutDetailSheet session={selected} onClose={() => setSelected(null)} />
+      <ManualLogSheet open={logOpen} onClose={closeLogSheet} onSaved={reload} session={editing} />
+      <WorkoutDetailSheet session={selected} onClose={() => setSelected(null)} onEdit={startEdit} />
     </main>
   )
 }

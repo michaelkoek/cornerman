@@ -58,8 +58,10 @@ import { computePRs, emptyPR, epley, foldSet } from './prs'
 
 export interface SessionPatch {
   status?: Session['status']
+  date?: string
+  sport?: Sport
   rpe?: number
-  note?: string
+  note?: string | null
   durationMin?: number
 }
 
@@ -144,6 +146,8 @@ async function updateSession(id: string, body: SessionPatch): Promise<Session> {
   const next: Session = {
     ...existing,
     status: body.status ?? existing.status,
+    date: body.date ?? existing.date,
+    sport: body.sport ?? existing.sport,
     rpe: body.rpe !== undefined ? body.rpe : existing.rpe,
     note: body.note !== undefined ? body.note : existing.note,
     durationMin: body.durationMin !== undefined ? body.durationMin : existing.durationMin,

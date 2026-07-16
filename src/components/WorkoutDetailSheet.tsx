@@ -13,6 +13,7 @@ import { Sheet } from './Sheet'
 interface WorkoutDetailSheetProps {
   session: Session | null
   onClose: () => void
+  onEdit: (session: Session) => void
 }
 
 function prescription(se: SessionExercise): string {
@@ -23,8 +24,8 @@ function prescription(se: SessionExercise): string {
   return `${se.targetSets} × ${reps}${unit}${weight}`
 }
 
-/** Read-only recap of a logged workout, shown from the Log screen. */
-export function WorkoutDetailSheet({ session, onClose }: WorkoutDetailSheetProps) {
+/** Recap of a logged workout, shown from the Log screen. Edit opens the log form. */
+export function WorkoutDetailSheet({ session, onClose, onEdit }: WorkoutDetailSheetProps) {
   if (!session) {
     return (
       <Sheet open={false} onClose={onClose}>
@@ -56,6 +57,14 @@ export function WorkoutDetailSheet({ session, onClose }: WorkoutDetailSheetProps
       ) : null}
 
       {session.note ? <p className="workout-detail__note">{session.note}</p> : null}
+
+      <button
+        type="button"
+        className="btn btn--ghost form-submit"
+        onClick={() => onEdit(session)}
+      >
+        Edit session
+      </button>
     </Sheet>
   )
 }
