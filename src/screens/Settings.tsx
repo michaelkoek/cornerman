@@ -305,6 +305,18 @@ function AddAnchorSheet({
 /* Strava                                                               */
 /* ------------------------------------------------------------------ */
 
+function fmtLastSync(iso: string): string {
+  const diffMin = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000))
+  if (diffMin < 60) {
+    return `${diffMin} min ago`
+  }
+  const diffH = Math.round(diffMin / 60)
+  if (diffH < 48) {
+    return `${diffH}h ago`
+  }
+  return `${Math.round(diffH / 24)} days ago`
+}
+
 function StravaSection({ settings }: { settings: SettingsShape }) {
   const connected = settings.stravaConnected
 
@@ -321,7 +333,9 @@ function StravaSection({ settings }: { settings: SettingsShape }) {
           </div>
         </div>
         <p className="settings-note">
-          Runs are synced in the background (via n8n) — there’s nothing to connect here.
+          {connected && settings.stravaLastSyncAt
+            ? `Runs sync hourly in the background. Last synced ${fmtLastSync(settings.stravaLastSyncAt)}.`
+            : 'Runs sync hourly in the background once authorized — see scripts/strava/authorize.ts.'}
         </p>
       </div>
     </section>

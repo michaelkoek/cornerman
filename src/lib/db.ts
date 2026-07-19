@@ -139,6 +139,7 @@ export function hydrateSession(id: string, data: DocumentData): Session {
     avgPaceSecPerKm: data.avgPaceSecPerKm ?? null,
     avgHr: data.avgHr ?? null,
     stravaId: data.stravaId ?? null,
+    run: (data.run as Session['run']) ?? null,
     exercises,
   }
 }
@@ -158,6 +159,7 @@ export function toStored(session: Session): DocumentData {
     avgPaceSecPerKm: session.avgPaceSecPerKm,
     avgHr: session.avgHr,
     stravaId: session.stravaId,
+    run: session.run,
     exercises: session.exercises.map(
       (se): StoredSessionExercise => ({
         id: se.id,
@@ -320,6 +322,7 @@ function defaultSettings(uid: string): Settings & { uid: string } {
     weeklyTarget: 4,
     anchors: DEFAULT_ANCHORS.map((a) => ({ ...a, id: newId() })),
     stravaConnected: false,
+    stravaLastSyncAt: null,
   }
 }
 
@@ -331,13 +334,19 @@ export async function getSettings(): Promise<Settings> {
   if (!snap.exists()) {
     const fresh = defaultSettings(uid)
     await setDoc(ref, fresh)
-    return { weeklyTarget: fresh.weeklyTarget, anchors: fresh.anchors, stravaConnected: fresh.stravaConnected }
+    return {
+      weeklyTarget: fresh.weeklyTarget,
+      anchors: fresh.anchors,
+      stravaConnected: fresh.stravaConnected,
+      stravaLastSyncAt: fresh.stravaLastSyncAt,
+    }
   }
   const data = snap.data()
   return {
     weeklyTarget: data.weeklyTarget ?? 4,
     anchors: (data.anchors ?? []) as Anchor[],
     stravaConnected: Boolean(data.stravaConnected),
+    stravaLastSyncAt: (data.stravaLastSyncAt as string | undefined) ?? null,
   }
 }
 

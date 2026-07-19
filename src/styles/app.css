@@ -911,6 +911,85 @@
 }
 
 /* ------------------------------------------------------------
+   Run detail (Strava run recap inside the workout detail sheet)
+   ------------------------------------------------------------ */
+.run-detail {
+  margin-top: var(--space-4);
+}
+
+.run-detail__stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.run-detail__stat {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.run-detail__stat-value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+}
+
+.run-detail__splits {
+  margin-top: var(--space-5);
+}
+
+.run-detail__splits-title {
+  margin-bottom: var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.run-detail__split-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.run-split {
+  display: grid;
+  grid-template-columns: 2rem 1fr 3.25rem 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-s-size);
+}
+
+.run-split__km {
+  color: var(--text-tertiary);
+}
+
+.run-split__bar-track {
+  height: 10px;
+  background: var(--accent-dim);
+}
+
+.run-split__bar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.run-split__pace {
+  text-align: right;
+}
+
+.run-split__elev {
+  text-align: right;
+  color: var(--text-tertiary);
+  font-size: var(--type-caption-size);
+}
+
+/* ------------------------------------------------------------
    Forms
    ------------------------------------------------------------ */
 .field {

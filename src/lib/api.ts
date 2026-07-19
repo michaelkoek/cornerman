@@ -135,6 +135,7 @@ async function createSession(body: CreateSessionRequest): Promise<Session> {
     avgPaceSecPerKm: null,
     avgHr: null,
     stravaId: null,
+    run: null,
     exercises: [],
   }
   return createSessionDoc(session)

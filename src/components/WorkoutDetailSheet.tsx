@@ -9,6 +9,7 @@ import {
   sportClass,
 } from '../lib/format'
 import { IconCheck } from './icons'
+import { RunDetail } from './RunDetail'
 import { Sheet } from './Sheet'
 import { WorkoutDetailSetEditor } from './WorkoutDetailSetEditor'
 
@@ -70,6 +71,8 @@ export function WorkoutDetailSheet({ session, onClose, onEdit, onChanged }: Work
       <p className="workout-detail__meta">
         {fmtDayEyebrow(local.date)} · {sessionStats(local)}
       </p>
+
+      {local.run != null ? <RunDetail session={local} run={local.run} /> : null}
 
       {local.exercises.length > 0 ? (
         <div className="list-group" style={{ marginTop: 'var(--space-4)' }}>

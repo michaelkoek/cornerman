@@ -218,6 +218,7 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
     avgPaceSecPerKm: null,
     avgHr: null,
     stravaId: null,
+    run: null,
     exercises,
   }
 

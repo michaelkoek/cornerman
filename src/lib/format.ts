@@ -139,6 +139,18 @@ export function fmtPace(secPerKm: number): string {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+/** 5065 -> "1:24:25", 1530 -> "25:30" — run durations. */
+export function fmtRunTime(totalSeconds: number): string {
+  const s = Math.max(0, Math.round(totalSeconds))
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = String(s % 60).padStart(2, '0')
+  if (h > 0) {
+    return `${h}:${String(m).padStart(2, '0')}:${sec}`
+  }
+  return `${m}:${sec}`
+}
+
 /** 95 -> "01:35" */
 export function fmtClock(totalSeconds: number): string {
   const s = Math.max(0, totalSeconds)

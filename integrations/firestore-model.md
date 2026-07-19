@@ -1,9 +1,10 @@
 # Cornerman — Firestore data model (source of truth)
 
 Single-user-per-account fitness app. Static React PWA on GitHub Pages talks to Firestore
-directly via the Firebase Web SDK. Auth = Firebase Auth (Google sign-in). n8n writes Strava
-runs into the same `sessions` collection. Exercises are NOT in Firestore — they are bundled
-static reference data (`data/exercises.json`) shipped with the app.
+directly via the Firebase Web SDK. Auth = Firebase Auth (Google sign-in). A GitHub Actions
+cron (`scripts/strava/sync.ts`) writes Strava runs into the same `sessions` collection.
+Exercises are NOT in Firestore — they are bundled static reference data
+(`data/exercises.json`) shipped with the app.
 
 All timestamps are ISO strings or Firestore Timestamps as noted. All dates are `YYYY-MM-DD`
 in the user's local timezone (Europe/Amsterdam). Weeks are Monday-based.
@@ -36,7 +37,19 @@ Document shape:
   distanceKm: number|null,
   avgPaceSecPerKm: number|null,
   avgHr: number|null,
-  stravaId: string|null,          // set by n8n for runs; used to dedupe
+  stravaId: string|null,          // set by the Strava sync for runs; used to dedupe
+  run: {                          // rich Strava detail; null for non-strava sessions
+    movingTimeSec: number,
+    elapsedTimeSec: number,       // pauses = elapsedTimeSec - movingTimeSec
+    maxHr: number|null,
+    avgCadence: number|null,      // steps/min (Strava per-leg value doubled at ingest)
+    elevationGainM: number|null,
+    calories: number|null,
+    splits: [                     // per-km splits from Strava splits_metric
+      { km: number, distanceM: number, paceSecPerKm: number|null,
+        elevDiffM: number|null, avgHr: number|null }
+    ]
+  } | null,
   exercises: [                    // [] for non-strength sessions
     {
       id: string,                 // uuid
@@ -63,11 +76,25 @@ One document, id === the user's uid.
   uid: string,
   weeklyTarget: number,           // default 4
   anchors: [ { id: string, weekday: number, sport: Sport, time: "19:00", label: string } ],
-  stravaConnected: boolean        // flipped true once n8n has tokens (or user toggles)
+  stravaConnected: boolean,       // flipped true by the sync after its first successful run
+  stravaLastSyncAt: string|null   // ISO timestamp, stamped on every successful sync
 }
 ```
 Defaults created on first sign-in: weeklyTarget 4, anchors = kickboxing Tue(2)+Thu(4) 19:00
 "Kickboxing class".
+
+### `integrations/strava`
+Single document owned by the Strava sync (Admin SDK only — clients are denied by rules).
+```
+{
+  accessToken: string,
+  refreshToken: string,           // Strava rotates these; sync persists the newest
+  expiresAt: number,              // epoch seconds
+  lastSyncEpoch: number,          // start_date epoch of the newest imported run
+  updatedAt: Timestamp
+}
+```
+Seeded once by `scripts/strava/authorize.ts`.
 
 ### `bodyweight/{uid}_{date}`
 One document per weigh-in day. Document id is `${uid}_${date}` so re-logging the same day
@@ -94,6 +121,10 @@ service cloud.firestore {
     match /settings/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+    // Strava tokens — Admin SDK only, never client-readable.
+    match /integrations/{id} {
+      allow read, write: if false;
+    }
     match /bodyweight/{id} {
       allow read: if request.auth != null && resource.data.uid == request.auth.uid;
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
@@ -103,16 +134,20 @@ service cloud.firestore {
 }
 ```
 
-## n8n → Firestore (Strava sync)
-n8n owns the Strava OAuth client secret and refresh token. On a cron (every ~3h) it:
-1. Refreshes the Strava access token.
-2. Fetches new activities of type `Run` after the last synced start date.
-3. For each run, upserts a `sessions` doc with: uid = Michael's fixed uid (configured in n8n),
-   sport "running", source "strava", status "done", date = start_date_local (YYYY-MM-DD),
-   durationMin = round(moving_time/60), distanceKm, avgPaceSecPerKm = moving_time/distanceKm,
-   avgHr (nullable), stravaId = String(activity.id), exercises: [].
-   Dedupe by `stravaId` (query existing where uid==… and stravaId==id; skip if present).
+## GitHub Actions → Firestore (Strava sync)
+`scripts/strava/sync.ts`, run hourly by `.github/workflows/strava-sync.yml` (plus a manual
+`workflow_dispatch` trigger). Secrets live in GitHub Actions; Strava tokens live in
+`integrations/strava` (Strava rotates refresh tokens, so they must be writable). Per run:
+1. Refresh the Strava access token when near expiry; persist the rotated pair.
+2. Fetch activities after `lastSyncEpoch` (first run: 90-day backfill); keep
+   `sport_type` `Run`/`TrailRun`.
+3. Dedupe by `stravaId`, then fetch `GET /activities/{id}` for detail and write a
+   `sessions` doc: sport "running", source "strava", status "done",
+   date = start_date_local (YYYY-MM-DD), durationMin = round(moving_time/60), distanceKm,
+   avgPaceSecPerKm, avgHr, note = activity name, and the nested `run` detail above.
+4. Advance `lastSyncEpoch`; stamp `stravaConnected` + `stravaLastSyncAt` on `settings/{uid}`.
 
+One-time bootstrap: `scripts/strava/authorize.ts` (OAuth code exchange, seeds the token doc).
 The app treats these like any other done session (counts toward weekly target + recovery).
 
 ## Apple Health → Firestore (bodyweight sync)

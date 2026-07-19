@@ -76,6 +76,27 @@ export interface SessionExercise {
 export type SessionStatus = 'planned' | 'in_progress' | 'done' | 'skipped';
 export type SessionSource = 'manual' | 'generated' | 'strava' | 'anchor';
 
+// One per-kilometre split of a Strava run (last split is usually shorter than 1 km).
+export interface IRunSplit {
+  km: number; // 1-based split index
+  distanceM: number; // actual metres covered in this split
+  paceSecPerKm: number | null;
+  elevDiffM: number | null;
+  avgHr: number | null;
+}
+
+// Rich run stats fetched from Strava's per-activity detail endpoint.
+// Pauses are derived: elapsedTimeSec - movingTimeSec.
+export interface IRunDetail {
+  movingTimeSec: number;
+  elapsedTimeSec: number;
+  maxHr: number | null;
+  avgCadence: number | null; // steps/min (Strava reports per-leg; doubled at ingest)
+  elevationGainM: number | null;
+  calories: number | null;
+  splits: IRunSplit[];
+}
+
 export interface Session {
   id: string;
   date: string; // YYYY-MM-DD
@@ -91,6 +112,7 @@ export interface Session {
   avgPaceSecPerKm: number | null;
   avgHr: number | null;
   stravaId: string | null;
+  run: IRunDetail | null; // only set on strava-sourced running sessions
   exercises: SessionExercise[]; // empty for non-strength sessions
 }
 
@@ -106,6 +128,7 @@ export interface Settings {
   weeklyTarget: number; // sessions per week
   anchors: Anchor[];
   stravaConnected: boolean;
+  stravaLastSyncAt: string | null; // ISO timestamp of the last successful sync
 }
 
 // --- API shapes ---
@@ -231,7 +254,6 @@ export interface BodyweightResponse {
 
 // GET /api/exercises?location=&category= -> Exercise[]
 
-// Strava
-// GET /api/strava/auth-url -> { url } (needs STRAVA_CLIENT_ID/SECRET in .env)
-// GET /api/strava/callback?code= -> redirects to /settings
-// POST /api/strava/sync -> { imported: number } (pulls runs, dedupes by stravaId)
+// Strava — synced by scripts/strava/sync.ts (GitHub Actions cron), which writes
+// sessions docs (source "strava", status "done", dedupe by stravaId) and the
+// nested `run` detail. One-time auth: scripts/strava/authorize.ts.
