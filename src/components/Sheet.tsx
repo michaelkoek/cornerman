@@ -59,6 +59,14 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
     tracking.current = true
   }
 
+  // the fixed chrome (grabber + header) never scrolls — dragging it always dismisses
+  const onChromeTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0]
+    if (!touch) return
+    startY.current = touch.clientY
+    tracking.current = true
+  }
+
   const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
     if (!tracking.current) return
     const touch = e.touches[0]
@@ -101,8 +109,8 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
         onTouchEnd={onTouchEnd}
         onTouchCancel={onTouchEnd}
       >
-        <span className="sheet__grabber" aria-hidden="true" />
-        <div ref={scrollRef} className="sheet__inner">
+        <div className="sheet__chrome" onTouchStart={onChromeTouchStart}>
+          <span className="sheet__grabber" aria-hidden="true" />
           {title && (
             <header className="sheet__head">
               <h2 className="type-display-m">{title}</h2>
@@ -111,6 +119,8 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
               </button>
             </header>
           )}
+        </div>
+        <div ref={scrollRef} className="sheet__inner">
           {children}
         </div>
       </div>

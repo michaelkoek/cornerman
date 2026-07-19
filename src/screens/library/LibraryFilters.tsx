@@ -1,4 +1,6 @@
-/** Search input + horizontally scrollable facet chip rows (body part, equipment). */
+import { FacetPicker } from './FacetPicker'
+
+/** Search input + labeled searchable facet pickers (body part, equipment). */
 export function LibraryFilters({
   query,
   onQuery,
@@ -28,41 +30,15 @@ export function LibraryFilters({
         aria-label="Search exercises"
         onChange={(e) => onQuery(e.target.value)}
       />
-      <FacetRow label="Body part" options={bodyParts} value={bodyPart} onChange={onBodyPart} />
-      <FacetRow
-        label="Equipment"
-        options={equipmentOptions}
-        value={equipment}
-        onChange={onEquipment}
-      />
+      <div className="facet-picker__row">
+        <FacetPicker label="Body part" options={bodyParts} value={bodyPart} onChange={onBodyPart} />
+        <FacetPicker
+          label="Equipment"
+          options={equipmentOptions}
+          value={equipment}
+          onChange={onEquipment}
+        />
+      </div>
     </section>
-  )
-}
-
-function FacetRow({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string
-  options: string[]
-  value: string | null
-  onChange: (v: string | null) => void
-}) {
-  return (
-    <div className="chip-scroll" role="group" aria-label={`${label} — tap again to clear`}>
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          className="seg__opt chip-scroll__opt"
-          aria-pressed={value === opt}
-          onClick={() => onChange(value === opt ? null : opt)}
-        >
-          {opt}
-        </button>
-      ))}
-    </div>
   )
 }
