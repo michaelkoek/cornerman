@@ -1665,6 +1665,65 @@ button.lift-card:active {
   }
 }
 
+/* Pull-to-refresh: fixed badge that follows the drag from above the top edge,
+   arms past the threshold (spinner pops), and spins until the refetch
+   settles. Pull distance/progress arrive as inline custom properties. */
+.ptr {
+  --ptr-pull: 0px;
+  --ptr-progress: 0;
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + var(--space-2));
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline-strong);
+  box-shadow: var(--shadow-card);
+  z-index: var(--z-tabbar);
+  pointer-events: none;
+  opacity: var(--ptr-progress);
+  transform: translate(-50%, calc(var(--ptr-pull) - 48px));
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+.ptr[data-phase='pulling'] {
+  transition: none;
+}
+
+.ptr[data-phase='refreshing'] {
+  opacity: 1;
+  transform: translate(-50%, 16px);
+}
+
+.ptr__spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  border: 2.5px solid var(--hairline-strong);
+  border-top-color: var(--accent);
+  transform: rotate(calc(var(--ptr-progress) * 300deg));
+  transition: scale var(--dur-base) var(--ease-out);
+}
+
+.ptr[data-armed='true'] .ptr__spinner {
+  scale: 1.15;
+}
+
+.ptr[data-phase='refreshing'] .ptr__spinner {
+  animation: splash-spin 720ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptr[data-phase='refreshing'] .ptr__spinner {
+    animation-duration: 1600ms;
+  }
+}
+
 .config-error {
   min-height: 100dvh;
   display: flex;

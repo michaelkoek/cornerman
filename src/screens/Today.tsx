@@ -38,6 +38,7 @@ import { PlannerSection } from './today/PlannerSection'
 import { ExampleSheet } from '../components/ExampleSheet'
 import { ManualLogSheet } from '../components/ManualLogSheet'
 import { PrToast } from '../components/PrToast'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { RestTimer } from '../components/RestTimer'
 import { Ring } from '../components/Ring'
 import { RpeSlider } from '../components/RpeSlider'
@@ -49,7 +50,7 @@ import { IconCheck, IconEye, IconSwap } from '../components/icons'
 const st = (i: number) => ({ '--i': i }) as CSSProperties
 
 export default function Today() {
-  const { data, error, loading, reload, setData } = useAsync(api.today)
+  const { data, error, loading, refreshing, reload, setData } = useAsync(api.today)
   const [restKey, setRestKey] = useState<number | null>(null)
 
   const setSession = (updater: (prev: Session) => Session) => {
@@ -70,6 +71,7 @@ export default function Today() {
 
   return (
     <main className="screen">
+      <PullToRefresh onRefresh={reload} refreshing={refreshing} />
       <TodayHeader data={data} />
 
       {session?.status === 'done' ? (

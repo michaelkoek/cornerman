@@ -32,6 +32,7 @@ import {
   todayIso,
 } from '../lib/format'
 import { useAsync, usePersist } from '../lib/useAsync'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { usePinchZoom } from '../lib/usePinchZoom'
 import { EmptyNotice, ErrorNotice, Skel } from '../components/Skeleton'
 import { Sheet } from '../components/Sheet'
@@ -46,7 +47,7 @@ const GRID = 'rgba(244, 238, 228, 0.08)'
 const EMPTY_COPY = 'Nothing logged yet. First bell rings when you do.'
 
 export default function Progress() {
-  const { data, error, loading, reload } = useAsync(api.dashboard)
+  const { data, error, loading, refreshing, reload } = useAsync(api.dashboard)
   const [detailId, setDetailId] = useState<string | null>(null)
 
   if (loading) return <ProgressSkeleton />
@@ -63,6 +64,7 @@ export default function Progress() {
 
   return (
     <main className="screen">
+      <PullToRefresh onRefresh={reload} refreshing={refreshing} />
       <header className="screen-title">
         <h1 className="type-display-l">Progress</h1>
       </header>

@@ -12,6 +12,7 @@ import {
 } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
 import { ManualLogSheet } from '../components/ManualLogSheet'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { WorkoutDetailSheet } from '../components/WorkoutDetailSheet'
 import { EmptyNotice, ErrorNotice, SkelRows, Skel } from '../components/Skeleton'
 import { IconPlus, SportIcon } from '../components/icons'
@@ -34,7 +35,7 @@ function groupByWeek(sessions: Session[]): WeekGroup[] {
 }
 
 export default function Log() {
-  const { data, error, loading, reload } = useAsync(api.listSessions)
+  const { data, error, loading, refreshing, reload } = useAsync(api.listSessions)
   const [logOpen, setLogOpen] = useState(false)
   const [selected, setSelected] = useState<Session | null>(null)
   const [editing, setEditing] = useState<Session | null>(null)
@@ -54,6 +55,7 @@ export default function Log() {
 
   return (
     <main className="screen">
+      <PullToRefresh onRefresh={reload} refreshing={refreshing} />
       <header className="screen-title">
         <h1 className="type-display-l">Log</h1>
       </header>

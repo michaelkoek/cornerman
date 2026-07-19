@@ -4,12 +4,13 @@ import { api } from '../lib/api'
 import { signOut } from '../lib/auth'
 import { SPORTS, SPORT_LABEL, WEEKDAY_FULL, sportClass } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { Sheet } from '../components/Sheet'
 import { ErrorNotice, Skel } from '../components/Skeleton'
 import { IconMinus, IconPlus, IconX, SportIcon } from '../components/icons'
 
 export default function Settings() {
-  const { data, error, loading, reload, setData } = useAsync(api.settings)
+  const { data, error, loading, refreshing, reload, setData } = useAsync(api.settings)
 
   if (loading) return <SettingsSkeleton />
   if (error || !data) {
@@ -25,6 +26,7 @@ export default function Settings() {
 
   return (
     <main className="screen">
+      <PullToRefresh onRefresh={reload} refreshing={refreshing} />
       <header className="screen-title">
         <h1 className="type-display-l">Settings</h1>
       </header>
