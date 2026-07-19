@@ -709,7 +709,7 @@
   display: inline-block;
   padding: 1px var(--space-1);
   margin-right: var(--space-1);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: var(--tracking-eyebrow);
   color: #e0a33c;
@@ -1691,11 +1691,11 @@ button.lift-card:active {
     opacity var(--dur-base) var(--ease-out);
 }
 
-.ptr[data-phase='pulling'] {
+.ptr[data-phase="pulling"] {
   transition: none;
 }
 
-.ptr[data-phase='refreshing'] {
+.ptr[data-phase="refreshing"] {
   opacity: 1;
   transform: translate(-50%, 16px);
 }
@@ -1710,16 +1710,16 @@ button.lift-card:active {
   transition: scale var(--dur-base) var(--ease-out);
 }
 
-.ptr[data-armed='true'] .ptr__spinner {
+.ptr[data-armed="true"] .ptr__spinner {
   scale: 1.15;
 }
 
-.ptr[data-phase='refreshing'] .ptr__spinner {
+.ptr[data-phase="refreshing"] .ptr__spinner {
   animation: splash-spin 720ms linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ptr[data-phase='refreshing'] .ptr__spinner {
+  .ptr[data-phase="refreshing"] .ptr__spinner {
     animation-duration: 1600ms;
   }
 }
