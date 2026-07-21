@@ -817,6 +817,24 @@
 }
 
 /* ------------------------------------------------------------
+   Swap sheet (split chips + search + muscle filter)
+   ------------------------------------------------------------ */
+.swap-sheet__caption {
+  margin-bottom: var(--space-3);
+}
+
+.swap-sheet__filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.exercise-row__prescription--block {
+  display: block;
+}
+
+/* ------------------------------------------------------------
    Sheets (modal bottom sheets)
    ------------------------------------------------------------ */
 .sheet__backdrop {

@@ -236,14 +236,16 @@ export async function buildAddedExercise(ex: Exercise, order: number): Promise<S
   return buildSessionExercise(ex, order, 3, prog)
 }
 
-/** Alternatives: same category, fits location, not already in the session. */
-export function alternativesFor(session: Session, se: SessionExercise): Exercise[] {
-  const current = se.exercise
+/**
+ * Swap candidates: fits location, not already in the session. Spans every
+ * category — the swap sheet narrows by split (push/pull/legs), search and
+ * muscle group client-side.
+ */
+export function alternativesFor(session: Session): Exercise[] {
   const inSession = new Set(session.exercises.map((x) => x.exerciseId))
   const location = session.location
   return getAllExercises().filter(
     (e) =>
-      e.category === current.category &&
       !inSession.has(e.id) &&
       (location === null || location === 'gym' || e.location.includes(location)),
   )

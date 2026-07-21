@@ -198,7 +198,7 @@ export interface CreateSessionRequest {
 // PATCH /api/sets/:id — { reps?, weightKg?, seconds?, done? }
 // POST /api/sessions/:id/exercises { exerciseId } — add exercise to session
 // DELETE /api/session-exercises/:id — remove exercise (swap flow)
-// GET /api/session-exercises/:id/alternatives — list of Exercise fitting same slot
+// GET /api/session-exercises/:id/alternatives — swap candidates (any category, fits location, not in session)
 
 // GET /api/dashboard
 export interface DashboardResponse {

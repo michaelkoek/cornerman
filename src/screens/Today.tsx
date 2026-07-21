@@ -33,7 +33,7 @@ import {
   sessionPrCount,
   type LoggedSet,
 } from '../lib/prs'
-import { useAsync, usePersist } from '../lib/useAsync'
+import { useAsync } from '../lib/useAsync'
 import { PlannerSection } from './today/PlannerSection'
 import { ExampleSheet } from '../components/ExampleSheet'
 import { ManualLogSheet } from '../components/ManualLogSheet'
@@ -45,6 +45,7 @@ import { RpeSlider } from '../components/RpeSlider'
 import { Sheet } from '../components/Sheet'
 import { Skel, ErrorNotice } from '../components/Skeleton'
 import { Stepper } from '../components/Stepper'
+import { SwapSheet } from '../components/SwapSheet'
 import { IconCheck, IconEye, IconSwap } from '../components/icons'
 
 const st = (i: number) => ({ '--i': i }) as CSSProperties
@@ -730,100 +731,6 @@ function SetLogger({
         Log set {set.setNumber}
       </button>
     </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* Swap sheet                                                           */
-/* ------------------------------------------------------------------ */
-
-function SwapSheet({
-  swapFor,
-  sessionId,
-  onClose,
-  onSwapped,
-}: {
-  swapFor: SessionExercise | null
-  sessionId: string
-  onClose: () => void
-  onSwapped: () => void
-}) {
-  const persisted = usePersist(swapFor)
-  return (
-    <Sheet open={swapFor !== null} onClose={onClose} title="Swap exercise">
-      {persisted && (
-        <AlternativesList key={persisted.id} se={persisted} sessionId={sessionId} onSwapped={onSwapped} />
-      )}
-    </Sheet>
-  )
-}
-
-function AlternativesList({
-  se,
-  sessionId,
-  onSwapped,
-}: {
-  se: SessionExercise
-  sessionId: string
-  onSwapped: () => void
-}) {
-  const { data, error, loading, reload } = useAsync(() => api.alternatives(sessionId, se.id))
-  const [busyId, setBusyId] = useState<string | null>(null)
-  const [swapError, setSwapError] = useState<string | null>(null)
-
-  const pick = async (ex: Exercise) => {
-    setBusyId(ex.id)
-    setSwapError(null)
-    try {
-      await api.removeSessionExercise(sessionId, se.id)
-      await api.addSessionExercise(sessionId, ex.id)
-      onSwapped()
-    } catch (err) {
-      setSwapError(err instanceof Error ? err.message : 'Swap failed.')
-      setBusyId(null)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="skel-stack">
-        {[0, 1, 2].map((i) => (
-          <Skel key={i} h={64} r="var(--radius-m)" />
-        ))}
-      </div>
-    )
-  }
-  if (error) return <ErrorNotice message={error} onRetry={reload} />
-  if (!data || data.length === 0) {
-    return <p className="notice__text">No alternatives fit this slot with your equipment.</p>
-  }
-
-  return (
-    <>
-      <p className="type-caption" style={{ marginBottom: 'var(--space-3)' }}>
-        Replacing <strong>{se.exercise.name}</strong>
-      </p>
-      <div className="list-group">
-        {data.map((ex) => (
-          <button
-            key={ex.id}
-            type="button"
-            className="exercise-row"
-            disabled={busyId !== null}
-            onClick={() => void pick(ex)}
-          >
-            <span className="exercise-row__main">
-              <span className="exercise-row__name">{ex.name}</span>
-              <span className="exercise-row__prescription" style={{ display: 'block' }}>
-                {ex.muscleGroups.join(' · ').toUpperCase()}
-              </span>
-            </span>
-            <span className="exercise-row__count">{busyId === ex.id ? '…' : '→'}</span>
-          </button>
-        ))}
-      </div>
-      {swapError && <p className="form-error">{swapError}</p>}
-    </>
   )
 }
 

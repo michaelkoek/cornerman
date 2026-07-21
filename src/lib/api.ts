@@ -207,12 +207,10 @@ async function removeSessionExercise(sessionId: string, sessionExerciseId: strin
   })
 }
 
-async function alternatives(sessionId: string, sessionExerciseId: string): Promise<Exercise[]> {
+async function alternatives(sessionId: string): Promise<Exercise[]> {
   const session = await getSession(sessionId)
   if (!session) throw new Error('Session not found')
-  const se = session.exercises.find((x) => x.id === sessionExerciseId)
-  if (!se) throw new Error('Session exercise not found')
-  return alternativesFor(session, se)
+  return alternativesFor(session)
 }
 
 // ---------------------------------------------------------------------------
