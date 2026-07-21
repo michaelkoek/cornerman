@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react'
+import { BottomLayer } from './BottomLayer'
 import { IconX } from './icons'
 
 interface SheetProps {
@@ -96,7 +97,7 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
   if (!mounted) return null
 
   return (
-    <>
+    <BottomLayer>
       <div className={`sheet__backdrop ${shown ? 'is-open' : ''}`} onClick={onClose} />
       <div
         className={`sheet corner-bracket ${sportClass ?? ''} ${shown ? 'is-open' : ''}`}
@@ -124,6 +125,6 @@ export function Sheet({ open, onClose, title, sportClass, children }: SheetProps
           {children}
         </div>
       </div>
-    </>
+    </BottomLayer>
   )
 }

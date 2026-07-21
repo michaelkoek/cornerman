@@ -7,8 +7,22 @@
    App shell
    ------------------------------------------------------------ */
 #root {
-  min-height: 100dvh;
+  height: 100%;
   background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 320px);
+}
+
+.app-grain {
+  height: 100%;
+}
+
+/* The single app scroller — the document itself never scrolls (iOS
+   standalone fixed-position bug); screens scroll inside this instead. */
+.app-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
 }
 
 .screen {
@@ -25,7 +39,7 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -795,6 +809,11 @@
 .timer-sheet__eyebrow {
   text-align: center;
   margin-bottom: var(--space-3);
+}
+
+/* Grabber header — drag down past the threshold to skip the rest timer */
+.timer-sheet__grab {
+  touch-action: none;
 }
 
 /* ------------------------------------------------------------
@@ -1683,7 +1702,7 @@ button.lift-card:active {
    Login gate + splash (auth)
    ------------------------------------------------------------ */
 .login {
-  min-height: 100dvh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1706,7 +1725,7 @@ button.lift-card:active {
 }
 
 .splash {
-  min-height: 100dvh;
+  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1804,7 +1823,7 @@ button.lift-card:active {
 }
 
 .config-error {
-  min-height: 100dvh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

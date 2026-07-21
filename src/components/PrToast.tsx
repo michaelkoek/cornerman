@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { BottomLayer } from './BottomLayer'
 
 const SHOW_MS = 2600
 const EXIT_MS = 340
@@ -28,9 +29,11 @@ export function PrToast({ message, onDone }: { message: string; onDone: () => vo
   }, [])
 
   return (
-    <div className={`pr-toast corner-bracket ${shown ? 'is-open' : ''}`} role="status">
-      <p className="type-eyebrow pr-toast__eyebrow">Personal record</p>
-      <p className="pr-toast__msg">{message}</p>
-    </div>
+    <BottomLayer>
+      <div className={`pr-toast corner-bracket ${shown ? 'is-open' : ''}`} role="status">
+        <p className="type-eyebrow pr-toast__eyebrow">Personal record</p>
+        <p className="pr-toast__msg">{message}</p>
+      </div>
+    </BottomLayer>
   )
 }

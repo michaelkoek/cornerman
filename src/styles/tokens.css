@@ -129,12 +129,16 @@
 }
 
 html {
+  height: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The document never scrolls — iOS standalone PWAs break position: fixed
+   while the document is the scroller. Screens scroll inside .app-scroll. */
 body {
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   background: var(--bg-0);
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -762,10 +766,13 @@ button {
   animation-delay: calc(var(--i, 0) * 60ms);
 }
 
+/* `to` must end at transform: none — the fill-mode holds the final frame
+   forever, and a held translateY(0) is a containing block for fixed
+   descendants (breaks bottom-pinned chrome); a held `none` is not. */
 @keyframes walkout {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 

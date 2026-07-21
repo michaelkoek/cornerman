@@ -32,12 +32,12 @@ const shouldIgnoreTarget = (target: EventTarget | null): boolean => {
 }
 
 /**
- * Custom pull-to-refresh for the document scroller. The browser's native
- * gesture is disabled via `overscroll-behavior-y: none` on `body`, so this
- * listens to window touch events (passively — no scroll jank), translates the
- * indicator while the user drags from the top, and arms past the threshold.
- * Pull distance is written straight to CSS custom properties to avoid
- * re-rendering on every touchmove.
+ * Custom pull-to-refresh for the app scroller (`.app-scroll` — the document
+ * itself never scrolls). The browser's native gesture is disabled via
+ * `overscroll-behavior-y: none`, so this listens to window touch events
+ * (passively — no scroll jank), translates the indicator while the user drags
+ * from the top, and arms past the threshold. Pull distance is written straight
+ * to CSS custom properties to avoid re-rendering on every touchmove.
  */
 export function usePullToRefresh({ onRefresh, refreshing }: IPullToRefreshOptions): IPullToRefreshHandle {
   const indicatorRef = useRef<HTMLDivElement | null>(null)
@@ -53,6 +53,11 @@ export function usePullToRefresh({ onRefresh, refreshing }: IPullToRefreshOption
   const refreshStartRef = useRef(0)
 
   useEffect(() => {
+    // The indicator mounts inside .app-scroll and both remount together on
+    // navigation, so resolving the scroller once per mount is never stale.
+    const scroller = indicatorRef.current?.closest('.app-scroll') ?? null
+    const isScrolled = () => (scroller ? scroller.scrollTop > 0 : window.scrollY > 0)
+
     const setPull = (pull: number) => {
       pullRef.current = pull
       const el = indicatorRef.current
@@ -74,7 +79,7 @@ export function usePullToRefresh({ onRefresh, refreshing }: IPullToRefreshOption
 
     const onTouchStart = (event: TouchEvent) => {
       const touch = event.touches[0]
-      if (!touch || phaseRef.current === 'refreshing' || window.scrollY > 0) {
+      if (!touch || phaseRef.current === 'refreshing' || isScrolled()) {
         return
       }
       if (shouldIgnoreTarget(event.target)) {
@@ -89,7 +94,7 @@ export function usePullToRefresh({ onRefresh, refreshing }: IPullToRefreshOption
       if (startY === null || !touch || phaseRef.current === 'refreshing') {
         return
       }
-      if (window.scrollY > 0) {
+      if (isScrolled()) {
         resetPull()
         return
       }

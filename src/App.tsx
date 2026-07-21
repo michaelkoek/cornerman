@@ -30,7 +30,8 @@ function Screens() {
   const location = useLocation()
   return (
     // key on pathname re-runs the screen entrance (fade/rise, no exit — DESIGN §6)
-    <div key={location.pathname}>
+    // .app-scroll is the app's only scroller; the document itself never scrolls
+    <div key={location.pathname} className="app-scroll">
       <Routes location={location}>
         <Route path="/" element={<Today />} />
         <Route path="/log" element={<Log />} />
