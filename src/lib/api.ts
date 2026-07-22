@@ -135,6 +135,7 @@ async function createSession(body: CreateSessionRequest): Promise<Session> {
     rpe: body.rpe ?? null,
     note: body.note ?? null,
     location: null,
+    machinesOnly: false,
     distanceKm: null,
     avgPaceSecPerKm: null,
     avgHr: null,
@@ -213,10 +214,11 @@ async function removeSessionExercise(sessionId: string, sessionExerciseId: strin
   })
 }
 
-async function alternatives(sessionId: string): Promise<Exercise[]> {
+async function alternatives(sessionId: string, sessionExerciseId?: string): Promise<Exercise[]> {
   const session = await getSession(sessionId)
   if (!session) throw new Error('Session not found')
-  return alternativesFor(session)
+  const current = session.exercises.find((se) => se.id === sessionExerciseId)?.exercise
+  return alternativesFor(session, current)
 }
 
 // ---------------------------------------------------------------------------

@@ -55,7 +55,7 @@ function SwapCandidates({
   sessionId: string
   onSwapped: () => void
 }) {
-  const { data, error, loading, reload } = useAsync(() => api.alternatives(sessionId))
+  const { data, error, loading, reload } = useAsync(() => api.alternatives(sessionId, se.id))
   const [category, setCategory] = useState<ExerciseCategory>(se.exercise.category)
   const [query, setQuery] = useState('')
   const [muscle, setMuscle] = useState<string | null>(null)

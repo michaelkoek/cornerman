@@ -114,6 +114,9 @@ export interface Session {
   rpe: number | null; // 1-10
   note: string | null;
   location: Location | null;
+  // True when the session was built with the machines & cables filter; the
+  // swap sheet keeps offering machine/cable alternatives for those exercises.
+  machinesOnly: boolean;
   // running (strava) extras
   distanceKm: number | null;
   avgPaceSecPerKm: number | null;
@@ -187,6 +190,9 @@ export interface SuggestRequest {
   location: Location;
   split?: WorkoutSplit;
   focus?: FocusTarget;
+  // Gym only: restrict the pool to machine/cable exercises. Slots that can't
+  // be filled that way fall back to the full gym pool.
+  machinesOnly?: boolean;
 }
 // Response: Session
 

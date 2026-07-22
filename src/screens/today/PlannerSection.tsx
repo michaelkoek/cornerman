@@ -18,8 +18,16 @@ export function PlannerSection({
 }) {
   const [minutes, setMinutes] = useState<20 | 45 | 60 | null>(null)
   const [location, setLocation] = useState<Location>('gym')
+  const [machinesOnly, setMachinesOnly] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const pickLocation = (loc: Location) => {
+    setLocation(loc)
+    if (loc === 'home') {
+      setMachinesOnly(false)
+    }
+  }
 
   const build = async (opts: { split?: WorkoutSplit; focus?: FocusTarget }) => {
     if (!minutes || busy) {
@@ -28,7 +36,12 @@ export function PlannerSection({
     setBusy(true)
     setError(null)
     try {
-      const session = await api.suggest({ minutes, location, ...opts })
+      const session = await api.suggest({
+        minutes,
+        location,
+        machinesOnly: location === 'gym' && machinesOnly,
+        ...opts,
+      })
       onSession(session)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not build a workout.')
@@ -44,7 +57,9 @@ export function PlannerSection({
         minutes={minutes}
         onMinutes={setMinutes}
         location={location}
-        onLocation={setLocation}
+        onLocation={pickLocation}
+        machinesOnly={machinesOnly}
+        onMachinesOnly={setMachinesOnly}
         busy={busy}
         error={error}
         onBuild={(split) => void build({ split: split ?? undefined })}

@@ -98,6 +98,19 @@ CREATE INDEX IF NOT EXISTS idx_se_exercise ON session_exercises(exercise_id);
 CREATE INDEX IF NOT EXISTS idx_sets_se ON sets(session_exercise_id);
 `);
 
+// ---------- migrations ----------
+// The schema above only runs CREATE TABLE IF NOT EXISTS, so columns added
+// later need a guarded ALTER TABLE for existing databases.
+
+function ensureColumn(table: string, column: string, definition: string): void {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+  if (!columns.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
+}
+
+ensureColumn('sessions', 'machines_only', 'INTEGER NOT NULL DEFAULT 0');
+
 // ---------- settings helpers ----------
 
 export function getSetting(key: string): string | null {
@@ -216,6 +229,7 @@ export interface SessionRow {
   rpe: number | null;
   note: string | null;
   location: string | null;
+  machines_only: number;
   distance_km: number | null;
   avg_pace_sec_per_km: number | null;
   avg_hr: number | null;
@@ -321,6 +335,7 @@ export function rowToSession(row: SessionRow): Session {
     rpe: row.rpe,
     note: row.note,
     location: row.location as Location | null,
+    machinesOnly: row.machines_only === 1,
     distanceKm: row.distance_km,
     avgPaceSecPerKm: row.avg_pace_sec_per_km,
     avgHr: row.avg_hr,

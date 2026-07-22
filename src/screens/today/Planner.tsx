@@ -9,6 +9,8 @@ export function Planner({
   onMinutes,
   location,
   onLocation,
+  machinesOnly,
+  onMachinesOnly,
   busy,
   error,
   onBuild,
@@ -18,6 +20,8 @@ export function Planner({
   onMinutes: (m: 20 | 45 | 60) => void
   location: Location
   onLocation: (loc: Location) => void
+  machinesOnly: boolean
+  onMachinesOnly: (on: boolean) => void
   busy: boolean
   error: string | null
   onBuild: (split: WorkoutSplit | null) => void
@@ -58,6 +62,16 @@ export function Planner({
           </button>
         ))}
       </div>
+      {location === 'gym' && (
+        <label className="planner__machines">
+          <input
+            type="checkbox"
+            checked={machinesOnly}
+            onChange={(e) => onMachinesOnly(e.target.checked)}
+          />
+          <span>Machines &amp; cables only</span>
+        </label>
+      )}
       <div className="seg seg--3" role="group" aria-label="Split — optional, tap again to clear">
         {(['push', 'pull', 'legs'] as const).map((s) => (
           <button

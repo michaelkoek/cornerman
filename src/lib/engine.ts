@@ -10,7 +10,7 @@ import type {
   SuggestRequest,
   WorkoutSplit,
 } from '../../shared/types'
-import { buildSlots, filterPool, pickExercises } from '../../shared/planning'
+import { buildSlots, filterPool, isMachineExercise, pickExercises } from '../../shared/planning'
 import {
   allDoneSessions,
   createSessionDoc,
@@ -189,8 +189,10 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
   const split = req.split ?? nextSplit(recentStrength)
   const slots = buildSlots(minutes, split, req.focus)
   const used = recentlyUsedExerciseIds(recentStrength)
-  const pool = filterPool(getAllExercises(), location, hard)
-  const picked = pickExercises(slots, pool, hard, used)
+  const machinesOnly = location === 'gym' && req.machinesOnly === true
+  const fullPool = filterPool(getAllExercises(), location, hard)
+  const pool = machinesOnly ? fullPool.filter(isMachineExercise) : fullPool
+  const picked = pickExercises(slots, pool, hard, used, fullPool)
 
   const allBodyweight = picked.every((e) => e.type !== 'weighted')
   const sport = allBodyweight ? 'calisthenics' : 'weightlifting'
@@ -216,6 +218,7 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
     rpe: null,
     note: null,
     location,
+    machinesOnly,
     distanceKm: null,
     avgPaceSecPerKm: null,
     avgHr: null,
@@ -241,14 +244,18 @@ export async function buildAddedExercise(ex: Exercise, order: number): Promise<S
 /**
  * Swap candidates: fits location, not already in the session. Spans every
  * category — the swap sheet narrows by split (push/pull/legs), search and
- * muscle group client-side.
+ * muscle group client-side. In a machines-only session, swapping a
+ * machine/cable exercise only offers machine/cable alternatives; fallback
+ * fills (non-machine exercises) keep the full pool.
  */
-export function alternativesFor(session: Session): Exercise[] {
+export function alternativesFor(session: Session, current?: Exercise): Exercise[] {
   const inSession = new Set(session.exercises.map((x) => x.exerciseId))
   const location = session.location
+  const requireMachine = session.machinesOnly && current !== undefined && isMachineExercise(current)
   return getAllExercises().filter(
     (e) =>
       !inSession.has(e.id) &&
-      (location === null || location === 'gym' || e.location.includes(location)),
+      (location === null || location === 'gym' || e.location.includes(location)) &&
+      (!requireMachine || isMachineExercise(e)),
   )
 }

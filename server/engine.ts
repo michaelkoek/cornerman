@@ -9,7 +9,7 @@ import {
   type SessionRow,
 } from './db.ts';
 import type { Exercise, Session, SuggestRequest, WorkoutSplit } from '../shared/types.ts';
-import { buildSlots, filterPool, pickExercises } from '../shared/planning.ts';
+import { buildSlots, filterPool, isMachineExercise, pickExercises } from '../shared/planning.ts';
 
 const STRENGTH_SPORTS = ['weightlifting', 'calisthenics'] as const;
 const CYCLE: WorkoutSplit[] = ['push', 'pull', 'legs'];
@@ -145,8 +145,10 @@ export function suggestSession(req: SuggestRequest): Session {
   const split = req.split ?? nextSplit();
   const slots = buildSlots(minutes, split, req.focus);
   const used = recentlyUsedExerciseIds();
-  const pool = filterPool(getAllExercises(), location, hard);
-  const picked = pickExercises(slots, pool, hard, used);
+  const machinesOnly = location === 'gym' && req.machinesOnly === true;
+  const fullPool = filterPool(getAllExercises(), location, hard);
+  const pool = machinesOnly ? fullPool.filter(isMachineExercise) : fullPool;
+  const picked = pickExercises(slots, pool, hard, used, fullPool);
 
   // 5. Sport of the generated session.
   const allBodyweight = picked.every((e) => e.type !== 'weighted');
@@ -158,8 +160,8 @@ export function suggestSession(req: SuggestRequest): Session {
   };
 
   const insertSession = db.prepare(
-    `INSERT INTO sessions (date, sport, source, status, duration_min, location)
-     VALUES (?, ?, 'generated', 'planned', ?, ?)`
+    `INSERT INTO sessions (date, sport, source, status, duration_min, location, machines_only)
+     VALUES (?, ?, 'generated', 'planned', ?, ?, ?)`
   );
   const insertSe = db.prepare(
     `INSERT INTO session_exercises
@@ -172,7 +174,9 @@ export function suggestSession(req: SuggestRequest): Session {
   );
 
   const createAll = db.transaction((): number => {
-    const sessionId = Number(insertSession.run(today, sport, minutes, location).lastInsertRowid);
+    const sessionId = Number(
+      insertSession.run(today, sport, minutes, location, machinesOnly ? 1 : 0).lastInsertRowid
+    );
     picked.forEach((e, i) => {
       const prog = progressionFor(e);
       const targetSets = setsPerExercise(e);
@@ -211,7 +215,11 @@ export function progressionForExercise(ex: Exercise): ProgressionResult {
   return progressionFor(ex);
 }
 
-/** Alternatives: same category, fits location, not already in the session. */
+/**
+ * Alternatives: same category, fits location, not already in the session.
+ * In a machines-only session, a machine/cable exercise only swaps for other
+ * machine/cable exercises; fallback fills keep the full pool.
+ */
 export function alternativesFor(sessionExerciseId: number): Exercise[] | null {
   const se = db
     .prepare('SELECT session_id, exercise_id FROM session_exercises WHERE id = ?')
@@ -223,10 +231,12 @@ export function alternativesFor(sessionExerciseId: number): Exercise[] | null {
   if (!current) return null;
   const inSession = new Set(session.exercises.map((x) => x.exerciseId));
   const location = session.location;
+  const requireMachine = session.machinesOnly && isMachineExercise(current);
   return getAllExercises().filter(
     (e) =>
       e.category === current.category &&
       !inSession.has(e.id) &&
-      (location === null || location === 'gym' || e.location.includes(location))
+      (location === null || location === 'gym' || e.location.includes(location)) &&
+      (!requireMachine || isMachineExercise(e))
   );
 }

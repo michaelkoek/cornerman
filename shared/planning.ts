@@ -2,6 +2,7 @@
 // server/engine.ts): slot layout per duration, muscle-focus presets, and
 // exercise selection. No data access — engines feed in history-derived inputs.
 import type {
+  Equipment,
   Exercise,
   ExerciseCategory,
   FocusTarget,
@@ -9,6 +10,15 @@ import type {
   SuggestRequest,
   WorkoutSplit,
 } from './types';
+
+// The "machines & cables only" gym filter. A future generic equipment picker
+// only has to turn this constant into a parameter.
+const MACHINE_EQUIPMENT: readonly Equipment[] = ['machine', 'cable'];
+
+/** True when the exercise can be done on a machine or cable station. */
+export function isMachineExercise(e: Exercise): boolean {
+  return e.equipment.some((eq) => MACHINE_EQUIPMENT.includes(eq));
+}
 
 export interface Slot {
   category?: ExerciseCategory;
@@ -141,31 +151,52 @@ function rankCandidates(candidates: Exercise[], hard: boolean, muscles?: string[
   });
 }
 
-/** Build the ordered set of picked exercises for a plan (pure). */
+/**
+ * Build the ordered set of picked exercises for a plan (pure).
+ *
+ * When `fallbackPool` differs from `pool` (machines-only builds), each slot is
+ * filled from the constrained pool first and topped up from the fallback pool,
+ * so a slot without machine/cable options still gets exercises.
+ */
 export function pickExercises(
   slots: Slot[],
   pool: Exercise[],
   hard: boolean,
   used: Set<string>,
+  fallbackPool: Exercise[] = pool,
 ): Exercise[] {
   const picked: Exercise[] = [];
   const pickedIds = new Set<string>();
 
-  for (const slot of slots) {
+  const select = (
+    source: Exercise[],
+    slot: Slot,
+    needed: number,
+    exclude: Set<string>,
+  ): Exercise[] => {
     const matches = slotMatcher(slot);
-    let candidates = pool.filter((e) => matches(e) && !pickedIds.has(e.id) && !used.has(e.id));
+    let candidates = source.filter((e) => matches(e) && !exclude.has(e.id) && !used.has(e.id));
     // If variety exclusion empties the slot, fall back to allowing recently used exercises.
-    if (candidates.length < slot.count) {
-      candidates = pool.filter((e) => matches(e) && !pickedIds.has(e.id));
+    if (candidates.length < needed) {
+      candidates = source.filter((e) => matches(e) && !exclude.has(e.id));
     }
+    return rankCandidates(candidates, hard, slot.muscles).slice(0, needed);
+  };
 
-    let chosen = rankCandidates(candidates, hard, slot.muscles).slice(0, slot.count);
+  for (const slot of slots) {
+    let chosen = select(pool, slot, slot.count, pickedIds);
+
+    // Constrained pool ran short — top up from the unconstrained pool.
+    if (chosen.length < slot.count && fallbackPool !== pool) {
+      const exclude = new Set([...pickedIds, ...chosen.map((e) => e.id)]);
+      chosen = [...chosen, ...select(fallbackPool, slot, slot.count - chosen.length, exclude)];
+    }
 
     // Still short (thin muscle pool, e.g. chest at home) — fill from the fallback categories.
     const fallbackCategories = slot.fallbackCategories;
     if (chosen.length < slot.count && fallbackCategories) {
       const chosenIds = new Set(chosen.map((e) => e.id));
-      const fillers = pool.filter(
+      const fillers = fallbackPool.filter(
         (e) =>
           fallbackCategories.includes(e.category) &&
           !pickedIds.has(e.id) &&

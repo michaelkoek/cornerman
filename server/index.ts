@@ -133,14 +133,19 @@ app.get('/api/today', (c) => {
 app.post('/api/suggest', async (c) => {
   const body = (await c.req.json().catch(() => null)) as Partial<SuggestRequest> | null;
   const validSplit = body?.split === undefined || ['push', 'pull', 'legs'].includes(body.split);
+  const validMachinesOnly = body?.machinesOnly === undefined || typeof body.machinesOnly === 'boolean';
   if (
     !body ||
     ![20, 45, 60].includes(body.minutes as number) ||
     !['home', 'gym'].includes(body.location as string) ||
-    !validSplit
+    !validSplit ||
+    !validMachinesOnly
   ) {
     return c.json(
-      { error: 'Expected body { minutes: 20|45|60, location: "home"|"gym", split?: "push"|"pull"|"legs" }' },
+      {
+        error:
+          'Expected body { minutes: 20|45|60, location: "home"|"gym", split?: "push"|"pull"|"legs", machinesOnly?: boolean }',
+      },
       400
     );
   }
@@ -148,6 +153,7 @@ app.post('/api/suggest', async (c) => {
     minutes: body.minutes as 20 | 45 | 60,
     location: body.location as 'home' | 'gym',
     split: body.split,
+    machinesOnly: body.machinesOnly,
   });
   return c.json(session, 201);
 });
