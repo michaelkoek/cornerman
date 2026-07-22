@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import type { FocusTarget, Location, Session, WorkoutSplit } from '../../../shared/types'
+import type { Location, Session } from '../../../shared/types'
 import { api } from '../../lib/api'
-import { FocusPlanner } from './FocusPlanner'
-import { Planner } from './Planner'
+import { Planner, type Emphasis } from './Planner'
 
 /**
- * The two workout builders on Today: the split planner and the muscle-focus
- * planner. Time + location are picked once here and shared by both; either
- * build button replaces today's planned session.
+ * The workout builder on Today: time + location + an optional emphasis
+ * (push/pull/legs split or a muscle focus) behind a single build CTA.
+ * Building replaces today's planned session.
  */
 export function PlannerSection({
   onSession,
@@ -29,7 +28,7 @@ export function PlannerSection({
     }
   }
 
-  const build = async (opts: { split?: WorkoutSplit; focus?: FocusTarget }) => {
+  const build = async (emphasis: Emphasis | null) => {
     if (!minutes || busy) {
       return
     }
@@ -40,7 +39,8 @@ export function PlannerSection({
         minutes,
         location,
         machinesOnly: location === 'gym' && machinesOnly,
-        ...opts,
+        split: emphasis?.kind === 'split' ? emphasis.value : undefined,
+        focus: emphasis?.kind === 'focus' ? emphasis.value : undefined,
       })
       onSession(session)
     } catch (err) {
@@ -51,20 +51,17 @@ export function PlannerSection({
   }
 
   return (
-    <>
-      <Planner
-        secondary={secondary}
-        minutes={minutes}
-        onMinutes={setMinutes}
-        location={location}
-        onLocation={pickLocation}
-        machinesOnly={machinesOnly}
-        onMachinesOnly={setMachinesOnly}
-        busy={busy}
-        error={error}
-        onBuild={(split) => void build({ split: split ?? undefined })}
-      />
-      <FocusPlanner minutes={minutes} busy={busy} onBuild={(focus) => void build({ focus })} />
-    </>
+    <Planner
+      secondary={secondary}
+      minutes={minutes}
+      onMinutes={setMinutes}
+      location={location}
+      onLocation={pickLocation}
+      machinesOnly={machinesOnly}
+      onMachinesOnly={setMachinesOnly}
+      busy={busy}
+      error={error}
+      onBuild={(emphasis) => void build(emphasis)}
+    />
   )
 }

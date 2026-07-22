@@ -86,7 +86,7 @@
   margin-bottom: var(--space-6);
 }
 
-.today-head__date {
+.today-head__brand {
   color: var(--text-tertiary);
 }
 
@@ -120,6 +120,55 @@
 
 .streak-line.is-cold::before {
   border-color: var(--text-disabled);
+}
+
+/* Mon–Sun training dots under the streak line */
+.week-strip {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.week-strip__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.week-strip__letter {
+  font-family: var(--font-data);
+  font-size: 0.625rem;
+  line-height: 1;
+  color: var(--text-disabled);
+}
+
+.week-strip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--text-disabled);
+}
+
+.week-strip__day.is-future .week-strip__dot {
+  background: var(--surface-3);
+}
+
+.week-strip__day.is-today .week-strip__letter {
+  color: var(--text-primary);
+}
+
+.week-strip__day.is-today:not(.is-trained) .week-strip__dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+
+.week-strip__day.is-trained .week-strip__letter {
+  color: var(--text-secondary);
+}
+
+.week-strip__day.is-trained .week-strip__dot {
+  background: var(--accent);
 }
 
 /* ------------------------------------------------------------
@@ -204,6 +253,11 @@
 
 .hero__cta {
   margin-top: var(--space-5);
+  width: 100%;
+}
+
+.hero--rest {
+  --bracket-color: var(--text-tertiary);
 }
 
 .hero--rest .hero__name {
@@ -279,6 +333,17 @@
   accent-color: var(--accent);
 }
 
+/* Kept in flow at "home" so toggling location never shifts the layout */
+.planner__machines.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* two-class selector: outranks .chip-scroll's `margin: 0 …` reset below */
+.chip-scroll.planner__emphasis {
+  margin-top: var(--space-3);
+}
+
 .seg__opt {
   height: 52px;
   display: flex;
@@ -312,6 +377,8 @@
 
 .planner__go {
   margin-top: var(--space-4);
+  width: 100%;
+  height: var(--touch-target);
 }
 
 /* ------------------------------------------------------------
@@ -507,7 +574,7 @@
 
 .chip-scroll__opt {
   flex: none;
-  height: 40px;
+  height: 44px;
   padding: 0 var(--space-4);
   white-space: nowrap;
   text-transform: none;

@@ -395,6 +395,15 @@ export function doneCountForWeek(sessions: Session[], ws: string): number {
   return sessions.filter((s) => s.status === 'done' && s.date >= ws && s.date <= we).length
 }
 
+/** Monday-first flags for the week starting `ws`: true where a done session exists. */
+export function trainedDaysForWeek(sessions: Session[], ws: string): boolean[] {
+  const we = addDays(ws, 6)
+  const trained = new Set(
+    sessions.filter((s) => s.status === 'done' && s.date >= ws && s.date <= we).map((s) => s.date)
+  )
+  return Array.from({ length: 7 }, (_, i) => trained.has(addDays(ws, i)))
+}
+
 /** Consecutive weeks hitting the weekly target (current week counts if already hit). */
 export function computeStreakWeeks(sessions: Session[], target: number): number {
   if (target <= 0) return 0

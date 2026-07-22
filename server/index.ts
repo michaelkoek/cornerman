@@ -72,6 +72,16 @@ function doneCountForWeek(ws: string): number {
   return row.n;
 }
 
+/** Monday-first flags for the week: true where at least one done session exists. */
+function trainedDaysForWeek(ws: string): boolean[] {
+  const we = addDays(ws, 6);
+  const rows = db
+    .prepare("SELECT DISTINCT date FROM sessions WHERE status = 'done' AND date >= ? AND date <= ?")
+    .all(ws, we) as { date: string }[];
+  const trained = new Set(rows.map((r) => r.date));
+  return Array.from({ length: 7 }, (_, i) => trained.has(addDays(ws, i)));
+}
+
 /** Consecutive weeks hitting the weekly target, counting current week if it already hit. */
 function computeStreakWeeks(target: number): number {
   if (target <= 0) return 0;
@@ -122,6 +132,7 @@ app.get('/api/today', (c) => {
     session: sessionRow ? rowToSession(sessionRow) : null,
     yesterdayLoad: computeYesterdayLoad(date),
     weekSessions,
+    weekDays: trainedDaysForWeek(ws),
     weeklyTarget: target,
     streakWeeks: computeStreakWeeks(target),
   };

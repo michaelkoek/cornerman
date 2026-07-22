@@ -79,6 +79,7 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             style={{ width: '100%', marginBottom: '0.5rem' }}
           />
+          {error && <p className="form-error">{error}</p>}
           <button
             type="submit"
             className="btn btn--primary hero__cta login__cta"
@@ -99,7 +100,6 @@ export default function Login() {
         >
           {mode === 'signin' ? 'Need an account? Sign up' : 'Have an account? Sign in'}
         </button>
-        {error && <p className="form-error">{error}</p>}
       </section>
     </main>
   )

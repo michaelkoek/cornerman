@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import type { Session, TodayResponse } from '../../shared/types'
 import { api } from '../lib/api'
-import { fmtDayEyebrow } from '../lib/format'
+import { WEEKDAY_FULL, parseIso } from '../lib/format'
 import { st } from '../lib/stagger'
 import { useAsync } from '../lib/useAsync'
 import { PullToRefresh } from '../components/PullToRefresh'
 import { RestTimer } from '../components/RestTimer'
 import { Ring } from '../components/Ring'
 import { Skel, ErrorNotice } from '../components/Skeleton'
+import { WeekStrip } from '../components/WeekStrip'
 import { AnchorHero } from './today/AnchorHero'
 import { CoachHint } from './today/CoachHint'
 import { DoneCard } from './today/DoneCard'
 import { PlannerSection } from './today/PlannerSection'
+import { ReadyHero } from './today/ReadyHero'
 import { WorkoutView } from './today/WorkoutView'
 
 export default function Today() {
@@ -61,7 +63,7 @@ export default function Today() {
         </>
       ) : (
         <>
-          <CoachHint load={data.yesterdayLoad} />
+          <ReadyHero data={data} onLogged={reload} />
           <PlannerSection onSession={(s) => setData({ ...data, session: s })} />
         </>
       )}
@@ -76,16 +78,18 @@ export default function Today() {
 /* ------------------------------------------------------------------ */
 
 function TodayHeader({ data }: { data: TodayResponse }) {
+  const weekday = WEEKDAY_FULL[parseIso(data.date).getDay()] ?? 'Today'
   return (
     <header className="today-head stagger-item" style={st(0)}>
       <div>
-        <p className="type-eyebrow today-head__date">Today · {fmtDayEyebrow(data.date)}</p>
-        <h1 className="type-display-l today-head__day">Cornerman</h1>
+        <p className="type-eyebrow today-head__brand">Cornerman</p>
+        <h1 className="type-display-l today-head__day">{weekday}</h1>
         <p
           className={`type-eyebrow streak-line ${data.streakWeeks > 0 ? '' : 'is-cold'}`}
         >
           {data.streakWeeks > 0 ? `${data.streakWeeks} wk streak` : 'No streak yet'}
         </p>
+        <WeekStrip days={data.weekDays} date={data.date} />
       </div>
       <Ring value={data.weekSessions} target={data.weeklyTarget} />
     </header>
@@ -101,9 +105,10 @@ function TodaySkeleton() {
     <main className="screen" aria-busy="true">
       <div className="today-head">
         <div style={{ flex: 1 }}>
-          <Skel h={12} w={140} />
+          <Skel h={12} w={90} />
           <Skel h={32} w={200} style={{ marginTop: 8 }} />
           <Skel h={12} w={110} style={{ marginTop: 12 }} />
+          <Skel h={20} w={160} style={{ marginTop: 12 }} />
         </div>
         <Skel h={64} w={64} r="var(--radius-full)" />
       </div>

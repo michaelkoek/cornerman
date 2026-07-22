@@ -165,6 +165,7 @@ export interface TodayResponse {
   session: Session | null; // today's planned/in-progress/done session if any
   yesterdayLoad: 'rest' | 'light' | 'moderate' | 'hard'; // recovery signal
   weekSessions: number; // done sessions this week (Mon-Sun)
+  weekDays: boolean[]; // 7 entries, Monday-first — true where a done session exists
   weeklyTarget: number;
   streakWeeks: number; // consecutive weeks hitting target
   prBaselines?: Record<string, ExercisePR>; // by exerciseId — PR detection while logging
