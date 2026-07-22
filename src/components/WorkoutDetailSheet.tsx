@@ -17,6 +17,7 @@ interface WorkoutDetailSheetProps {
   session: Session | null
   onClose: () => void
   onEdit: (session: Session) => void
+  onDelete: (session: Session) => void
   onChanged: () => void
 }
 
@@ -29,7 +30,7 @@ function prescription(se: SessionExercise): string {
 }
 
 /** Recap of a logged workout, shown from the Log screen. Sets are tap-to-edit. */
-export function WorkoutDetailSheet({ session, onClose, onEdit, onChanged }: WorkoutDetailSheetProps) {
+export function WorkoutDetailSheet({ session, onClose, onEdit, onDelete, onChanged }: WorkoutDetailSheetProps) {
   // Local copy so set edits render immediately; the list reloads via onChanged.
   const [local, setLocal] = useState<Session | null>(session)
 
@@ -89,6 +90,14 @@ export function WorkoutDetailSheet({ session, onClose, onEdit, onChanged }: Work
 
       <button type="button" className="btn btn--ghost form-submit" onClick={() => onEdit(local)}>
         Edit session
+      </button>
+      <button
+        type="button"
+        className="btn btn--quiet"
+        style={{ width: '100%', marginTop: 'var(--space-2)' }}
+        onClick={() => onDelete(local)}
+      >
+        Delete session
       </button>
     </Sheet>
   )

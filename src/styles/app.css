@@ -1309,6 +1309,49 @@ textarea.input {
   opacity: 0.55;
 }
 
+/* Swipe-left-to-reveal wrapper around a log row */
+.swipe-row {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.swipe-row__action {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 88px; /* keep in sync with SWIPE_ACTION_WIDTH */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--danger);
+  color: var(--text-on-accent);
+  font-family: var(--font-display);
+  font-size: var(--type-eyebrow-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+.swipe-row__action:active {
+  background: color-mix(in srgb, var(--danger) 82%, black);
+}
+
+.swipe-row__content {
+  position: relative;
+  background: var(--surface-1); /* opaque so the action stays hidden at rest */
+  transition: transform 200ms var(--ease-swift);
+}
+
+.swipe-row.is-open .swipe-row__content {
+  transform: translateX(-88px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe-row__content {
+    transition-duration: 1ms;
+  }
+}
+
 .fab {
   position: fixed;
   right: var(--space-4);

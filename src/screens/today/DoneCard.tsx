@@ -3,7 +3,7 @@ import type { Session } from '../../../shared/types'
 import { SPORT_LABEL, fmtDayEyebrow, fmtRunTime, sportClass, workoutTitle } from '../../lib/format'
 import { st } from '../../lib/stagger'
 import { ManualLogSheet } from '../../components/ManualLogSheet'
-import { DiscardSheet } from './DiscardSheet'
+import { DiscardSheet } from '../../components/DiscardSheet'
 
 interface IDoneCardProps {
   session: Session

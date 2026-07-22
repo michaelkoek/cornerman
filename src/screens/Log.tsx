@@ -11,8 +11,10 @@ import {
   weekStartIso,
 } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
+import { DiscardSheet } from '../components/DiscardSheet'
 import { ManualLogSheet } from '../components/ManualLogSheet'
 import { PullToRefresh } from '../components/PullToRefresh'
+import { SwipeableRow } from '../components/SwipeableRow'
 import { WorkoutDetailSheet } from '../components/WorkoutDetailSheet'
 import { EmptyNotice, ErrorNotice, SkelRows, Skel } from '../components/Skeleton'
 import { IconPlus, SportIcon } from '../components/icons'
@@ -39,11 +41,19 @@ export default function Log() {
   const [logOpen, setLogOpen] = useState(false)
   const [selected, setSelected] = useState<Session | null>(null)
   const [editing, setEditing] = useState<Session | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Session | null>(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const startEdit = (session: Session) => {
     setSelected(null)
     setEditing(session)
     setLogOpen(true)
+  }
+
+  const startDelete = (session: Session) => {
+    setSelected(null)
+    setDeleteTarget(session)
+    setConfirmOpen(true)
   }
 
   const closeLogSheet = () => {
@@ -80,7 +90,14 @@ export default function Log() {
             </div>
             <div className="list-group">
               {g.sessions.map((s) => (
-                <SessionRow key={s.id} session={s} onOpen={() => setSelected(s)} />
+                <SwipeableRow
+                  key={s.id}
+                  actionLabel="Delete"
+                  actionAriaLabel={`Delete session: ${SPORT_LABEL[s.sport]}, ${fmtShortDate(s.date)}`}
+                  onAction={() => startDelete(s)}
+                >
+                  <SessionRow session={s} onOpen={() => setSelected(s)} />
+                </SwipeableRow>
               ))}
             </div>
           </section>
@@ -96,8 +113,17 @@ export default function Log() {
         session={selected}
         onClose={() => setSelected(null)}
         onEdit={startEdit}
+        onDelete={startDelete}
         onChanged={reload}
       />
+      {deleteTarget != null ? (
+        <DiscardSheet
+          open={confirmOpen}
+          session={deleteTarget}
+          onClose={() => setConfirmOpen(false)}
+          onDiscarded={reload}
+        />
+      ) : null}
     </main>
   )
 }
