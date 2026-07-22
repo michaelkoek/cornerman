@@ -1,7 +1,6 @@
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import type { Location, WorkoutSplit } from '../../../shared/types'
-
-const st = (i: number) => ({ '--i': i }) as CSSProperties
+import { st } from '../../lib/stagger'
 
 /** Split planner: time chips + location + optional push/pull/legs override. */
 export function Planner({

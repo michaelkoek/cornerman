@@ -168,7 +168,8 @@ export function sessionStats(s: Session): string {
   }
   if (s.exercises.length > 0) {
     const top = topSet(s)
-    return `${s.exercises.length} exercises${top ? ` · ${top}` : ''}`
+    const duration = s.elapsedSec > 0 ? fmtRunTime(s.elapsedSec) : null
+    return [`${s.exercises.length} exercises`, top, duration].filter(Boolean).join(' · ')
   }
   const bits: string[] = []
   if (s.durationMin != null) bits.push(`${s.durationMin} min`)

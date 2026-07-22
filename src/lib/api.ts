@@ -63,6 +63,8 @@ export interface SessionPatch {
   rpe?: number
   note?: string | null
   durationMin?: number
+  startedAt?: number | null
+  elapsedSec?: number
 }
 
 export interface SetPatch {
@@ -128,6 +130,8 @@ async function createSession(body: CreateSessionRequest): Promise<Session> {
     source: 'manual',
     status: body.status ?? 'done',
     durationMin: body.durationMin ?? null,
+    startedAt: null,
+    elapsedSec: 0,
     rpe: body.rpe ?? null,
     note: body.note ?? null,
     location: null,
@@ -152,6 +156,8 @@ async function updateSession(id: string, body: SessionPatch): Promise<Session> {
     rpe: body.rpe !== undefined ? body.rpe : existing.rpe,
     note: body.note !== undefined ? body.note : existing.note,
     durationMin: body.durationMin !== undefined ? body.durationMin : existing.durationMin,
+    startedAt: body.startedAt !== undefined ? body.startedAt : existing.startedAt,
+    elapsedSec: body.elapsedSec !== undefined ? body.elapsedSec : existing.elapsedSec,
   }
   await writeSession(next)
   return next

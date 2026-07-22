@@ -1,7 +1,6 @@
-import { useState, type CSSProperties, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { signInWithEmail, signUpWithEmail } from '../lib/auth'
-
-const st = (i: number) => ({ '--i': i }) as CSSProperties
+import { st } from '../lib/stagger'
 
 function friendlyError(err: unknown): string {
   const code = (err as { code?: string }).code ?? ''

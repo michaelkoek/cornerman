@@ -1853,3 +1853,107 @@ button.lift-card:active {
 .signout-row {
   margin-top: var(--space-2);
 }
+
+/* ------------------------------------------------------------
+   WORKOUT TIMER STRIP (active session elapsed time)
+   ------------------------------------------------------------ */
+/* Sticky, not fixed: fixed detaches under animated ancestors (see
+   BottomLayer); sticky pins against the .app-scroll scrollport. Bleeds
+   across the .screen 16px gutter so it reads as full-width chrome. */
+.workout-strip {
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--z-tabbar) - 10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0 calc(-1 * var(--space-4)) var(--space-4);
+  padding: calc(env(safe-area-inset-top) + var(--space-2)) var(--space-4) var(--space-2);
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--hairline-strong);
+  box-shadow: 0 8px 24px -16px rgba(5, 3, 1, 0.9);
+}
+
+.workout-strip__state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 72px;
+}
+
+.workout-strip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--sport-color, var(--accent));
+  animation: strip-pulse 1.2s var(--ease-out) infinite;
+}
+
+.workout-strip__digits {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-data-l-size);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.workout-strip__btn {
+  min-height: var(--touch-min);
+}
+
+.workout-strip.is-paused .workout-strip__dot {
+  background: var(--warning);
+  animation: none;
+}
+
+.workout-strip.is-paused .workout-strip__digits {
+  color: var(--warning);
+  animation: strip-blink 1.4s var(--ease-out) infinite;
+}
+
+@keyframes strip-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+@keyframes strip-blink {
+  50% { opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workout-strip__dot,
+  .workout-strip.is-paused .workout-strip__digits {
+    animation: none;
+  }
+}
+
+/* Measured time readout in the finish sheet. */
+.finish-time {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.finish-time__value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bottom Resume/Finish bar, shown only while paused (Strava stopped state). */
+.workout-pause-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-3);
+  max-width: 480px;
+  margin-inline: auto;
+  background: var(--surface-2);
+  border-top: 1px solid var(--hairline-strong);
+  box-shadow: var(--shadow-sheet);
+  padding: var(--space-4) var(--space-4) calc(env(safe-area-inset-bottom) + var(--space-4));
+}

@@ -104,6 +104,13 @@ export interface Session {
   source: SessionSource;
   status: SessionStatus;
   durationMin: number | null;
+  // Wall-clock elapsed workout timer. startedAt = epoch ms when the current
+  // running segment began (null while paused or never started). elapsedSec =
+  // accumulated seconds of completed segments. Live elapsed is
+  // elapsedSec + (startedAt ? (now - startedAt) / 1000 : 0). A session is
+  // "paused" when status is in_progress, startedAt is null and elapsedSec > 0.
+  startedAt: number | null;
+  elapsedSec: number;
   rpe: number | null; // 1-10
   note: string | null;
   location: Location | null;

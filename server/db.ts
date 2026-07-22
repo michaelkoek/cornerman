@@ -316,6 +316,8 @@ export function rowToSession(row: SessionRow): Session {
     source: row.source as SessionSource,
     status: row.status as SessionStatus,
     durationMin: row.duration_min,
+    startedAt: null,
+    elapsedSec: 0,
     rpe: row.rpe,
     note: row.note,
     location: row.location as Location | null,

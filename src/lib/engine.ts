@@ -211,6 +211,8 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
     source: 'generated',
     status: 'planned',
     durationMin: minutes,
+    startedAt: null,
+    elapsedSec: 0,
     rpe: null,
     note: null,
     location,
