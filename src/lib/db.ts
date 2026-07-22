@@ -322,10 +322,13 @@ const DEFAULT_ANCHORS: Omit<Anchor, 'id'>[] = [
   { weekday: 4, sport: 'kickboxing', time: '19:00', label: 'Kickboxing class' },
 ]
 
+const DEFAULT_REST_SECONDS = 90
+
 function defaultSettings(uid: string): Settings & { uid: string } {
   return {
     uid,
     weeklyTarget: 4,
+    defaultRestSeconds: DEFAULT_REST_SECONDS,
     anchors: DEFAULT_ANCHORS.map((a) => ({ ...a, id: newId() })),
     stravaConnected: false,
     stravaLastSyncAt: null,
@@ -342,6 +345,7 @@ export async function getSettings(): Promise<Settings> {
     await setDoc(ref, fresh)
     return {
       weeklyTarget: fresh.weeklyTarget,
+      defaultRestSeconds: fresh.defaultRestSeconds,
       anchors: fresh.anchors,
       stravaConnected: fresh.stravaConnected,
       stravaLastSyncAt: fresh.stravaLastSyncAt,
@@ -350,16 +354,19 @@ export async function getSettings(): Promise<Settings> {
   const data = snap.data()
   return {
     weeklyTarget: data.weeklyTarget ?? 4,
+    defaultRestSeconds: data.defaultRestSeconds ?? DEFAULT_REST_SECONDS,
     anchors: (data.anchors ?? []) as Anchor[],
     stravaConnected: Boolean(data.stravaConnected),
     stravaLastSyncAt: (data.stravaLastSyncAt as string | undefined) ?? null,
   }
 }
 
-export async function writeWeeklyTarget(weeklyTarget: number): Promise<Settings> {
+export type SettingsPatch = Partial<Pick<Settings, 'weeklyTarget' | 'defaultRestSeconds'>>
+
+export async function writeSettingsPatch(patch: SettingsPatch): Promise<Settings> {
   const uid = currentUid()
   const ref = doc(getDb(), 'settings', uid)
-  await setDoc(ref, { weeklyTarget }, { merge: true })
+  await setDoc(ref, patch, { merge: true })
   return getSettings()
 }
 

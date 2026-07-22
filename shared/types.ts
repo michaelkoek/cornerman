@@ -136,6 +136,7 @@ export interface Anchor {
 
 export interface Settings {
   weeklyTarget: number; // sessions per week
+  defaultRestSeconds: number; // rest timer default between sets
   anchors: Anchor[];
   stravaConnected: boolean;
   stravaLastSyncAt: string | null; // ISO timestamp of the last successful sync
@@ -167,6 +168,7 @@ export interface TodayResponse {
   weekSessions: number; // done sessions this week (Mon-Sun)
   weekDays: boolean[]; // 7 entries, Monday-first — true where a done session exists
   weeklyTarget: number;
+  defaultRestSeconds: number; // rest timer default between sets
   streakWeeks: number; // consecutive weeks hitting target
   prBaselines?: Record<string, ExercisePR>; // by exerciseId — PR detection while logging
 }
@@ -263,7 +265,7 @@ export interface BodyweightResponse {
 }
 
 // GET /api/settings -> Settings
-// PUT /api/settings { weeklyTarget }
+// PUT /api/settings { weeklyTarget?, defaultRestSeconds? }
 // POST /api/anchors { weekday, sport, time, label } / DELETE /api/anchors/:id
 
 // GET /api/exercises?location=&category= -> Exercise[]

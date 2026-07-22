@@ -68,7 +68,9 @@ export default function Today() {
         </>
       )}
 
-      {restKey !== null && <RestTimer key={restKey} onDone={() => setRestKey(null)} />}
+      {restKey !== null && (
+        <RestTimer key={restKey} seconds={data.defaultRestSeconds} onDone={() => setRestKey(null)} />
+      )}
     </main>
   )
 }

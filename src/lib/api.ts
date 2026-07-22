@@ -47,7 +47,8 @@ import {
   upsertBodyweight,
   weekStart,
   writeSession,
-  writeWeeklyTarget,
+  writeSettingsPatch,
+  type SettingsPatch,
 } from './db'
 import {
   alternativesFor,
@@ -116,6 +117,7 @@ async function today(): Promise<TodayResponse> {
     weekSessions: doneCountForWeek(doneSessions, ws),
     weekDays: trainedDaysForWeek(doneSessions, ws),
     weeklyTarget: target,
+    defaultRestSeconds: settings.defaultRestSeconds,
     streakWeeks: computeStreakWeeks(doneSessions, target),
     prBaselines: active ? Object.fromEntries(computePRs(doneSessions)) : undefined,
   }
@@ -444,9 +446,15 @@ async function bodyweight(): Promise<BodyweightResponse> {
 // settings & anchors
 // ---------------------------------------------------------------------------
 
-function updateSettings(body: { weeklyTarget: number }): Promise<Settings> {
-  const wt = Math.round(body.weeklyTarget)
-  return writeWeeklyTarget(wt)
+function updateSettings(body: SettingsPatch): Promise<Settings> {
+  const patch: SettingsPatch = {}
+  if (body.weeklyTarget !== undefined) {
+    patch.weeklyTarget = Math.round(body.weeklyTarget)
+  }
+  if (body.defaultRestSeconds !== undefined) {
+    patch.defaultRestSeconds = Math.round(body.defaultRestSeconds)
+  }
+  return writeSettingsPatch(patch)
 }
 
 function addAnchor(body: {

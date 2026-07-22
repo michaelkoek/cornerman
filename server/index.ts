@@ -64,6 +64,10 @@ function getWeeklyTarget(): number {
   return Number(getSetting('weeklyTarget') ?? '4');
 }
 
+function getDefaultRestSeconds(): number {
+  return Number(getSetting('defaultRestSeconds') ?? '90');
+}
+
 function doneCountForWeek(ws: string): number {
   const we = addDays(ws, 6);
   const row = db
@@ -98,6 +102,7 @@ function computeStreakWeeks(target: number): number {
 function buildSettings(): Settings {
   return {
     weeklyTarget: getWeeklyTarget(),
+    defaultRestSeconds: getDefaultRestSeconds(),
     anchors: getAnchors(),
     stravaConnected: stravaConnected(),
   };
@@ -134,6 +139,7 @@ app.get('/api/today', (c) => {
     weekSessions,
     weekDays: trainedDaysForWeek(ws),
     weeklyTarget: target,
+    defaultRestSeconds: getDefaultRestSeconds(),
     streakWeeks: computeStreakWeeks(target),
   };
   return c.json(res);
@@ -442,11 +448,31 @@ app.get('/api/dashboard', (c) => {
 app.get('/api/settings', (c) => c.json(buildSettings()));
 
 app.put('/api/settings', async (c) => {
-  const body = (await c.req.json().catch(() => null)) as { weeklyTarget?: number } | null;
-  if (!body || typeof body.weeklyTarget !== 'number' || body.weeklyTarget < 1 || body.weeklyTarget > 14) {
-    return c.json({ error: 'Expected body { weeklyTarget: number (1-14) }' }, 400);
+  const body = (await c.req.json().catch(() => null)) as {
+    weeklyTarget?: number;
+    defaultRestSeconds?: number;
+  } | null;
+  const validTarget =
+    body?.weeklyTarget === undefined ||
+    (typeof body.weeklyTarget === 'number' && body.weeklyTarget >= 1 && body.weeklyTarget <= 14);
+  const validRest =
+    body?.defaultRestSeconds === undefined ||
+    (typeof body.defaultRestSeconds === 'number' &&
+      body.defaultRestSeconds >= 15 &&
+      body.defaultRestSeconds <= 300);
+  const hasField = body?.weeklyTarget !== undefined || body?.defaultRestSeconds !== undefined;
+  if (!body || !hasField || !validTarget || !validRest) {
+    return c.json(
+      { error: 'Expected body { weeklyTarget?: number (1-14), defaultRestSeconds?: number (15-300) }' },
+      400
+    );
   }
-  setSetting('weeklyTarget', String(Math.round(body.weeklyTarget)));
+  if (body.weeklyTarget !== undefined) {
+    setSetting('weeklyTarget', String(Math.round(body.weeklyTarget)));
+  }
+  if (body.defaultRestSeconds !== undefined) {
+    setSetting('defaultRestSeconds', String(Math.round(body.defaultRestSeconds)));
+  }
   return c.json(buildSettings());
 });
 
