@@ -41,7 +41,7 @@ export default function Today() {
 
       {session?.status === 'done' ? (
         <>
-          <DoneCard session={session} date={data.date} onSaved={reload} />
+          <DoneCard session={session} date={data.date} />
           <PlannerSection onSession={(s) => setData({ ...data, session: s })} secondary />
         </>
       ) : active ? (
