@@ -135,9 +135,11 @@ html {
 }
 
 /* The document never scrolls — iOS standalone PWAs break position: fixed
-   while the document is the scroller. Screens scroll inside .app-scroll. */
+   while the document is the scroller. Screens scroll inside .app-scroll.
+   height chains from html's 100% (not dvh — iOS standalone misreports it,
+   leaving a gap under bottom-pinned chrome). */
 body {
-  height: 100dvh;
+  height: 100%;
   overflow: hidden;
   background: var(--bg-0);
   color: var(--text-primary);
@@ -199,10 +201,11 @@ button {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Screen container: gutter + clearance for the tab bar. */
+/* Screen container: gutter; the tab bar sits below the scroller, so no
+   bottom clearance for it is needed. */
 .screen {
   padding: calc(env(safe-area-inset-top) + var(--space-12)) var(--space-4)
-    calc(var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-4));
+    var(--space-4);
   max-width: 480px;
   margin-inline: auto;
 }
@@ -693,12 +696,11 @@ button {
   stroke: var(--positive);
 }
 
-/* -- 5.8 Bottom tab bar --------------------------------------------- */
+/* -- 5.8 Bottom tab bar ---------------------------------------------
+   In-flow flex child of .app-grain, not position: fixed — the document
+   never scrolls, and fixed bottom chrome detaches or gaps on iOS. */
 .tabbar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  flex: none;
   z-index: var(--z-tabbar);
   height: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);

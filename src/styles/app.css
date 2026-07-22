@@ -11,14 +11,19 @@
   background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 320px);
 }
 
+/* Flex column shell: scroller fills the space above the in-flow tab bar,
+   so the bar always sits flush with the real bottom of the screen. */
 .app-grain {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* The single app scroller — the document itself never scrolls (iOS
    standalone fixed-position bug); screens scroll inside this instead. */
 .app-scroll {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -27,9 +32,7 @@
 
 .screen {
   animation: screen-in var(--dur-base) var(--ease-out);
-  padding-bottom: calc(
-    var(--tabbar-height) + env(safe-area-inset-bottom) + var(--space-8)
-  );
+  padding-bottom: var(--space-8);
 }
 
 @keyframes screen-in {
