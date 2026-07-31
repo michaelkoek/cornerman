@@ -1,10 +1,14 @@
 import { useState } from 'react'
-import type { FocusTarget, Location, WorkoutSplit } from '../../../shared/types'
+import type { FocusTarget, Location, Muscle, WorkoutSplit } from '../../../shared/types'
+import { exerciseBudget } from '../../../shared/planning'
+import { MUSCLE_LABEL } from '../../components/bodymap/regions'
 import { st } from '../../lib/stagger'
+import { PlannerMuscleMap } from './PlannerMuscleMap'
 
 export type Emphasis =
   | { kind: 'split'; value: WorkoutSplit }
   | { kind: 'focus'; value: FocusTarget }
+  | { kind: 'muscles'; value: Muscle[] }
 
 interface IEmphasisOption {
   label: string
@@ -51,9 +55,36 @@ export function Planner({
   onBuild,
 }: IPlannerProps) {
   const [pickedLabel, setPickedLabel] = useState<string | null>(null)
+  const [muscles, setMuscles] = useState<Muscle[]>([])
   const picked = EMPHASIS_OPTIONS.find((o) => o.label === pickedLabel) ?? null
 
+  const pickEmphasis = (label: string) => {
+    setPickedLabel(pickedLabel === label ? null : label)
+    setMuscles([])
+  }
+
+  const toggleMuscle = (muscle: Muscle) => {
+    setMuscles((prev) =>
+      prev.includes(muscle) ? prev.filter((m) => m !== muscle) : [...prev, muscle],
+    )
+    setPickedLabel(null)
+  }
+
+  const emphasis = (): Emphasis | null => {
+    if (muscles.length > 0) {
+      return { kind: 'muscles', value: muscles }
+    }
+    return picked?.emphasis ?? null
+  }
+
   const hint = (): string => {
+    if (muscles.length > 0) {
+      const names = muscles.map((m) => MUSCLE_LABEL[m]).join(', ')
+      if (minutes && muscles.length > exerciseBudget(minutes)) {
+        return `${names} — ${minutes} min fits ${exerciseBudget(minutes)} exercises, first picks win.`
+      }
+      return `Custom day: ${names}.`
+    }
     if (!picked) {
       return 'No emphasis picked — I’ll rotate for you.'
     }
@@ -66,6 +97,9 @@ export function Planner({
   const ctaLabel = (): string => {
     if (busy) {
       return 'Building…'
+    }
+    if (muscles.length > 0) {
+      return 'Build custom day'
     }
     if (picked) {
       return `Build ${picked.label.toLowerCase()} day`
@@ -127,19 +161,20 @@ export function Planner({
             type="button"
             className="seg__opt chip-scroll__opt"
             aria-pressed={pickedLabel === opt.label}
-            onClick={() => setPickedLabel(pickedLabel === opt.label ? null : opt.label)}
+            onClick={() => pickEmphasis(opt.label)}
           >
             {opt.label}
           </button>
         ))}
       </div>
+      <PlannerMuscleMap selected={muscles} onToggle={toggleMuscle} onClear={() => setMuscles([])} />
       <p className="type-caption planner__split-hint">{hint()}</p>
       {error && <p className="form-error">{error}</p>}
       <button
         type="button"
         className={`btn planner__go ${minutes ? 'btn--primary' : 'btn--ghost'}`}
         disabled={!minutes || busy}
-        onClick={() => onBuild(picked?.emphasis ?? null)}
+        onClick={() => onBuild(emphasis())}
       >
         {ctaLabel()}
       </button>

@@ -41,6 +41,7 @@ export function PlannerSection({
         machinesOnly: location === 'gym' && machinesOnly,
         split: emphasis?.kind === 'split' ? emphasis.value : undefined,
         focus: emphasis?.kind === 'focus' ? emphasis.value : undefined,
+        muscles: emphasis?.kind === 'muscles' ? emphasis.value : undefined,
       })
       onSession(session)
     } catch (err) {

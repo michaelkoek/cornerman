@@ -14,7 +14,10 @@ import type {
   Sport,
   ExerciseCategory,
   Equipment,
+  Force,
   Location,
+  Mechanics,
+  Muscle,
 } from '../shared/types.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,7 +35,10 @@ CREATE TABLE IF NOT EXISTS exercises (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   category TEXT NOT NULL,
-  muscle_groups TEXT NOT NULL,   -- JSON array
+  primary_muscles TEXT NOT NULL,   -- JSON array of Muscle
+  secondary_muscles TEXT NOT NULL, -- JSON array of Muscle
+  force TEXT,                      -- push|pull|static
+  mechanics TEXT,                  -- compound|isolation
   equipment TEXT NOT NULL,       -- JSON array
   location TEXT NOT NULL,        -- JSON array
   difficulty INTEGER NOT NULL,
@@ -136,10 +142,11 @@ function seed(): void {
   const raw = readFileSync(join(DATA_DIR, 'exercises.json'), 'utf-8');
   const list = JSON.parse(raw) as Exercise[];
   const upsert = db.prepare(`
-    INSERT INTO exercises (id, name, category, muscle_groups, equipment, location, difficulty, type, rep_low, rep_high, cue)
-    VALUES (@id, @name, @category, @muscleGroups, @equipment, @location, @difficulty, @type, @repLow, @repHigh, @cue)
+    INSERT INTO exercises (id, name, category, primary_muscles, secondary_muscles, force, mechanics, equipment, location, difficulty, type, rep_low, rep_high, cue)
+    VALUES (@id, @name, @category, @primaryMuscles, @secondaryMuscles, @force, @mechanics, @equipment, @location, @difficulty, @type, @repLow, @repHigh, @cue)
     ON CONFLICT(id) DO UPDATE SET
-      name = excluded.name, category = excluded.category, muscle_groups = excluded.muscle_groups,
+      name = excluded.name, category = excluded.category, primary_muscles = excluded.primary_muscles,
+      secondary_muscles = excluded.secondary_muscles, force = excluded.force, mechanics = excluded.mechanics,
       equipment = excluded.equipment, location = excluded.location, difficulty = excluded.difficulty,
       type = excluded.type, rep_low = excluded.rep_low, rep_high = excluded.rep_high, cue = excluded.cue
   `);
@@ -149,7 +156,10 @@ function seed(): void {
         id: e.id,
         name: e.name,
         category: e.category,
-        muscleGroups: JSON.stringify(e.muscleGroups),
+        primaryMuscles: JSON.stringify(e.primaryMuscles),
+        secondaryMuscles: JSON.stringify(e.secondaryMuscles),
+        force: e.force ?? null,
+        mechanics: e.mechanics ?? null,
         equipment: JSON.stringify(e.equipment),
         location: JSON.stringify(e.location),
         difficulty: e.difficulty,
@@ -209,7 +219,10 @@ interface ExerciseRow {
   id: string;
   name: string;
   category: string;
-  muscle_groups: string;
+  primary_muscles: string;
+  secondary_muscles: string;
+  force: string | null;
+  mechanics: string | null;
   equipment: string;
   location: string;
   difficulty: number;
@@ -262,7 +275,10 @@ export function rowToExercise(r: ExerciseRow): Exercise {
     id: r.id,
     name: r.name,
     category: r.category as ExerciseCategory,
-    muscleGroups: JSON.parse(r.muscle_groups) as string[],
+    primaryMuscles: JSON.parse(r.primary_muscles) as Muscle[],
+    secondaryMuscles: JSON.parse(r.secondary_muscles) as Muscle[],
+    ...(r.force ? { force: r.force as Force } : {}),
+    ...(r.mechanics ? { mechanics: r.mechanics as Mechanics } : {}),
     equipment: JSON.parse(r.equipment) as Equipment[],
     location: JSON.parse(r.location) as Location[],
     difficulty: r.difficulty as 1 | 2 | 3,

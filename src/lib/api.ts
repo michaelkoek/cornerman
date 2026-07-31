@@ -16,6 +16,7 @@ import type {
   ExerciseCategory,
   ExerciseHistoryResponse,
   Location,
+  Muscle,
   Session,
   SessionExercise,
   SetLog,
@@ -24,6 +25,7 @@ import type {
   SuggestRequest,
   TodayResponse,
 } from '../../shared/types'
+import { setsPerMuscle } from './muscleVolume'
 import {
   addAnchorDoc,
   addDays,
@@ -341,12 +343,18 @@ async function dashboard(): Promise<DashboardResponse> {
   const monthPrefix = today.slice(0, 7)
   const sessionsThisMonth = doneSessions.filter((s) => s.date.startsWith(monthPrefix)).length
 
+  const volume = setsPerMuscle(doneSessions, addDays(today, -6), today)
+  const muscleVolume = (Object.entries(volume) as [Muscle, number][])
+    .map(([muscle, sets]) => ({ muscle, sets }))
+    .sort((a, b) => b.sets - a.sets)
+
   return {
     weeklyVolume,
     liftProgression,
     streakWeeks: computeStreakWeeks(doneSessions, settings.weeklyTarget),
     sessionsThisMonth,
     allLifts,
+    muscleVolume,
   }
 }
 

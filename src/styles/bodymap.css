@@ -1,0 +1,177 @@
+/* ------------------------------------------------------------
+   Body map — tap-a-muscle figure (Library filter) and
+   muscle-volume heatmap (Progress). Tokens from tokens.css.
+   ------------------------------------------------------------ */
+
+.bodymap {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bodymap__silhouette path {
+  fill: var(--surface-1);
+  stroke: var(--hairline);
+  stroke-width: 1;
+}
+
+.bodymap__region path {
+  fill: var(--surface-3);
+  stroke: var(--bg-0);
+  stroke-width: 1.5;
+  transition: fill var(--dur-base) var(--ease-out);
+}
+
+.bodymap__region[role='button'] {
+  cursor: pointer;
+}
+
+.bodymap__region[role='button']:focus-visible {
+  outline: none;
+}
+
+.bodymap__region[role='button']:focus-visible path {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.bodymap__region--selected path {
+  fill: var(--accent);
+  stroke: var(--accent-press);
+}
+
+/* Invisible fat-stroke twin: generous touch target on narrow regions. */
+.bodymap__region .bodymap__hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14;
+  pointer-events: stroke;
+  transition: none;
+}
+
+/* Heatmap buckets: 0 sets -> surface, then a Corner-Red ramp. The custom
+   property feeds both SVG region fills and legend swatch backgrounds. */
+.bodymap__fill-0 {
+  --heat: var(--surface-2);
+}
+.bodymap__fill-1 {
+  --heat: color-mix(in srgb, var(--accent) 22%, var(--surface-2));
+}
+.bodymap__fill-2 {
+  --heat: color-mix(in srgb, var(--accent) 45%, var(--surface-2));
+}
+.bodymap__fill-3 {
+  --heat: color-mix(in srgb, var(--accent) 70%, var(--surface-2));
+}
+.bodymap__fill-4 {
+  --heat: var(--accent);
+}
+
+g[class*='bodymap__fill-'] path {
+  fill: var(--heat);
+}
+
+.muscle-volume__swatch {
+  background: var(--heat);
+}
+
+/* Layout: front + back side by side, MuscleWiki style. */
+.bodymap-pair {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.bodymap-pair > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.bodymap-pair__label {
+  margin-top: var(--space-1);
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+/* Collapsible body-map filter section (Library filter, planner targets). */
+.bodymap-filter {
+  margin-top: var(--space-4);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-m);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+
+.bodymap-filter__toggle {
+  width: 100%;
+  min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  color: var(--text-secondary);
+}
+
+.bodymap-filter__toggle[aria-expanded='true'] {
+  color: var(--text-primary);
+}
+
+.bodymap-filter__value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.bodymap-filter__body {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.bodymap-filter__clear {
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+/* Muscle volume section (Progress). */
+.muscle-volume__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.muscle-volume__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--type-eyebrow-size);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.muscle-volume__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid var(--hairline);
+}
+
+.muscle-volume__list {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.muscle-volume__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.muscle-volume__sets {
+  font-family: var(--font-data);
+  font-size: var(--type-data-m-size);
+  color: var(--text-primary);
+}

@@ -19,6 +19,8 @@ import type {
   ExercisePR,
   Sport,
 } from '../../shared/types'
+import { allMuscles } from '../../shared/muscles'
+import { MuscleVolumeSection } from './progress/MuscleVolumeSection'
 import { api } from '../lib/api'
 import { addDays } from '../lib/db'
 import {
@@ -90,6 +92,8 @@ export default function Progress() {
         </div>
         <VolumeChart data={data} />
       </section>
+
+      {data.muscleVolume && <MuscleVolumeSection muscleVolume={data.muscleVolume} />}
 
       <section className="section">
         <div className="section__head">
@@ -350,7 +354,7 @@ function ExerciseDetailBody({ data }: { data: ExerciseHistoryResponse }) {
   return (
     <>
       <p className="type-caption" style={{ marginBottom: 'var(--space-3)' }}>
-        <strong>{exercise.name}</strong> · {exercise.muscleGroups.join(' · ').toUpperCase()}
+        <strong>{exercise.name}</strong> · {allMuscles(exercise).join(' · ').toUpperCase()}
       </p>
 
       {weighted ? (

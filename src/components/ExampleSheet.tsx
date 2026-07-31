@@ -53,8 +53,13 @@ function ExampleBody({ exercise }: { exercise: Exercise }) {
 
       <p className="exlog__cue">{exercise.cue}</p>
       <div className="exlog__muscles">
-        {exercise.muscleGroups.map((m) => (
+        {exercise.primaryMuscles.map((m) => (
           <span key={m} className="exlog__muscle">
+            {m}
+          </span>
+        ))}
+        {exercise.secondaryMuscles.map((m) => (
+          <span key={m} className="exlog__muscle exlog__muscle--secondary">
             {m}
           </span>
         ))}

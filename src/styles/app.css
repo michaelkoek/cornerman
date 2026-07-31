@@ -19,6 +19,23 @@
   flex-direction: column;
 }
 
+/* Opaque status-bar scrim: content scrolling inside .app-scroll would
+   otherwise show through the notch/Dynamic Island area above sticky
+   headers. The page gradient starts at --bg-1, so this is invisible at
+   rest and only reads once content slides underneath. Fixed is safe here:
+   .app-grain has no transform/filter ancestor (unlike .screen). */
+.app-grain::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg-1);
+  z-index: calc(var(--z-tabbar) - 15);
+  pointer-events: none;
+}
+
 /* The single app scroller — the document itself never scrolls (iOS
    standalone fixed-position bug); screens scroll inside this instead. */
 .app-scroll {
@@ -547,10 +564,21 @@
 /* ------------------------------------------------------------
    Exercise library (/exercises)
    ------------------------------------------------------------ */
+/* Sticky, not fixed: pins against the .app-scroll scrollport (same reasoning
+   as .workout-strip). Bleeds across the .screen 16px gutter so the list
+   scrolls behind it edge-to-edge; top offset keeps it below the status bar. */
 .library__filters {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: calc(var(--z-tabbar) - 20);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  margin: 0 calc(-1 * var(--space-4));
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--hairline-strong);
+  box-shadow: 0 8px 24px -16px rgba(5, 3, 1, 0.9);
 }
 
 .library__search {

@@ -143,7 +143,7 @@ export function suggestSession(req: SuggestRequest): Session {
   ).run(today);
 
   const split = req.split ?? nextSplit();
-  const slots = buildSlots(minutes, split, req.focus);
+  const slots = buildSlots(minutes, split, req.focus, req.muscles);
   const used = recentlyUsedExerciseIds();
   const machinesOnly = location === 'gym' && req.machinesOnly === true;
   const fullPool = filterPool(getAllExercises(), location, hard);

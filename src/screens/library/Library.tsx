@@ -1,8 +1,9 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import type { LibraryExercise } from '../../../shared/types'
+import type { LibraryExercise, Muscle } from '../../../shared/types'
 import { Skel } from '../../components/Skeleton'
-import { facetValues, filterLibrary, loadLibrary } from '../../lib/exerciseLibrary'
+import { facetValues, filterLibrary, loadLibrary, muscleCounts } from '../../lib/exerciseLibrary'
 import { useAsync } from '../../lib/useAsync'
+import { BodyMapFilter } from './BodyMapFilter'
 import { LibraryDetailSheet } from './LibraryDetailSheet'
 import { LibraryFilters } from './LibraryFilters'
 import { LibraryList } from './LibraryList'
@@ -13,6 +14,7 @@ export default function Library() {
   const [query, setQuery] = useState('')
   const [bodyPart, setBodyPart] = useState<string | null>(null)
   const [equipment, setEquipment] = useState<string | null>(null)
+  const [muscle, setMuscle] = useState<Muscle | null>(null)
   const [selected, setSelected] = useState<LibraryExercise | null>(null)
   const deferredQuery = useDeferredValue(query)
 
@@ -23,13 +25,14 @@ export default function Library() {
         : { bodyParts: [], equipment: [] },
     [all],
   )
+  const counts = useMemo(() => (all ? muscleCounts(all) : {}), [all])
 
   const filtered = useMemo(() => {
     if (!all) {
       return []
     }
-    return filterLibrary(all, { query: deferredQuery, bodyPart, equipment })
-  }, [all, deferredQuery, bodyPart, equipment])
+    return filterLibrary(all, { query: deferredQuery, bodyPart, equipment, muscle })
+  }, [all, deferredQuery, bodyPart, equipment, muscle])
 
   return (
     <main className="screen">
@@ -51,7 +54,10 @@ export default function Library() {
             equipmentOptions={facets.equipment}
             equipment={equipment}
             onEquipment={setEquipment}
+            muscle={muscle}
+            onMuscle={setMuscle}
           />
+          <BodyMapFilter selected={muscle} onSelect={setMuscle} counts={counts} />
           <p className="type-caption library__count" aria-live="polite">
             {filtered.length} of {all.length} exercises
           </p>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import type { Exercise, ExerciseCategory, SessionExercise } from '../../shared/types'
+import type { Exercise, ExerciseCategory, Muscle, SessionExercise } from '../../shared/types'
+import { allMuscles } from '../../shared/muscles'
 import { api } from '../lib/api'
 import { useAsync, usePersist } from '../lib/useAsync'
 import { Sheet } from './Sheet'
@@ -58,7 +59,7 @@ function SwapCandidates({
   const { data, error, loading, reload } = useAsync(() => api.alternatives(sessionId, se.id))
   const [category, setCategory] = useState<ExerciseCategory>(se.exercise.category)
   const [query, setQuery] = useState('')
-  const [muscle, setMuscle] = useState<string | null>(null)
+  const [muscle, setMuscle] = useState<Muscle | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [swapError, setSwapError] = useState<string | null>(null)
 
@@ -67,7 +68,7 @@ function SwapCandidates({
     [data, category],
   )
   const muscles = useMemo(
-    () => [...new Set(inCategory.flatMap((ex) => ex.muscleGroups))].sort(),
+    () => [...new Set(inCategory.flatMap((ex) => allMuscles(ex)))].sort(),
     [inCategory],
   )
   const visible = useMemo(() => {
@@ -76,7 +77,7 @@ function SwapCandidates({
       if (q && !ex.name.toLowerCase().includes(q)) {
         return false
       }
-      if (muscle && !ex.muscleGroups.includes(muscle)) {
+      if (muscle && !allMuscles(ex).includes(muscle)) {
         return false
       }
       return true
@@ -175,7 +176,7 @@ function SwapCandidates({
               <span className="exercise-row__main">
                 <span className="exercise-row__name">{ex.name}</span>
                 <span className="exercise-row__prescription exercise-row__prescription--block">
-                  {ex.muscleGroups.join(' · ').toUpperCase()}
+                  {allMuscles(ex).join(' · ').toUpperCase()}
                 </span>
               </span>
               <span className="exercise-row__count">{busyId === ex.id ? '…' : '→'}</span>

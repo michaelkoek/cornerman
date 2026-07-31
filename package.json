@@ -11,7 +11,8 @@
     "deploy:build": "vite build",
     "start": "tsx server/index.ts",
     "preview": "vite preview",
-    "prep:library": "tsx scripts/prepare-exercise-library.ts"
+    "prep:library": "tsx scripts/prepare-exercise-library.ts",
+    "backfill:muscles": "tsx scripts/backfill/backfill-exercise-muscles.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.0.8",

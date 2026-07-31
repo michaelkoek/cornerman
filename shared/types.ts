@@ -22,11 +22,38 @@ export type Equipment =
   | 'none';
 export type Location = 'home' | 'gym';
 
+// Canonical muscle vocabulary. The library dataset's free-string vocabulary
+// (pectorals, delts, upper back, ...) is bridged to these values in shared/muscles.ts.
+export const MUSCLES = [
+  'chest',
+  'shoulders',
+  'triceps',
+  'biceps',
+  'forearms',
+  'back',
+  'lats',
+  'lower-back',
+  'abs',
+  'obliques',
+  'quads',
+  'hamstrings',
+  'glutes',
+  'calves',
+  'full-body',
+] as const;
+export type Muscle = (typeof MUSCLES)[number];
+
+export type Force = 'push' | 'pull' | 'static';
+export type Mechanics = 'compound' | 'isolation';
+
 export interface Exercise {
   id: string;
   name: string;
   category: ExerciseCategory;
-  muscleGroups: string[];
+  primaryMuscles: Muscle[];
+  secondaryMuscles: Muscle[];
+  force?: Force;
+  mechanics?: Mechanics;
   equipment: Equipment[];
   location: Location[];
   difficulty: 1 | 2 | 3;
@@ -193,6 +220,9 @@ export interface SuggestRequest {
   location: Location;
   split?: WorkoutSplit;
   focus?: FocusTarget;
+  // Custom body-map selection: build a session touching exactly these muscles,
+  // exercise count split across them. Overrides focus and split when non-empty.
+  muscles?: Muscle[];
   // Gym only: restrict the pool to machine/cable exercises. Slots that can't
   // be filled that way fall back to the full gym pool.
   machinesOnly?: boolean;
@@ -235,6 +265,8 @@ export interface DashboardResponse {
     bestEst1Rm: number | null;
     lastDate: string;
   }[]; // every weighted exercise ever logged, most-logged first
+  // Sets per muscle over the last 7 days (done sets only; primary 1, secondary 0.5).
+  muscleVolume?: { muscle: Muscle; sets: number }[];
 }
 
 // GET /api/exercise-history/:exerciseId — per-exercise detail (Progress drill-in)

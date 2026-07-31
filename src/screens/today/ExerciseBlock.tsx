@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { ExercisePR, SessionExercise, SetLog } from '../../../shared/types'
+import { allMuscles } from '../../../shared/muscles'
 import { fmtKg, fmtSet } from '../../lib/format'
 import { Stepper } from '../../components/Stepper'
 import { IconCheck, IconEye, IconSwap } from '../../components/icons'
@@ -86,7 +87,7 @@ export function ExerciseBlock({
             <div style={{ minWidth: 0 }}>
               <p className="exlog__cue">{se.exercise.cue}</p>
               <div className="exlog__muscles">
-                {se.exercise.muscleGroups.map((m) => (
+                {allMuscles(se.exercise).map((m) => (
                   <span key={m} className="exlog__muscle">
                     {m}
                   </span>

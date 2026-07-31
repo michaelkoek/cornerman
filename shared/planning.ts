@@ -7,9 +7,11 @@ import type {
   ExerciseCategory,
   FocusTarget,
   Location,
+  Muscle,
   SuggestRequest,
   WorkoutSplit,
 } from './types';
+import { allMuscles } from './muscles';
 
 // The "machines & cables only" gym filter. A future generic equipment picker
 // only has to turn this constant into a parameter.
@@ -22,15 +24,15 @@ export function isMachineExercise(e: Exercise): boolean {
 
 export interface Slot {
   category?: ExerciseCategory;
-  /** When set, candidates match on muscle-group overlap instead of category. */
-  muscles?: string[];
+  /** When set, candidates match on muscle overlap instead of category. */
+  muscles?: Muscle[];
   /** Fills the slot when the muscle filter runs dry (small home pools). */
   fallbackCategories?: ExerciseCategory[];
   count: number;
 }
 
 interface FocusPreset {
-  muscles?: string[];
+  muscles?: Muscle[];
   category?: ExerciseCategory;
   fallbackCategories?: ExerciseCategory[];
 }
@@ -81,12 +83,61 @@ function focusSlots(minutes: SuggestRequest['minutes'], focus: FocusTarget): Slo
   return [main(5), accessory, { category: 'conditioning', count: 1 }];
 }
 
-/** Slot layout for a request: focus wins over split, split over rotation. */
+// Where to fill from when a muscle's pool runs dry (small home pools).
+const MUSCLE_FALLBACK: Record<Muscle, ExerciseCategory[]> = {
+  chest: ['push'],
+  shoulders: ['push'],
+  triceps: ['push'],
+  biceps: ['pull'],
+  forearms: ['pull'],
+  back: ['pull'],
+  lats: ['pull'],
+  'lower-back': ['core', 'legs'],
+  abs: ['core'],
+  obliques: ['core'],
+  quads: ['legs'],
+  hamstrings: ['legs'],
+  glutes: ['legs'],
+  calves: ['legs'],
+  'full-body': ['conditioning'],
+};
+
+/** Total exercises a session length holds (matches split/focus layouts). */
+export function exerciseBudget(minutes: SuggestRequest['minutes']): number {
+  if (minutes === 20) {
+    return 3;
+  }
+  return minutes === 45 ? 5 : 7;
+}
+
+/**
+ * Custom body-map selection: one slot per picked muscle, the exercise budget
+ * split round-robin in selection order (first picks absorb the remainder).
+ * With more muscles than budget, later picks are dropped — compounds picked
+ * for earlier slots usually still touch them.
+ */
+function muscleSlots(minutes: SuggestRequest['minutes'], muscles: Muscle[]): Slot[] {
+  const budget = exerciseBudget(minutes);
+  const targets = muscles.slice(0, budget);
+  const base = Math.floor(budget / targets.length);
+  const remainder = budget % targets.length;
+  return targets.map((muscle, i) => ({
+    muscles: [muscle],
+    fallbackCategories: MUSCLE_FALLBACK[muscle],
+    count: base + (i < remainder ? 1 : 0),
+  }));
+}
+
+/** Slot layout for a request: muscles win over focus, focus over split, split over rotation. */
 export function buildSlots(
   minutes: SuggestRequest['minutes'],
   split: WorkoutSplit,
   focus: FocusTarget | undefined,
+  muscles?: Muscle[],
 ): Slot[] {
+  if (muscles && muscles.length > 0) {
+    return muscleSlots(minutes, muscles);
+  }
   return focus ? focusSlots(minutes, focus) : splitSlots(minutes, split);
 }
 
@@ -119,28 +170,34 @@ function shuffle<T>(arr: T[]): T[] {
 function slotMatcher(slot: Slot): (e: Exercise) => boolean {
   const muscles = slot.muscles;
   if (muscles) {
-    return (e) => e.muscleGroups.some((m) => muscles.includes(m));
+    return (e) => allMuscles(e).some((m) => muscles.includes(m));
   }
   return (e) => e.category === slot.category;
 }
 
+function isCompound(e: Exercise): boolean {
+  if (e.mechanics) {
+    return e.mechanics === 'compound';
+  }
+  return e.secondaryMuscles.length >= 2;
+}
+
 /**
- * Compound first (>=3 muscle groups), random tiebreak. Muscle-focused slots
- * put exercises whose primary muscle matches ahead of incidental overlaps
- * (an arms day should reach for curls before bench presses). When recovering
- * hard, bias easier work.
+ * Compound first, random tiebreak. Muscle-focused slots put exercises whose
+ * primary muscle matches ahead of incidental overlaps (an arms day should
+ * reach for curls before bench presses). When recovering hard, bias easier work.
  */
-function rankCandidates(candidates: Exercise[], hard: boolean, muscles?: string[]): Exercise[] {
+function rankCandidates(candidates: Exercise[], hard: boolean, muscles?: Muscle[]): Exercise[] {
   return shuffle(candidates).sort((a, b) => {
     if (muscles) {
       const primary =
-        Number(muscles.includes(b.muscleGroups[0] ?? '')) -
-        Number(muscles.includes(a.muscleGroups[0] ?? ''));
+        Number(b.primaryMuscles.some((m) => muscles.includes(m))) -
+        Number(a.primaryMuscles.some((m) => muscles.includes(m)));
       if (primary !== 0) {
         return primary;
       }
     }
-    const compound = Number(b.muscleGroups.length >= 3) - Number(a.muscleGroups.length >= 3);
+    const compound = Number(isCompound(b)) - Number(isCompound(a));
     if (compound !== 0) {
       return compound;
     }

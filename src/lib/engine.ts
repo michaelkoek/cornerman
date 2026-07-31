@@ -187,7 +187,7 @@ export async function suggestSession(req: SuggestRequest): Promise<Session> {
   await deletePlannedOnDate(today)
 
   const split = req.split ?? nextSplit(recentStrength)
-  const slots = buildSlots(minutes, split, req.focus)
+  const slots = buildSlots(minutes, split, req.focus, req.muscles)
   const used = recentlyUsedExerciseIds(recentStrength)
   const machinesOnly = location === 'gym' && req.machinesOnly === true
   const fullPool = filterPool(getAllExercises(), location, hard)

@@ -1,7 +1,8 @@
 // Lazy access to the bundled exercise library (data/exercise-library.json,
 // ~860 KB) — dynamically imported so it only loads inside the /exercises chunk
 // or on first instruction-steps open, never on the gym-critical path.
-import type { LibraryExercise } from '../../shared/types'
+import type { LibraryExercise, Muscle } from '../../shared/types'
+import { LIBRARY_TARGET_TO_MUSCLE } from '../../shared/muscles'
 
 let cached: Promise<LibraryExercise[]> | null = null
 
@@ -23,11 +24,18 @@ export interface LibraryFilter {
   query: string
   bodyPart: string | null
   equipment: string | null
+  /** Canonical muscle from the body map / muscle picker (primary target only). */
+  muscle: Muscle | null
+}
+
+/** Canonical primary muscle of a library entry, or null when unmapped. */
+export function libraryMuscle(e: LibraryExercise): Muscle | null {
+  return LIBRARY_TARGET_TO_MUSCLE[e.target] ?? null
 }
 
 export function filterLibrary(
   all: LibraryExercise[],
-  { query, bodyPart, equipment }: LibraryFilter,
+  { query, bodyPart, equipment, muscle }: LibraryFilter,
 ): LibraryExercise[] {
   const q = query.trim().toLowerCase()
   return all.filter((e) => {
@@ -40,8 +48,23 @@ export function filterLibrary(
     if (equipment && e.equipment !== equipment) {
       return false
     }
+    if (muscle && libraryMuscle(e) !== muscle) {
+      return false
+    }
     return true
   })
+}
+
+/** Exercise count per canonical muscle — feeds the body map's aria labels. */
+export function muscleCounts(all: LibraryExercise[]): Partial<Record<Muscle, number>> {
+  const counts: Partial<Record<Muscle, number>> = {}
+  for (const e of all) {
+    const muscle = libraryMuscle(e)
+    if (muscle) {
+      counts[muscle] = (counts[muscle] ?? 0) + 1
+    }
+  }
+  return counts
 }
 
 /** Distinct sorted values of a facet, for filter chips. */
